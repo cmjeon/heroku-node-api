@@ -1,7 +1,7 @@
 var express = require('express');
 var morgan = require('morgan');
 var app = express();
-const port = process.env.PORT;
+const port = process.env.PORT||3000;
 
 var users = [
   {id: 1, name: 'alice'},
