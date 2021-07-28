@@ -12,7 +12,7 @@ var users = [
 app.use(morgan('dev'));
 
 app.get('/', function(req, res) {
-  res.json('Hello!');
+  res.json('Hello! You can use /users');
   res.status(200).end();
 })
 
