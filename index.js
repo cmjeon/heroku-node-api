@@ -11,6 +11,11 @@ var users = [
 
 app.use(morgan('dev'));
 
+app.get('/', function(req, res) {
+  res.json('Hello!');
+  res.status(200).end();
+})
+
 app.get('/users', function(req, res) {
   res.json(users);
 });
