@@ -1,9 +1,9 @@
 const express = require('express');
 const app = express();
-const port = precess.env.port;
+const PORT = precess.env.PORT;
 
 app.get("/", (req, res) => {
   res.send({ hello: "world" });
 });
 
-app.listen(port);
+app.listen(PORT);
