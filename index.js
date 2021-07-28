@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const PORT = precess.env.PORT || 3000;
+const PORT = process.env.PORT;
 
 app.get("/", (req, res) => {
   res.send({ hello: "world" });
