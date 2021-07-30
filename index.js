@@ -17,11 +17,15 @@ app.get('/', function(req, res) {
   res.status(200).end();
 })
 
+app.get('/login', (req, res) => {
+  res.json('This is Login');
+  res.status(200).end();
+})
+
 app.get('/users', function(req, res) {
   req.query.limit = req.query.limit || 10;
   console.log('***receive param***', req.query.limit);
   db.query(`SELECT * FROM USER_INFO`, (err, users) => {
-    
     if(err) {
       console.log('*****',err);
       throw err;
