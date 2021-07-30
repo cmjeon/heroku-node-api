@@ -19,7 +19,8 @@ app.get('/', function(req, res) {
 
 app.get('/users', function(req, res) {
   db.query(`SELECT * FROM USER_INFO`, (err, users) => {
-    res.json(users);  
+    res.json(users);
+    res.status(200).end();
   });
 });
 
