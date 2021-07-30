@@ -3,12 +3,19 @@
 ## 명령어
 
 ```bash
+# push to github
+$ git push origin main
+
 # heroku 실행
 $ git push heroku master
 
 # 로그보기
 $ heroku logs --tail
 ```
+
+## heroku
+
+https://enigmatic-falls-66086.herokuapp.com/
 
 
 ## 참고
