@@ -3,7 +3,11 @@
 ## 명령어
 
 ```bash
+# heroku 실행
 $ git push heroku master
+
+# 로그보기
+$ heroku logs --tail
 ```
 
 

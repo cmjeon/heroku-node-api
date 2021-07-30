@@ -18,8 +18,16 @@ app.get('/', function(req, res) {
 })
 
 app.get('/users', function(req, res) {
+  req.query.limit = req.query.limit || 10;
+  console.log('***receive param***', req.query.limit);
   db.query(`SELECT * FROM USER_INFO`, (err, users) => {
-    res.json(users);  
+    
+    if(err) {
+      console.log('*****',err);
+      throw err;
+    }
+    res.json(users);
+    res.status(200).end();
   });
 });
 
