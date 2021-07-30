@@ -22,7 +22,7 @@ app.get('/users', function(req, res) {
     
     if(err) {
       console.log(err);
-      throw err2;
+      throw err;
     }
     res.json(users);
     res.status(200).end();
