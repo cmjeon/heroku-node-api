@@ -18,10 +18,11 @@ app.get('/', function(req, res) {
 })
 
 app.get('/users', function(req, res) {
+  console.log('*****',req);
   db.query(`SELECT * FROM USER_INFO`, (err, users) => {
     
     if(err) {
-      console.log(err);
+      console.log('*****',err);
       throw err;
     }
     res.json(users);
