@@ -1,6 +1,7 @@
 var express = require('express');
 var morgan = require('morgan');
 var app = express();
+var db = require('./mysql/mysql');
 const port = process.env.PORT||3000;
 
 var users = [
@@ -17,7 +18,9 @@ app.get('/', function(req, res) {
 })
 
 app.get('/users', function(req, res) {
-  res.json(users);
+  db.query(`SELECT * FROM USER_INFO`, (err, users) => {
+    res.json(users);  
+  });
 });
 
 app.listen(port, function() {
