@@ -1,3 +1,7 @@
 node_modules
 package-lock.json
+<<<<<<< HEAD
 mysql/mysql.js
+=======
+mysql/mysql.js
+>>>>>>> main
