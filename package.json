@@ -2,18 +2,30 @@
   "name": "heroku-node-api",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "test": "mocha index.spec.js -w",
-    "start": "node index.js"
+    "test": "cross-env NODE_ENV=test mocha index.spec.js -w",
+    "start": "node bin/www.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.19.0",
+    "cross-env": "7.0.3",
+    "dotenv": "10.0.0",
     "express": "4.17.1",
+    "express-session": "1.17.2",
     "morgan": "1.10.0",
-    "mysql": "2.18.1"
+    "mysql": "2.18.1",
+    "passport": "0.4.1",
+    "passport-jwt": "4.0.0",
+    "passport-local": "1.0.0",
+    "sequelize": "^6.6.5",
+    "cors": "2.8.5",
+    "bcrypt": "5.0.1",
+    "jsonwebtoken": "8.5.1",
+    "swagger-jsdoc": "^3.5.0",
+    "swagger-ui-express": "^4.1.2"
   },
   "devDependencies": {
     "mocha": "9.0.2",
