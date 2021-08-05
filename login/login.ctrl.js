@@ -14,21 +14,22 @@ const login = (req, res) => {
   // console.log(email, pw);
   db.query(`SELECT * FROM USER_INFO WHERE EMAIL = '${email}'`, (err, users) => {
     if(err) {
-      res.status(500).json('Internal Server Error');
+      return res.status(500).json('Internal Server Error');
     }
-    // console.log(users);
     const user = users[0]; 
+    // console.log(users);
     // non registered user
     if (!user) {
-      res.status(401).send('Authentication failed. User not found.');
+      // console.log('dddddd');
+      return res.status(401).send('Authentication failed. User not found.');
     }
-    console.log('user:', user);
+    // console.log('user:', user);
     // bcrypt.hash(pw, saltRounds, function(err, hash) {
     //   console.log(':::::', hash);
     // });
     bcrypt.compare(pw, user.PW, (err, result) => {
       if (err) {
-        console.log('err????', err)
+        // console.log('err????', err)
         res.status(500).send('Internal Server Error');
       }
       if (result) {
@@ -61,8 +62,40 @@ const logout = (req, res) => {
 
 }
 
+const signup = (req, res) => {
+  const email = req.body.email;
+  const name = req.body.name;
+  const pw = req.body.pw;
+  let hashedpw;
+  const profile = req.body.profile;
+  let id;
+
+  console.log('email', email);
+
+  bcrypt.hash(pw, saltRounds, function(err, _hashedpw) {
+    hashedpw = _hashedpw;
+    // console.log(email, pw);
+    db.query('INSERT INTO USER_INFO (USER_ID, EMAIL, NAME, PW, PROFILE) VALUES ( null, ?, ?, ?, ?)', 
+          [email, name, hashedpw, profile],(err, results) => {
+      // console.log('uuuuuuuuuuuu', results.insertId); 
+      id = results.insertId;
+      if(err) {
+        return res.status(500).json('Internal Server Error');
+      }
+      // console.log(id);
+      db.query(`SELECT USER_ID, EMAIL, NAME, PROFILE FROM USER_INFO WHERE USER_ID = ${id}`, (err, users) => {
+        // console.log(err);
+        const user  = users[0];
+        if (!user) return res.status(404).end();
+        res.status(201).json(user);
+      });
+    });
+  });
+}
+
 module.exports = {
   index,
   login,
-  logout
+  logout,
+  signup
 }

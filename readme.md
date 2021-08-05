@@ -13,7 +13,23 @@ $ git push heroku master
 $ heroku logs --tail
 ```
 
-## heroku
+## 실행방법
+
+### 데이터베이스 설정
+
+mysql/mysql 에 적절한 설정 추가
+
+```js
+var db = mysql.createConnection({
+  host : 'sampelhost.com',
+  port : '3306',
+  user : 'sample-user',
+  password : 'sample',
+  database : 'sample-db'
+});
+```
+
+## heroku 에 대해
 
 https://enigmatic-falls-66086.herokuapp.com/
 

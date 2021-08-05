@@ -33,7 +33,7 @@ const authenticateUser = async (req, res, next) => {
   }
 
   const token = req.headers.authorization;
-  console.log('token::::', token);
+  // console.log('token::::', token);
   let payload;
   try {
     payload = await verifyToken(token);
