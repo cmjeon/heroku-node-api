@@ -4,7 +4,7 @@ const should = require('should');
 
 const loginspec = () => {
   return (
-    describe.only('LOGIN', () => {
+    describe('LOGIN', () => {
       describe('GET /login', () => {
         describe('성공케이스', () => {
           it('Login! 를 반환한다', (done) => { // done
@@ -77,12 +77,8 @@ const loginspec = () => {
             body.should.have.property('USER_ID');
             done();
           });
-          it('생성된 유저 객체를 반환한다', (done) => {
-            body.should.have.property('id');
-            done();
-          });
           it('입력한 name을 반환한다', (done) => {
-            body.should.have.property('name', name);
+            body.should.have.property('NAME', name);
             done();
           });
         });
