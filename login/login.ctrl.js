@@ -17,7 +17,7 @@ const login = (req, res) => {
       res.status(500).json('Internal Server Error');
     }
     // console.log(users);
-    const user = users[0];
+    const user = users[0]; 
     // non registered user
     if (!user) {
       res.status(401).send('Authentication failed. User not found.');
