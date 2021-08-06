@@ -13,10 +13,10 @@ const login = (req, res) => {
   const pw = req.body.pw;
   // console.log(email, pw);
   db.query(`SELECT * FROM USER_INFO WHERE EMAIL = '${email}'`, (err, users) => {
-    if(err) {
+    if (err) {
       return res.status(500).json('Internal Server Error');
     }
-    const user = users[0]; 
+    const user = users[0];
     // console.log(users);
     // non registered user
     if (!user) {
@@ -70,26 +70,26 @@ const signup = (req, res) => {
   const profile = req.body.profile;
   let id;
 
-  console.log('email', email);
+  // console.log('email', email);
 
-  bcrypt.hash(pw, saltRounds, function(err, _hashedpw) {
+  bcrypt.hash(pw, saltRounds, function (err, _hashedpw) {
     hashedpw = _hashedpw;
     // console.log(email, pw);
-    db.query('INSERT INTO USER_INFO (USER_ID, EMAIL, NAME, PW, PROFILE) VALUES ( null, ?, ?, ?, ?)', 
-          [email, name, hashedpw, profile],(err, results) => {
-      // console.log('uuuuuuuuuuuu', results.insertId); 
-      id = results.insertId;
-      if(err) {
-        return res.status(500).json('Internal Server Error');
-      }
-      // console.log(id);
-      db.query(`SELECT USER_ID, EMAIL, NAME, PROFILE FROM USER_INFO WHERE USER_ID = ${id}`, (err, users) => {
-        // console.log(err);
-        const user  = users[0];
-        if (!user) return res.status(404).end();
-        res.status(201).json(user);
+    db.query('INSERT INTO USER_INFO (USER_ID, EMAIL, NAME, PW, PROFILE) VALUES ( null, ?, ?, ?, ?)',
+      [email, name, hashedpw, profile], (err, results) => {
+        // console.log('uuuuuuuuuuuu', results.insertId); 
+        id = results.insertId;
+        if (err) {
+          return res.status(500).json('Internal Server Error');
+        }
+        // console.log(id);
+        db.query(`SELECT USER_ID, EMAIL, NAME, PROFILE FROM USER_INFO WHERE USER_ID = ${id}`, (err, users) => {
+          // console.log(err);
+          const user = users[0];
+          if (!user) return res.status(404).end();
+          res.status(201).json(user);
+        });
       });
-    });
   });
 }
 
