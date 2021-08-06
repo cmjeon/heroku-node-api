@@ -61,8 +61,8 @@ const loginspec = () => {
           before((done) => {
             request(app)
               .post('/login/signup')
-              .send({ 
-                email: email, 
+              .send({
+                email: email,
                 name: name,
                 pw: pw,
                 profile: profile
@@ -77,8 +77,15 @@ const loginspec = () => {
             body.should.have.property('USER_ID');
             done();
           });
-          it('입력한 name을 반환한다', (done) => {
+          it('입력한 email, name, profile 을 반환한다', (done) => {
+            body.should.have.property('EMAIL', email);
             body.should.have.property('NAME', name);
+            body.should.have.property('PROFILE', profile);
+            done();
+          });
+        });
+        describe('실패케이스', () => {
+          it('중복된 이메일을 등록하면 객체를 반환한다', (done) => {
             done();
           });
         });

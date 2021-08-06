@@ -1,5 +1,5 @@
-const SECRET_KEY = 'vuex-with-token';
-const EXPIRATION_DATE = '100d';
+const SECRET_KEY = 'heroku-node-api';
+const EXPIRATION_DATE = '1d';
 
 module.exports = {
   SECRET_KEY,
