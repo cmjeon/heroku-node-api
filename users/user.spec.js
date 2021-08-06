@@ -13,7 +13,7 @@ const usersspec = () => {
           .expect(200)
           .end((err, res) => {
             token = res.body.token;
-            console.log('token:', token);
+            // console.log('token:', token);
             done();
           });
       });
@@ -61,9 +61,9 @@ const usersspec = () => {
           });
         });
       });
-    }) 
+    })
   )
 }
-  
+
 
 module.exports = usersspec;
