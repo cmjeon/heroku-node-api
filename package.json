@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "cross-env NODE_ENV=test mocha index.spec.js -w",
+    "test": "cross-env NODE_ENV=development mocha index.spec.js -w",
     "start": "node bin/www.js"
   },
   "author": "",
@@ -23,6 +23,7 @@
     "passport": "0.4.1",
     "passport-jwt": "4.0.0",
     "passport-local": "1.0.0",
+    "promise-mysql": "^5.0.3",
     "sequelize": "^6.6.5",
     "swagger-jsdoc": "^3.5.0",
     "swagger-ui-express": "^4.1.2"
