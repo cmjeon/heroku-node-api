@@ -55,7 +55,7 @@ const usersspec = () => {
               .get('/users/2')
               .set('Authorization', token)
               .end((err, res) => {
-                res.body.should.have.property('USER_ID', 2);
+                res.body.should.have.property('USER_ID', '2');
                 done();
               });
           });

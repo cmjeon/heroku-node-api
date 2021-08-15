@@ -59,7 +59,7 @@ const loginspec = () => {
         });
       });
       describe('POST /login/signup', () => {
-        describe.only('성공케이스', () => {
+        describe('성공케이스', () => {
           let body;
           let email = getRandomEmail();
           let name = '테스트유저';
@@ -76,22 +76,20 @@ const loginspec = () => {
               })
               .expect(201)
               .end((err, res) => {
-                // console.log('zzzzzzzzz', res.body);
                 body = res.body;
                 done();
               });
           });
           it('회원가입에 성공하면 유저 객체를 반환한다', (done) => { // done
-            // console.log('tttt', body);
             body.user.should.have.property('USER_ID');
             done();
           });
-          // it('입력한 email, name, profile 을 반환한다', (done) => {
-          //   body.user.should.have.property('EMAIL', email);
-          //   body.user.should.have.property('NAME', name);
-          //   body.user.should.have.property('PROFILE', profile);
-          //   // done();
-          // });
+          it('입력한 email, name, profile 을 반환한다', (done) => {
+            body.user.should.have.property('EMAIL', email);
+            body.user.should.have.property('NAME', name);
+            body.user.should.have.property('PROFILE', profile);
+            done();
+          });
         });
         describe('실패케이스', () => {
           let email = 'test@test.com';
