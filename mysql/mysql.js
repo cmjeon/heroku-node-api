@@ -1,6 +1,5 @@
 var mysql = require('mysql');
-var db = mysql.createConnection({
-
-});
+var config = require('./config.json')
+var db = mysql.createConnection({ config });
 db.connect();
 module.exports = db;
