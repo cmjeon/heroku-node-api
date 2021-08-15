@@ -1,6 +1,7 @@
 const app = require('../app');
 const request = require('supertest');
 const should = require('should');
+const { getRandomEmail } = require('../utils/util.js');
 
 const loginspec = () => {
   return (
@@ -20,10 +21,15 @@ const loginspec = () => {
       describe('POST /login/login', () => {
         describe('성공케이스', () => {
           let body;
+          let email = 'chmin82@gmail.com';
+          let pw = '1111';
           before((done) => {
             request(app)
               .post('/login/login')
-              .send({ email: 'chmin82@gmail.com', pw: '1111' })
+              .send({
+                email: email,
+                pw: pw
+              })
               .expect(200)
               .end((err, res) => {
                 body = res.body;
@@ -54,7 +60,8 @@ const loginspec = () => {
       });
       describe('POST /login/signup', () => {
         describe('성공케이스', () => {
-          let email = 'test@test.com';
+          let body;
+          let email = getRandomEmail();
           let name = '테스트유저';
           let pw = '1234';
           let profile = '유저 프로파일';
@@ -74,22 +81,35 @@ const loginspec = () => {
               });
           });
           it('회원가입에 성공하면 유저 객체를 반환한다', (done) => { // done
-            body.should.have.property('USER_ID');
+            body.user.should.have.property('USER_ID');
             done();
           });
           it('입력한 email, name, profile 을 반환한다', (done) => {
-            body.should.have.property('EMAIL', email);
-            body.should.have.property('NAME', name);
-            body.should.have.property('PROFILE', profile);
+            body.user.should.have.property('EMAIL', email);
+            body.user.should.have.property('NAME', name);
+            body.user.should.have.property('PROFILE', profile);
             done();
           });
         });
         describe('실패케이스', () => {
-          it('중복된 이메일을 등록하면 객체를 반환한다', (done) => {
-            done();
+          let email = 'test@test.com';
+          let name = '테스트유저';
+          let pw = '1234';
+          let profile = '유저 프로파일';
+          it('중복된 이메일을 등록하면 400를 반환한다', (done) => {
+            request(app)
+              .post('/login/signup')
+              .send({
+                email: email,
+                name: name,
+                pw: pw,
+                profile: profile
+              })
+              .expect(400)
+              .end(done);
           });
         });
-      })
+      });
     })
   )
 }
