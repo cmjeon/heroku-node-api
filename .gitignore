@@ -2,4 +2,3 @@ node_modules
 package-lock.json
 mysql/mysql.js
 mysql/config.json
-config/config.json
