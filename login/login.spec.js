@@ -92,11 +92,11 @@ const loginspec = () => {
           });
         });
         describe('실패케이스', () => {
-          let email = 'test@test.com';
+          let email = 'test@testDupl.com';
           let name = '테스트유저';
           let pw = '1234';
           let profile = '유저 프로파일';
-          it('중복된 이메일을 등록하면 400를 반환한다', (done) => {
+          it('중복된 이메일을 등록하면 message로 duplEmail를 반환한다', (done) => {
             request(app)
               .post('/login/signup')
               .send({
@@ -105,8 +105,30 @@ const loginspec = () => {
                 pw: pw,
                 profile: profile
               })
-              .expect(400)
-              .end(done);
+              .expect(200)
+              .end((err, res) => {
+                body = res.body;
+                body.message.should.eql('duplEmail');
+                done();
+              });
+          });
+        });
+      });
+      describe('GET /login/checkDuplEmail', () => {
+        describe('성공케이스', () => {
+          it('중복된 이메일을 등록하면 message로 duplEmail를 반환한다', (done) => {
+            let email = 'test@test.com';
+            request(app)
+              .get('/login/checkDuplEmail')
+              .send({
+                email: email
+              })
+              .expect(200)
+              .end((err, res) => {
+                body = res.body;
+                body.message.should.eql('duplEmail');
+                done();
+              });
           });
         });
       });

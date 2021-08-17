@@ -4,8 +4,9 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "cross-env NODE_ENV=development mocha index.spec.js -w",
-    "start": "node bin/www.js"
+    "test": "NODE_ENV=test mocha index.spec.js -w",
+    "start": "node bin/www.js",
+    "debug": "NODE_ENV=debug node bin/www.js"
   },
   "author": "",
   "license": "ISC",

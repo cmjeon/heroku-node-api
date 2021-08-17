@@ -8,5 +8,6 @@ router.get('/', ctrl.index);
 router.post('/login', ctrl.login);
 router.get('/logout', ctrl.logout);
 router.post('/signup', ctrl.signup);
+router.get('/checkDuplEmail', ctrl.checkDuplEmail);
 
 module.exports = router;

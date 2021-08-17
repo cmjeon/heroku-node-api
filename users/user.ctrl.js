@@ -17,11 +17,16 @@ const index = (req, res) => {
 }
 
 const show = (req, res) => {
-  const id = parseInt(req.params.id, '10');
+  const id = req.params.id;
+  if (!id) {
+    return res.status(400).end();
+  }
   // if (Number.isNaN(id)) {
   //   return res.status(400).end();
   // }
+  // console.log('id', id);
   db.query(`SELECT USER_ID, EMAIL, NAME, PROFILE FROM USER_INFO WHERE USER_ID = '${id}'`, (err, users) => {
+    // console.log('users', users);
     const user = users[0];
     if (!user) return res.status(404).end();
     res.json(user);

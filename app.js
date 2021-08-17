@@ -11,7 +11,7 @@ const docs = require('./utils/api-doc.js');
 
 const { authenticateUser } = require('./utils/auth');
 
-if (process.env.NODE_ENV !== 'development') {
+if (process.env.NODE_ENV === 'debug') {
   app.use(morgan('dev'));
 }
 

@@ -77,32 +77,54 @@ const signup = (req, res) => {
     }
     const user = users[0];
     if (user) {
-      return res.status(400).end();
-    }
-    bcrypt.hash(pw, saltRounds, function (err, _hashedpw) {
-      hashedpw = _hashedpw;
-      // console.log(email, pw);
+      res.status(200).json({
+        success: 'true',
+        user: { email: email },
+        message: 'duplEmail'
+      });
+    } else {
+      bcrypt.hash(pw, saltRounds, function (err, _hashedpw) {
+        hashedpw = _hashedpw;
+        // console.log(email, pw);
 
-      db.query('INSERT INTO USER_INFO (USER_ID, EMAIL, NAME, PW, PROFILE, CRET_DTIME, CRET_ID, MOD_DTIME, MOD_ID) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-        [id, email, name, hashedpw, profile, new Date(), id, new Date(), id], (err, result) => {
-          // id = results.insertId;
-          if (err) {
-            console.log(err);
-            return res.status(500).json('Internal Server Error');
-          }
-          // console.log(id);
-          db.query(`SELECT USER_ID, EMAIL, NAME, PROFILE FROM USER_INFO WHERE USER_ID = '${id}'`, (err, users) => {
-            // console.log(err);
-            const user = users[0];
-            if (!user) return res.status(404).end();
-            res.status(201).json({
-              success: 'true',
-              user: user,
-              message: 'Signup Success'
+        db.query('INSERT INTO USER_INFO (USER_ID, EMAIL, NAME, PW, PROFILE, CRET_DTIME, CRET_ID, MOD_DTIME, MOD_ID) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+          [id, email, name, hashedpw, profile, new Date(), id, new Date(), id], (err, result) => {
+            // id = results.insertId;
+            if (err) {
+              console.log(err);
+              return res.status(500).json('Internal Server Error');
+            }
+            // console.log(id);
+            db.query(`SELECT USER_ID, EMAIL, NAME, PROFILE FROM USER_INFO WHERE USER_ID = '${id}'`, (err, users) => {
+              // console.log(err);
+              const user = users[0];
+              if (!user) return res.status(404).end();
+              res.status(201).json({
+                success: 'true',
+                user: user,
+                message: 'Signup Success'
+              });
             });
           });
-        });
-    });
+      });
+    }
+  });
+}
+
+const checkDuplEmail = (req, res) => {
+  const email = req.body.email;
+  db.query(`SELECT * FROM USER_INFO WHERE EMAIL = '${email}'`, (err, users) => {
+    if (err) {
+      return res.status(400).json('Internal Server Error');
+    }
+    const user = users[0];
+    if (user) {
+      res.status(200).json({
+        success: 'true',
+        user: { email: email },
+        message: 'duplEmail'
+      });
+    }
   });
 }
 
@@ -110,5 +132,6 @@ module.exports = {
   index,
   login,
   logout,
-  signup
+  signup,
+  checkDuplEmail
 }
