@@ -29,6 +29,12 @@ var db = mysql.createConnection({
 });
 ```
 
+서버실행
+
+```bash
+
+```
+
 ## heroku 에 대해
 
 https://enigmatic-falls-66086.herokuapp.com/
