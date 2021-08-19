@@ -13,7 +13,7 @@ const login = (req, res) => {
   const email = req.body.email;
   const pw = req.body.pw;
   // console.log(email, pw);
-  db.query(`SELECT * FROM USER_INFO WHERE EMAIL = '${email}'`, (err, users) => {
+  db.query(`SELECT * FROM USER_BASE_INFO WHERE EMAIL = '${email}'`, (err, users) => {
     if (err) {
       return res.status(500).json('Internal Server Error');
     }
@@ -71,7 +71,7 @@ const signup = (req, res) => {
   const profile = req.body.profile;
   let id = getRandomID(16);
 
-  db.query(`SELECT * FROM USER_INFO WHERE EMAIL = '${email}'`, (err, users) => {
+  db.query(`SELECT * FROM USER_BASE_INFO WHERE EMAIL = '${email}'`, (err, users) => {
     if (err) {
       return res.status(400).json('Internal Server Error');
     }
@@ -87,7 +87,7 @@ const signup = (req, res) => {
         hashedpw = _hashedpw;
         // console.log(email, pw);
 
-        db.query('INSERT INTO USER_INFO (USER_ID, EMAIL, NAME, PW, PROFILE, CRET_DTIME, CRET_ID, MOD_DTIME, MOD_ID) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        db.query('INSERT INTO USER_BASE_INFO (USER_ID, EMAIL, NAME, PW, PROFILE, CRET_DTIME, CRET_ID, MOD_DTIME, MOD_ID) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?)',
           [id, email, name, hashedpw, profile, new Date(), id, new Date(), id], (err, result) => {
             // id = results.insertId;
             if (err) {
@@ -95,7 +95,7 @@ const signup = (req, res) => {
               return res.status(500).json('Internal Server Error');
             }
             // console.log(id);
-            db.query(`SELECT USER_ID, EMAIL, NAME, PROFILE FROM USER_INFO WHERE USER_ID = '${id}'`, (err, users) => {
+            db.query(`SELECT USER_ID, EMAIL, NAME, PROFILE FROM USER_BASE_INFO WHERE USER_ID = '${id}'`, (err, users) => {
               // console.log(err);
               const user = users[0];
               if (!user) return res.status(404).end();
@@ -113,7 +113,7 @@ const signup = (req, res) => {
 
 const checkDuplEmail = (req, res) => {
   const email = req.body.email;
-  db.query(`SELECT * FROM USER_INFO WHERE EMAIL = '${email}'`, (err, users) => {
+  db.query(`SELECT * FROM USER_BASE_INFO WHERE EMAIL = '${email}'`, (err, users) => {
     if (err) {
       return res.status(400).json('Internal Server Error');
     }

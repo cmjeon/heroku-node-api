@@ -6,7 +6,7 @@ const index = (req, res) => {
   if (Number.isNaN(limit)) {
     return res.status(400).end();
   }
-  db.query(`SELECT USER_ID, EMAIL, NAME, PROFILE FROM USER_INFO limit ${limit}`, (err, users) => {
+  db.query(`SELECT USER_ID, EMAIL, NAME, PROFILE FROM USER_BASE_INFO limit ${limit}`, (err, users) => {
     if (err) {
       console.log('err');
       throw err;
@@ -25,7 +25,7 @@ const show = (req, res) => {
   //   return res.status(400).end();
   // }
   // console.log('id', id);
-  db.query(`SELECT USER_ID, EMAIL, NAME, PROFILE FROM USER_INFO WHERE USER_ID = '${id}'`, (err, users) => {
+  db.query(`SELECT USER_ID, EMAIL, NAME, PROFILE FROM USER_BASE_INFO WHERE USER_ID = '${id}'`, (err, users) => {
     // console.log('users', users);
     const user = users[0];
     if (!user) return res.status(404).end();

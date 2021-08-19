@@ -41,7 +41,7 @@ const authenticateUser = async (req, res, next) => {
     return res.status(401).json({ message: 'token is invalid' });
   }
 
-  const user = db.query(`SELECT * FROM USER_INFO WHERE USER_ID = ${payload.id}`);
+  const user = db.query(`SELECT * FROM USER_BASE_INFO WHERE USER_ID = ${payload.id}`);
 
   // const user = await UserModel.findById(payload._id)
   //   .select('-password')
