@@ -1,6 +1,6 @@
 var db = require('../mysql/mysql');
 
-const index = (req, res) => {
+const list = (req, res) => {
   req.query.limit = req.query.limit || 10;
   const limit = parseInt(req.query.limit, 10);
   if (Number.isNaN(limit)) {
@@ -33,6 +33,6 @@ const show = (req, res) => {
   });
 }
 module.exports = {
-  index,
+  list,
   show
 }

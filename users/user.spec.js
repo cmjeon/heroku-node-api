@@ -5,6 +5,7 @@ const should = require('should');
 const usersspec = () => {
   return (
     describe('USERS', () => {
+      // login 처리
       let token;
       before((done) => {
         request(app)
