@@ -5,8 +5,9 @@ const app = express();
 const morgan = require('morgan');
 const db = require('./mysql/mysql');
 // var bodyParser = require('body-parser');
-const login = require('./login/index')
+const login = require('./login/index');
 const users = require('./users/index');
+const task = require('./task/index');
 const docs = require('./utils/api-doc.js');
 
 const { authenticateUser } = require('./utils/auth');
@@ -25,6 +26,7 @@ app.get('/', function (req, res) {
 
 app.use('/login', login);
 app.use('/users', authenticateUser, users);
+app.use('/task', authenticateUser, users);
 // app.use('/users', users);
 // app.use('/api', docs);
 app.use('/api', docs);
