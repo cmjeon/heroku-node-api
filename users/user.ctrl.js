@@ -1,6 +1,6 @@
 var db = require('../mysql/mysql');
 
-const index = (req, res) => {
+const list = (req, res) => {
   req.query.limit = req.query.limit || 10;
   const limit = parseInt(req.query.limit, 10);
   if (Number.isNaN(limit)) {
@@ -32,7 +32,17 @@ const show = (req, res) => {
     res.json(user);
   });
 }
+
+const destroy = (req, res) => {
+  const id = req.params.id;
+  db.query(`DELETE FROM USER_BASE_INFO WHERE USER_ID = '${id}'`, (err, users) => {
+    // console.log('users', users);
+    res.status(204).end();
+  });
+}
+
 module.exports = {
-  index,
-  show
+  list,
+  show,
+  destroy
 }

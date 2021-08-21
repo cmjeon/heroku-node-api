@@ -73,7 +73,7 @@ const signup = (req, res) => {
 
   db.query(`SELECT * FROM USER_BASE_INFO WHERE EMAIL = '${email}'`, (err, users) => {
     if (err) {
-      return res.status(400).json('Internal Server Error');
+      return res.status(500).send('Internal Server Error');
     }
     const user = users[0];
     if (user) {
@@ -112,18 +112,22 @@ const signup = (req, res) => {
 }
 
 const checkDuplEmail = (req, res) => {
+  let success, message, result;
   const email = req.body.email;
   db.query(`SELECT * FROM USER_BASE_INFO WHERE EMAIL = '${email}'`, (err, users) => {
     if (err) {
-      return res.status(400).json('Internal Server Error');
+      return res.status(500).send('Internal Server Error');
     }
     const user = users[0];
     if (user) {
-      res.status(200).json({
-        success: 'true',
+      success = 'true';
+      message = 'duplEmail';
+      result = {
+        success: success,
+        message: message,
         user: { email: email },
-        message: 'duplEmail'
-      });
+      };
+      res.status(200).json(result);
     }
   });
 }
