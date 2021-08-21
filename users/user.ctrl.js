@@ -32,7 +32,17 @@ const show = (req, res) => {
     res.json(user);
   });
 }
+
+const destroy = (req, res) => {
+  const id = req.params.id;
+  db.query(`DELETE FROM USER_BASE_INFO WHERE USER_ID = '${id}'`, (err, users) => {
+    // console.log('users', users);
+    res.status(204).end();
+  });
+}
+
 module.exports = {
   list,
-  show
+  show,
+  destroy
 }
