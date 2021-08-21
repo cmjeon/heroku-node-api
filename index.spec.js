@@ -3,6 +3,8 @@ const request = require('supertest');
 const should = require('should');
 const userspec = require('./users/user.spec');
 const loginspec = require('./login/login.spec');
+const taskspec = require('./task/task.spec');
+const { getNowTime } = require('./utils/util');
 
 // before(function () {
 //    console.log("---");
@@ -24,18 +26,10 @@ describe("ROOT", function () {
 });
 userspec();
 loginspec();
+taskspec();
 
-function nowDate() {
-  var today = new Date();
-  var hh = String(today.getHours()).padStart(2, '0')+':';
-  var mm = String(today.getMinutes()).padStart(2, '0')+':';
-  var ss = String(today.getSeconds()).padStart(2, '0')+':';
-  var mills = String(today.getMilliseconds()).padStart(3, '0');
-  
-  today = hh+mm+ss+mills
-  return today;
-}
+let nowDate = getNowTime();
 
 after(function () {
-  console.log("Test ends when :", nowDate());
+  console.log("###### Test ends when :", nowDate, "######");
 });
