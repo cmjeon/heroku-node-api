@@ -26,7 +26,7 @@ app.get('/', function (req, res) {
 
 app.use('/login', login);
 app.use('/users', authenticateUser, users);
-app.use('/task', authenticateUser, users);
+app.use('/tasks', authenticateUser, task);
 // app.use('/users', users);
 // app.use('/api', docs);
 app.use('/api', docs);
