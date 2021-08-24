@@ -56,7 +56,8 @@ const create = (req, res) => {
   const taskDesc = req.body.taskDesc;
   const status = req.body.status;
   const dueDate = req.body.dueDate;
-  const alarmDTime = req.body.alarmDTime;
+  const alarmDtime = req.body.alarmDtime;
+  console.log('alarmDtime')
   if (!taskOwnUserId || !taskDate || !subject || !status) {
     return res.status(400).end();
   }
@@ -66,7 +67,7 @@ const create = (req, res) => {
     }
     dispSeq = result[0].DISP_SEQ;
     db.query('INSERT INTO TASK_BASE_INFO (TASK_ID, TASK_DATE, DISP_SEQ, SUBJECT, TASK_DESC, STATUS, DUE_DATE, ALARM_DTIME, CRET_DTIME, CRET_ID, MOD_DTIME, MOD_ID, TASK_OWN_USER_ID) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-      [null, taskDate, dispSeq, subject, taskDesc, status, dueDate, alarmDTime, new Date(), taskOwnUserId, new Date(), taskOwnUserId, taskOwnUserId], (err, result) => {
+      [null, taskDate, dispSeq, subject, taskDesc, status, dueDate, alarmDtime, new Date(), taskOwnUserId, new Date(), taskOwnUserId, taskOwnUserId], (err, result) => {
         if (err) {
           console.log(err);
           return res.status(500).json('Internal Server Error');
@@ -102,7 +103,7 @@ const update = (req, res) => {
   let taskDesc = req.body.taskDesc;
   let status = req.body.status;
   let dueDate = req.body.dueDate;
-  let alarmDtime = req.body.alarmDTime;
+  let alarmDtime = req.body.alarmDtime;
   db.query(`SELECT TASK_ID, TASK_DATE, DISP_SEQ, SUBJECT, TASK_DESC, STATUS, DUE_DATE, ALARM_DTIME, CRET_DTIME, CRET_ID, MOD_DTIME, MOD_ID FROM TASK_BASE_INFO WHERE TASK_ID='${taskId}'`, (err, tasks) => {
     if (err) {
       return res.status(500).send('Internal Server Error');
