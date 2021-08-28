@@ -9,61 +9,7 @@
     "application/json"
   ],
   "paths": {
-    "/signup": {
-      "post": {
-        "tags": [
-          "/signup"
-        ],
-        "description": "회원 가입을 위한 API 입니다. 사용자 아이디, 암호, 닉네임 3개를 입력해야 합니다.",
-        "parameters": [
-          {
-            "name": "username",
-            "in": "formData",
-            "description": "사용자 아이디",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "password",
-            "in": "formData",
-            "description": "비밀번호",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "nickname",
-            "in": "formData",
-            "description": "닉네임",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "[완료]가입이 정상적으로 완료되었습니다.",
-            "content": {
-              "application/json": {},
-              "application/xml": {}
-            }
-          },
-          "409": {
-            "description": "[에러]사용자 아이디가 이미 존재하여 회원 가입이 실패하였습니다.",
-            "content": {
-              "application/json": {},
-              "application/xml": {}
-            }
-          },
-          "500": {
-            "description": "[에러]서버에 문제가 있어 회원 가입에 실패하였습니다.",
-            "content": {
-              "application/json": {},
-              "application/xml": {}
-            }
-          }
-        }
-      }
-    },
-    "/login": {
+    "/login/login": {
       "post": {
         "tags": [
           "/login"
@@ -71,14 +17,14 @@
         "description": "로그인하는 API 입니다. 사용자 아이디와 암호를 입력해야 합니다.",
         "parameters": [
           {
-            "name": "username",
+            "name": "email",
             "in": "formData",
             "description": "사용자 아이디",
             "required": true,
             "type": "string"
           },
           {
-            "name": "password",
+            "name": "pw",
             "in": "formData",
             "description": "비밀번호",
             "required": true,
@@ -102,6 +48,60 @@
           },
           "500": {
             "description": "[에러]서버에 문제가 있어 로그인하지 못했습니다",
+            "content": {
+              "application/json": {},
+              "application/xml": {}
+            }
+          }
+        }
+      }
+    },
+    "/login/signup": {
+      "post": {
+        "tags": [
+          "/login"
+        ],
+        "description": "회원 가입을 위한 API 입니다. 사용자 아이디, 암호, 닉네임 3개를 입력해야 합니다.",
+        "parameters": [
+          {
+            "name": "email",
+            "in": "formData",
+            "description": "이메일 계정",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "pw",
+            "in": "formData",
+            "description": "비밀번호",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "in": "formData",
+            "description": "닉네임",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "[완료]가입이 정상적으로 완료되었습니다.",
+            "content": {
+              "application/json": {},
+              "application/xml": {}
+            }
+          },
+          "409": {
+            "description": "[에러]사용자 아이디가 이미 존재하여 회원 가입이 실패하였습니다.",
+            "content": {
+              "application/json": {},
+              "application/xml": {}
+            }
+          },
+          "500": {
+            "description": "[에러]서버에 문제가 있어 회원 가입에 실패하였습니다.",
             "content": {
               "application/json": {},
               "application/xml": {}

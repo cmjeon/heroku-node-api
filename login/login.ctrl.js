@@ -77,7 +77,7 @@ const signup = (req, res) => {
     }
     const user = users[0];
     if (user) {
-      res.status(200).json({
+      res.status(409).json({
         success: 'true',
         user: { email: email },
         message: 'duplEmail'
