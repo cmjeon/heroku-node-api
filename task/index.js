@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const ctrl = require('./task.ctrl');
 
-router.get('/', ctrl.list);
+router.get('/tasks', ctrl.list);
 router.get('/:taskId', ctrl.show);
 router.delete('/:taskId', ctrl.destroy);
 router.post('/', ctrl.create);
