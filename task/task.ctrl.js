@@ -3,13 +3,20 @@ var db = require('../mysql/mysql');
 var { getTodayDateWithHypen } = require('../utils/util.js');
 
 const list = (req, res) => {
+  // console.log(req.headers);
+  if (!req.headers.userid) {
+    return res.status(403).end();
+  }
+  let taskOwnUserId = req.headers.userid;
   let todayDate = getTodayDateWithHypen();
   if (req.query.taskDate) {
     var dateReg = /^(19|20|21)\d{2}[-](0[1-9]|1[0-2])[-](0[1-9]|1\d|2\d|3[01])$/;
     if (!req.query.taskDate.match(dateReg)) return res.status(400).end();
   }
   const taskDate = req.query.taskDate || todayDate;
-  db.query(`SELECT TASK_ID, TASK_DATE, DISP_SEQ, SUBJECT, TASK_DESC, STATUS, DUE_DATE, ALARM_DTIME, CRET_DTIME, CRET_ID, MOD_DTIME, MOD_ID FROM TASK_BASE_INFO WHERE TASK_DATE='${taskDate}'`, (err, tasks) => {
+  // console.log('taskOwnUserId:', taskOwnUserId);
+  // console.log('taskDate:', taskDate);
+  db.query(`SELECT TASK_ID, TASK_DATE, DISP_SEQ, SUBJECT, TASK_DESC, STATUS, DUE_DATE, ALARM_DTIME, CRET_DTIME, CRET_ID, MOD_DTIME, MOD_ID FROM TASK_BASE_INFO WHERE TASK_OWN_USER_ID = '${taskOwnUserId}' AND TASK_DATE='${taskDate}'`, (err, tasks) => {
     if (err) {
       return res.status(500).send('Internal Server Error');
     }
@@ -19,12 +26,16 @@ const list = (req, res) => {
 }
 
 const show = (req, res) => {
+  if (!req.headers.userid) {
+    return res.status(403).end();
+  }
+  let taskOwnUserId = req.headers.userid;
   const taskId = parseInt(req.params.taskId);
   // console.log('taskId:', taskId);
   if (Number.isNaN(taskId)) {
     return res.status(400).end();
   }
-  db.query(`SELECT TASK_ID, TASK_DATE, DISP_SEQ, SUBJECT, TASK_DESC, STATUS, DUE_DATE, ALARM_DTIME, CRET_DTIME, CRET_ID, MOD_DTIME, MOD_ID FROM TASK_BASE_INFO WHERE TASK_ID='${taskId}'`, (err, tasks) => {
+  db.query(`SELECT TASK_ID, TASK_DATE, DISP_SEQ, SUBJECT, TASK_DESC, STATUS, DUE_DATE, ALARM_DTIME, CRET_DTIME, CRET_ID, MOD_DTIME, MOD_ID FROM TASK_BASE_INFO WHERE TASK_OWN_USER_ID = '${taskOwnUserId}' AND TASK_ID='${taskId}'`, (err, tasks) => {
     if (err) {
       return res.status(500).send('Internal Server Error');
     }
@@ -35,11 +46,15 @@ const show = (req, res) => {
 }
 
 const destroy = (req, res) => {
+  if (!req.headers.userid) {
+    return res.status(403).end();
+  }
+  let taskOwnUserId = req.headers.userid;
   const taskId = parseInt(req.params.taskId);
   if (Number.isNaN(taskId)) {
     return res.status(400).end();
   }
-  db.query(`DELETE FROM TASK_BASE_INFO WHERE TASK_ID='${taskId}'`, (err, result) => {
+  db.query(`DELETE FROM TASK_BASE_INFO WHERE TASK_OWN_USER_ID = '${taskOwnUserId}' AND TASK_ID='${taskId}'`, (err, result) => {
     if (err) {
       return res.status(500).send('Internal Server Error');
     }
@@ -49,7 +64,10 @@ const destroy = (req, res) => {
 }
 
 const create = (req, res) => {
-  const taskOwnUserId = req.body.userId;
+  if (!req.headers.userid) {
+    return res.status(403).end();
+  }
+  const taskOwnUserId = req.headers.userid;
   const taskDate = req.body.taskDate;
   let dispSeq;
   const subject = req.body.subject;

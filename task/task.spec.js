@@ -18,6 +18,7 @@ const taskspec = () => {
           .end((err, res) => {
             token = res.body.token;
             userId = res.body.user.userId;
+            console.log('TASK /login/login');
             done();
           });
       });
@@ -26,7 +27,10 @@ const taskspec = () => {
           it(`오늘자(${getTodayDateWithHypen()}) 할일정보를 담은 배열을 반환`, (done) => {
             request(app)
               .get('/tasks/tasks')
-              .set('Authorization', token)
+              .set({
+                'authorization': token,
+                'userid': userId
+              })
               .end((err, res) => {
                 res.body.should.be.instanceOf(Array);
                 for (let task of res.body) {
@@ -39,7 +43,10 @@ const taskspec = () => {
             let taskDate = '2021-08-21';
             request(app)
               .get(`/tasks/tasks?taskDate=${taskDate}`)
-              .set('Authorization', token)
+              .set({
+                'authorization': token,
+                'userid': userId
+              })
               .end((err, res) => {
                 for (let task of res.body) task.TASK_DATE.should.eql(taskDate);
                 done();
@@ -51,7 +58,10 @@ const taskspec = () => {
             let taskDate = '2021/08/21';
             request(app)
               .get(`/tasks/tasks?taskDate=${taskDate}`)
-              .set('Authorization', token)
+              .set({
+                'authorization': token,
+                'userid': userId
+              })
               .expect(400)
               .end(done);
           });
@@ -59,7 +69,10 @@ const taskspec = () => {
             let taskDate = '2011-30-50';
             request(app)
               .get(`/tasks/tasks?taskDate=${taskDate}`)
-              .set('Authorization', token)
+              .set({
+                'authorization': token,
+                'userid': userId
+              })
               .expect(400)
               .end(done);
           });
@@ -67,7 +80,10 @@ const taskspec = () => {
             let taskDate = 'something';
             request(app)
               .get(`/tasks/tasks?taskDate=${taskDate}`)
-              .set('Authorization', token)
+              .set({
+                'authorization': token,
+                'userid': userId
+              })
               .expect(400)
               .end(done);
           });
@@ -79,7 +95,10 @@ const taskspec = () => {
           it(`taskId 가 ${taskId}인 유저 객체를 반환한다`, (done) => {
             request(app)
               .get(`/tasks/${taskId}`)
-              .set('Authorization', token)
+              .set({
+                'authorization': token,
+                'userid': userId
+              })
               .end((err, res) => {
                 res.body.should.have.property('TASK_ID', taskId);
                 done();
@@ -90,14 +109,20 @@ const taskspec = () => {
           it('id 가 숫자가 아닐 경우 400으로 응답한다', (done) => {
             request(app)
               .get('/tasks/one')
-              .set('Authorization', token)
+              .set({
+                'authorization': token,
+                'userid': userId
+              })
               .expect(400)
               .end(done);
           });
           it('taskId 로 할일을 찾을 수 없을 경우 404으로 응답한다', (done) => {
             request(app)
               .get('/tasks/1')
-              .set('Authorization', token)
+              .set({
+                'authorization': token,
+                'userid': userId
+              })
               .expect(404)
               .end(done);
           });
@@ -134,9 +159,11 @@ const taskspec = () => {
             // console.log('token:', token);
             request(app)
               .post('/tasks')
-              .set('Authorization', token)
+              .set({
+                'authorization': token,
+                'userid': userId
+              })
               .send({
-                userId: userId,
                 taskDate: taskDate,
                 subject: subject,
                 status: status
@@ -169,7 +196,10 @@ const taskspec = () => {
           // // console.log('token:', token);
           // request(app)
           //   .post('/tasks')
-          //   .set('Authorization', token)
+          //   .set({
+          //     'authorization': token,
+          //     'userid': userId
+          //   })
           //   .send({
           //     userId: userId,
           //     taskDate: taskDate,
@@ -190,7 +220,10 @@ const taskspec = () => {
             // console.log('ajdslfkjaslf', taskId);
             request(app)
               .delete(`/tasks/${taskId}`)
-              .set('Authorization', token)
+              .set({
+                'authorization': token,
+                'userid': userId
+              })
               .expect(204)
               .end(done);
           });
@@ -199,7 +232,10 @@ const taskspec = () => {
           it('taskId 가 숫자가 아닐경우 400으로 응답한다', (done) => {
             request(app)
               .delete('/tasks/one')
-              .set('Authorization', token)
+              .set({
+                'authorization': token,
+                'userid': userId
+              })
               .expect(400)
               .end(done);
           });
@@ -217,7 +253,10 @@ const taskspec = () => {
           before((done) => {
             request(app)
               .put('/tasks/65')
-              .set('Authorization', token)
+              .set({
+                'authorization': token,
+                'userid': userId
+              })
               .send({
                 userId: userId,
                 subject: subject,
@@ -249,7 +288,10 @@ const taskspec = () => {
           it('정수가 아닌 taskId 일 경우 400 을 반환한다.', (done) => {
             request(app)
               .put('/tasks/one')
-              .set('Authorization', token)
+              .set({
+                'authorization': token,
+                'userid': userId
+              })
               .send({
                 subject: '아무말'
               })
@@ -266,7 +308,10 @@ const taskspec = () => {
           it('없는 taskId 일 경우 404 을 반환한다', (done) => {
             request(app)
               .put('/tasks/1')
-              .set('Authorization', token)
+              .set({
+                'authorization': token,
+                'userid': userId
+              })
               .send({
                 subject: '아무말'
               })
