@@ -11,7 +11,7 @@ var db = require('../mysql/mysql');//
 const newToken = user => {
   const payload = {
     email: user.EMAIL,
-    id: user.USER_ID,
+    userid: user.USER_ID,
   };
   return jwt.sign(payload, SECRET_KEY, {
     expiresIn: EXPIRATION_DATE,
@@ -41,7 +41,7 @@ const authenticateUser = async (req, res, next) => {
     return res.status(401).json({ message: 'token is invalid' });
   }
 
-  const user = db.query(`SELECT * FROM USER_BASE_INFO WHERE USER_ID = '${payload.id}'`);
+  const user = db.query(`SELECT * FROM USER_BASE_INFO WHERE USER_ID = '${payload.userid}'`);
 
   // const user = await UserModel.findById(payload._id)
   //   .select('-password')
