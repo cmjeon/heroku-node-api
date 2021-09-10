@@ -164,6 +164,67 @@
         }
       }
     },
+    "/tasks": {
+      "post": {
+        "tags": [
+          "/tasks"
+        ],
+        "description": "할일을 생성하는 API입니다",
+        "parameters": [
+          {
+            "name": "userid",
+            "in": "header",
+            "description": "사용자 ID",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "taskDate",
+            "in": "formData",
+            "description": "할일일자",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "subject",
+            "in": "formData",
+            "description": "할일명",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "in": "formData",
+            "description": "할일 상태",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "[완료]게시물이 생성되었습니다",
+            "content": {
+              "application/json": {},
+              "application/xml": {}
+            }
+          },
+          "400": {
+            "description": "[에러]게시물이 이미 존재합니다",
+            "content": {
+              "application/json": {},
+              "application/xml": {}
+            }
+          },
+          "500": {
+            "description": "[에러]서버에 문제가 있어 게시물을 생성하지 못했습니다",
+            "content": {
+              "application/json": {},
+              "application/xml": {}
+            }
+          }
+        }
+      }
+    },
     "/tasks/{taskId}": {
       "get": {
         "tags": [
@@ -281,65 +342,6 @@
           },
           "404": {
             "description": "[에러]리소스를 찾을 수 없습니다",
-            "content": {
-              "application/json": {},
-              "application/xml": {}
-            }
-          },
-          "500": {
-            "description": "[에러]서버에 문제가 있어 게시물을 생성하지 못했습니다",
-            "content": {
-              "application/json": {},
-              "application/xml": {}
-            }
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "/tasks"
-        ],
-        "description": "할일을 생성하는 API입니다",
-        "parameters": [
-          {
-            "name": "userid",
-            "in": "header",
-            "description": "사용자 ID",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "taskDate",
-            "in": "formData",
-            "description": "할일일자",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "subject",
-            "in": "formData",
-            "description": "할일명",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "status",
-            "in": "formData",
-            "description": "할일 상태",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "201": {
-            "description": "[완료]게시물이 생성되었습니다",
-            "content": {
-              "application/json": {},
-              "application/xml": {}
-            }
-          },
-          "400": {
-            "description": "[에러]게시물이 이미 존재합니다",
             "content": {
               "application/json": {},
               "application/xml": {}

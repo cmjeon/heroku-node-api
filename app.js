@@ -5,10 +5,10 @@ const app = express();
 const morgan = require('morgan');
 const db = require('./mysql/mysql');
 // var bodyParser = require('body-parser');
-const login = require('./login/index');
+const auth = require('./auth/index');
 const users = require('./users/index');
-const task = require('./task/index');
-const docs = require('./utils/api-doc.js');
+const tasks = require('./tasks/index');
+const docs = require('./docs/api-doc.js');
 
 const { authenticateUser } = require('./utils/auth');
 
@@ -24,11 +24,11 @@ app.get('/', function (req, res) {
   res.json('Hello!');
 });
 
-app.use('/login', login);
+app.use('/auth', auth);
 app.use('/users', authenticateUser, users);
-app.use('/tasks', authenticateUser, task);
+app.use('/tasks', authenticateUser, tasks);
 // app.use('/users', users);
 // app.use('/api', docs);
-app.use('/api', docs);
+app.use('/docs', docs);
 
 module.exports = app;

@@ -1,9 +1,9 @@
 const app = require('./app');
 const request = require('supertest');
 const should = require('should');
-const userspec = require('./users/user.spec');
-const loginspec = require('./login/login.spec');
-const taskspec = require('./task/task.spec');
+const usersspec = require('./users/users.spec');
+const authspec = require('./auth/auth.spec');
+const tasksspec = require('./tasks/tasks.spec');
 const { getNowTime } = require('./utils/util');
 
 // before(function () {
@@ -24,9 +24,9 @@ describe("ROOT", function () {
     });
   });
 });
-userspec();
-loginspec();
-taskspec();
+usersspec();
+authspec();
+tasksspec();
 
 let nowDate = getNowTime();
 

@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const ctrl = require('./user.ctrl');
+const ctrl = require('./users.ctrl');
 
 router.get('/', ctrl.list);
 router.get('/:id', ctrl.show);

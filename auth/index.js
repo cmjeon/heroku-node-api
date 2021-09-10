@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const ctrl = require('./login.ctrl');
+const ctrl = require('./auth.ctrl');
 
 // const { newToken } = require('../utils/auth');
 

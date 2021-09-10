@@ -4,7 +4,7 @@ var { newToken } = require('../utils/auth.js');
 var { getRandomID } = require('../utils/util.js');
 
 const index = (req, res) => {
-  res.json('Login!');
+  res.json('Auth!');
 }
 
 const saltRounds = 10;

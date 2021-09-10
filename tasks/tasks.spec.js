@@ -12,7 +12,7 @@ const taskspec = () => {
       let taskId;
       before((done) => {
         request(app)
-          .post('/login/login')
+          .post('/auth/login')
           .send({ email: 'test@testDupl.com', pw: '1234' })
           .expect(200)
           .end((err, res) => {
@@ -26,7 +26,7 @@ const taskspec = () => {
         describe('성공케이스', () => {
           it(`오늘자(${getTodayDateWithHypen()}) 할일정보를 담은 배열을 반환`, (done) => {
             request(app)
-              .get('/tasks/tasks')
+              .get('/tasks')
               .set({
                 'authorization': token,
                 'userid': userId
@@ -42,7 +42,7 @@ const taskspec = () => {
           it('날짜에 맞는 할일 배열을 반환', (done) => {
             let taskDate = '2021-08-21';
             request(app)
-              .get(`/tasks/tasks?taskDate=${taskDate}`)
+              .get(`/tasks?taskDate=${taskDate}`)
               .set({
                 'authorization': token,
                 'userid': userId
@@ -57,7 +57,7 @@ const taskspec = () => {
           it('taskDate 의 포맷이 YYYY-MM-DD 이 아니면 400을 응답한다', (done) => {
             let taskDate = '2021/08/21';
             request(app)
-              .get(`/tasks/tasks?taskDate=${taskDate}`)
+              .get(`/tasks?taskDate=${taskDate}`)
               .set({
                 'authorization': token,
                 'userid': userId
@@ -68,7 +68,7 @@ const taskspec = () => {
           it('taskDate 의 값이 날짜포맷이지만 날짜가 아니면 400을 응답한다', (done) => {
             let taskDate = '2011-30-50';
             request(app)
-              .get(`/tasks/tasks?taskDate=${taskDate}`)
+              .get(`/tasks?taskDate=${taskDate}`)
               .set({
                 'authorization': token,
                 'userid': userId
@@ -79,7 +79,7 @@ const taskspec = () => {
           it('taskDate 의 값이 날짜가 아니면 400을 응답한다', (done) => {
             let taskDate = 'something';
             request(app)
-              .get(`/tasks/tasks?taskDate=${taskDate}`)
+              .get(`/tasks?taskDate=${taskDate}`)
               .set({
                 'authorization': token,
                 'userid': userId
