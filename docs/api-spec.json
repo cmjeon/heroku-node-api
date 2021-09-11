@@ -9,10 +9,10 @@
     "application/json"
   ],
   "paths": {
-    "/login/login": {
+    "/auth/login": {
       "post": {
         "tags": [
-          "/login"
+          "/auth"
         ],
         "description": "로그인하는 API 입니다. 사용자 아이디와 암호를 입력해야 합니다.",
         "parameters": [
@@ -56,10 +56,10 @@
         }
       }
     },
-    "/login/signup": {
+    "/auth/signup": {
       "post": {
         "tags": [
-          "/login"
+          "/auth"
         ],
         "description": "회원 가입을 위한 API 입니다. 사용자 아이디, 암호, 닉네임 3개를 입력해야 합니다.",
         "parameters": [
@@ -110,7 +110,7 @@
         }
       }
     },
-    "/tasks/tasks": {
+    "/tasks": {
       "get": {
         "tags": [
           "/tasks"
@@ -162,9 +162,7 @@
             }
           }
         }
-      }
-    },
-    "/tasks": {
+      },
       "post": {
         "tags": [
           "/tasks"
