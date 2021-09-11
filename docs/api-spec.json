@@ -174,14 +174,16 @@
             "in": "header",
             "description": "사용자 ID",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "example": "QVB0FFA4N45NSUJE"
           },
           {
             "name": "taskDate",
             "in": "formData",
-            "description": "할일일자",
+            "description": "할일 날짜 (YYYY-MM-DD)",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "example": "2021-09-21"
           },
           {
             "name": "subject",
@@ -193,8 +195,30 @@
           {
             "name": "status",
             "in": "formData",
-            "description": "할일 상태",
+            "description": "할일 상태 (OPEN, COMPLETED)",
             "required": true,
+            "type": "string",
+            "example": "OPEN"
+          },
+          {
+            "name": "taskDesc",
+            "in": "formData",
+            "description": "할일 설명",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "dueDtime",
+            "in": "formData",
+            "description": "마감 기한 (YYYY-MM-DD HH:mm:ss)",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "alarmDtime",
+            "in": "formData",
+            "description": "알림 일자 (YYYY-MM-DD HH:mm:ss)",
+            "required": false,
             "type": "string"
           }
         ],
@@ -228,7 +252,7 @@
         "tags": [
           "/tasks"
         ],
-        "description": "특정 할일을 조회하는 API입니다",
+        "description": "할일을 조회하는 API입니다",
         "consumes": [
           "application/json"
         ],
@@ -302,16 +326,16 @@
         ],
         "parameters": [
           {
-            "name": "userid",
-            "in": "header",
-            "description": "사용자 ID",
+            "name": "taskId",
+            "in": "path",
+            "description": "할일 고유 아이디",
             "required": true,
             "type": "string"
           },
           {
-            "name": "taskId",
-            "in": "path",
-            "description": "할일 고유 아이디",
+            "name": "userid",
+            "in": "header",
+            "description": "사용자 ID",
             "required": true,
             "type": "string"
           }
@@ -353,86 +377,91 @@
             }
           }
         }
-      }
-    },
-    "/tasks/{_id}": {
-      "post": {
+      },
+      "patch": {
         "tags": [
-          "/posts"
+          "/tasks"
         ],
-        "description": "게시물을 한개 생성하는 API입니다",
+        "description": "할일을 수정하는 API입니다",
         "parameters": [
           {
-            "name": "title",
-            "in": "formData",
-            "description": "게시물 제목",
+            "name": "taskId",
+            "in": "path",
+            "description": "할일 고유 아이디",
             "required": true,
             "type": "string"
           },
           {
-            "name": "contents",
-            "in": "formData",
-            "description": "게시물 내용",
+            "name": "userid",
+            "in": "header",
+            "description": "사용자 ID",
             "required": true,
+            "type": "string",
+            "example": "QVB0FFA4N45NSUJE"
+          },
+          {
+            "name": "taskDate",
+            "in": "formData",
+            "description": "할일 날짜 (YYYY-MM-DD)",
+            "required": false,
+            "type": "string",
+            "example": "2021-09-21"
+          },
+          {
+            "name": "dispSeq",
+            "in": "formData",
+            "description": "할일 순서",
+            "required": false,
+            "type": "string",
+            "example": "1"
+          },
+          {
+            "name": "subject",
+            "in": "formData",
+            "description": "할일명",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "in": "formData",
+            "description": "할일 상태 (OPEN, COMPLETED)",
+            "required": false,
+            "type": "string",
+            "example": "OPEN"
+          },
+          {
+            "name": "taskDesc",
+            "in": "formData",
+            "description": "할일 설명",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "dueDtime",
+            "in": "formData",
+            "description": "마감 기한 (YYYY-MM-DD HH:mm:ss)",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "alarmDtime",
+            "in": "formData",
+            "description": "알림 일자 (YYYY-MM-DD HH:mm:ss)",
+            "required": false,
             "type": "string"
           }
         ],
         "responses": {
-          "201": {
-            "description": "[완료]게시물이 생성되었습니다",
+          "200": {
+            "description": "[완료]할일이 수정되었고 할일을 받아왔습니다",
             "content": {
               "application/json": {},
               "application/xml": {}
             }
           },
           "400": {
-            "description": "[에러]게시물이 이미 존재합니다",
-            "content": {
-              "application/json": {},
-              "application/xml": {}
-            }
-          },
-          "500": {
-            "description": "[에러]서버에 문제가 있어 게시물을 생성하지 못했습니다",
-            "content": {
-              "application/json": {},
-              "application/xml": {}
-            }
-          }
-        }
-      }
-    },
-    "/posts/{_id}": {
-      "get": {
-        "tags": [
-          "/posts"
-        ],
-        "description": "특정 게시물을 조회하는 API입니다",
-        "operationId": "getPostById",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "_id",
-            "in": "path",
-            "description": "게시글 고유 아이디",
-            "required": true,
-            "type": "string",
-            "schema": {
-              "$ref": "#/definitions/Posts"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "[완료]게시물이 조회되었습니다",
-            "schema": {
-              "$ref": "#/definitions/Posts"
-            },
+            "description": "[에러]잘못된 요청입니다.",
             "content": {
               "application/json": {},
               "application/xml": {}
@@ -446,100 +475,7 @@
             }
           },
           "500": {
-            "description": "[에러]서버에 문제가 있어 게시물을 생성하지 못했습니다",
-            "content": {
-              "application/json": {},
-              "application/xml": {}
-            }
-          }
-        }
-      },
-      "put": {
-        "tags": [
-          "/posts"
-        ],
-        "description": "특정 게시물을 수정하는 API입니다",
-        "operationId": "updatePost",
-        "parameters": [
-          {
-            "name": "_id",
-            "in": "path",
-            "description": "수정할 게시물의 아이디",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "body",
-            "description": "수정할 게시글의 정보",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/Posts"
-            }
-          }
-        ],
-        "responses": {
-          "201": {
-            "description": "[완료]게시물이 수정되었습니다",
-            "content": {
-              "application/json": {},
-              "application/xml": {}
-            }
-          },
-          "400": {
-            "description": "[에러]게시물이 이미 존재합니다",
-            "content": {
-              "application/json": {},
-              "application/xml": {}
-            }
-          },
-          "404": {
-            "description": "[에러]게시글을 찾을 수 없습니다"
-          },
-          "500": {
-            "description": "[에러]서버에 문제가 있어 게시물을 생성하지 못했습니다",
-            "content": {
-              "application/json": {},
-              "application/xml": {}
-            }
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "/posts"
-        ],
-        "description": "특정 게시물을 삭제하는 API입니다",
-        "operationId": "deletePost",
-        "parameters": [
-          {
-            "name": "_id",
-            "in": "path",
-            "description": "삭제할 게시물의 아이디",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "[완료]게시물이 삭제되었습니다",
-            "content": {
-              "application/json": {},
-              "application/xml": {}
-            }
-          },
-          "400": {
-            "description": "[에러]게시물을 삭제할 수 없습니다",
-            "content": {
-              "application/json": {},
-              "application/xml": {}
-            }
-          },
-          "404": {
-            "description": "[에러]게시글을 찾을 수 없습니다"
-          },
-          "500": {
-            "description": "[에러]서버에 문제가 있어 게시물을 삭제하지 못했습니다",
+            "description": "[에러]서버에 문제가 있어 게시물을 받아오지 못했습니다",
             "content": {
               "application/json": {},
               "application/xml": {}
@@ -574,7 +510,7 @@
         }
       }
     },
-    "Posts": {
+    "task": {
       "type": "object",
       "properties": {
         "_id": {

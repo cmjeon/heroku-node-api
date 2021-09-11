@@ -16,7 +16,7 @@ const list = (req, res) => {
   const taskDate = req.query.taskDate || todayDate;
   // console.log('taskOwnUserId:', taskOwnUserId);
   // console.log('taskDate:', taskDate);
-  db.query(`SELECT TASK_ID, TASK_DATE, DISP_SEQ, SUBJECT, TASK_DESC, STATUS, DUE_DATE, ALARM_DTIME, CRET_DTIME, CRET_ID, MOD_DTIME, MOD_ID FROM TASK_BASE_INFO WHERE TASK_OWN_USER_ID = '${taskOwnUserId}' AND TASK_DATE='${taskDate}'`, (err, tasks) => {
+  db.query(`SELECT TASK_ID, TASK_DATE, DISP_SEQ, SUBJECT, TASK_DESC, STATUS, DUE_DTIME, ALARM_DTIME, CRET_DTIME, CRET_ID, MOD_DTIME, MOD_ID FROM TASK_BASE_INFO WHERE TASK_OWN_USER_ID = '${taskOwnUserId}' AND TASK_DATE='${taskDate}'`, (err, tasks) => {
     if (err) {
       return res.status(500).send('Internal Server Error');
     }
@@ -35,13 +35,14 @@ const show = (req, res) => {
   if (Number.isNaN(taskId)) {
     return res.status(400).end();
   }
-  db.query(`SELECT TASK_ID, TASK_DATE, DISP_SEQ, SUBJECT, TASK_DESC, STATUS, DUE_DATE, ALARM_DTIME, CRET_DTIME, CRET_ID, MOD_DTIME, MOD_ID FROM TASK_BASE_INFO WHERE TASK_OWN_USER_ID = '${taskOwnUserId}' AND TASK_ID='${taskId}'`, (err, tasks) => {
+  db.query(`SELECT TASK_ID, TASK_DATE, DISP_SEQ, SUBJECT, TASK_DESC, STATUS, DUE_DTIME, ALARM_DTIME, CRET_DTIME, CRET_ID, MOD_DTIME, MOD_ID FROM TASK_BASE_INFO WHERE TASK_OWN_USER_ID = '${taskOwnUserId}' AND TASK_ID='${taskId}'`, (err, tasks) => {
     if (err) {
       return res.status(500).send('Internal Server Error');
     }
     let task = tasks[0];
     if (!task) return res.status(404).end();
     res.json(task);
+    res.status(200).end();
   });
 }
 
@@ -73,7 +74,7 @@ const create = (req, res) => {
   const subject = req.body.subject;
   const taskDesc = req.body.taskDesc;
   const status = req.body.status;
-  const dueDate = req.body.dueDate;
+  const dueDtime = req.body.dueDtime;
   const alarmDtime = req.body.alarmDtime;
   // console.log('alarmDtime')
   if (!taskOwnUserId || !taskDate || !subject || !status) {
@@ -84,13 +85,13 @@ const create = (req, res) => {
       return res.status(500).send('Internal Server Error');
     }
     dispSeq = result[0].DISP_SEQ;
-    db.query('INSERT INTO TASK_BASE_INFO (TASK_ID, TASK_DATE, DISP_SEQ, SUBJECT, TASK_DESC, STATUS, DUE_DATE, ALARM_DTIME, CRET_DTIME, CRET_ID, MOD_DTIME, MOD_ID, TASK_OWN_USER_ID) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-      [null, taskDate, dispSeq, subject, taskDesc, status, dueDate, alarmDtime, new Date(), taskOwnUserId, new Date(), taskOwnUserId, taskOwnUserId], (err, result) => {
+    db.query('INSERT INTO TASK_BASE_INFO (TASK_ID, TASK_DATE, DISP_SEQ, SUBJECT, TASK_DESC, STATUS, DUE_DTIME, ALARM_DTIME, CRET_DTIME, CRET_ID, MOD_DTIME, MOD_ID, TASK_OWN_USER_ID) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      [null, taskDate, dispSeq, subject, taskDesc, status, dueDtime, alarmDtime, new Date(), taskOwnUserId, new Date(), taskOwnUserId, taskOwnUserId], (err, result) => {
         if (err) {
           console.log(err);
           return res.status(500).json('Internal Server Error');
         }
-        db.query(`SELECT TASK_ID, TASK_DATE, DISP_SEQ, SUBJECT, TASK_DESC, STATUS, DUE_DATE, ALARM_DTIME, CRET_DTIME, CRET_ID, MOD_DTIME, MOD_ID, TASK_OWN_USER_ID FROM TASK_BASE_INFO WHERE TASK_ID = '${result.insertId}'`, (err, tasks) => {
+        db.query(`SELECT TASK_ID, TASK_DATE, DISP_SEQ, SUBJECT, TASK_DESC, STATUS, DUE_DTIME, ALARM_DTIME, CRET_DTIME, CRET_ID, MOD_DTIME, MOD_ID, TASK_OWN_USER_ID FROM TASK_BASE_INFO WHERE TASK_ID = '${result.insertId}'`, (err, tasks) => {
           if (err) {
             console.log(err);
             return res.status(500).json('Internal Server Error');
@@ -120,9 +121,9 @@ const update = (req, res) => {
   // console.log('subject', subject);
   let taskDesc = req.body.taskDesc;
   let status = req.body.status;
-  let dueDate = req.body.dueDate;
+  let dueDtime = req.body.dueDtime;
   let alarmDtime = req.body.alarmDtime;
-  db.query(`SELECT TASK_ID, TASK_DATE, DISP_SEQ, SUBJECT, TASK_DESC, STATUS, DUE_DATE, ALARM_DTIME, CRET_DTIME, CRET_ID, MOD_DTIME, MOD_ID FROM TASK_BASE_INFO WHERE TASK_ID='${taskId}'`, (err, tasks) => {
+  db.query(`SELECT TASK_ID, TASK_DATE, DISP_SEQ, SUBJECT, TASK_DESC, STATUS, DUE_DTIME, ALARM_DTIME, CRET_DTIME, CRET_ID, MOD_DTIME, MOD_ID FROM TASK_BASE_INFO WHERE TASK_ID='${taskId}'`, (err, tasks) => {
     if (err) {
       return res.status(500).send('Internal Server Error');
     }
@@ -134,17 +135,18 @@ const update = (req, res) => {
     if (subject) task.SUBJECT = subject;
     if (taskDesc) task.TASK_DESC = taskDesc;
     if (status) task.STATUS = status;
-    if (dueDate) task.DUE_DATE = dueDate;
+    if (dueDtime) task.DUE_DTIME = dueDtime;
     if (alarmDtime) task.ALARM_DTIME = alarmDtime;
     // console.log(subject);
-    db.query(`UPDATE TASK_BASE_INFO SET TASK_DATE=?, DISP_SEQ=?, SUBJECT=?, TASK_DESC=?, STATUS=?, DUE_DATE=?, ALARM_DTIME=?, MOD_DTIME=?, MOD_ID=? WHERE TASK_ID = '${taskId}'`,
-      [task.TASK_DATE, task.dispSeq, task.subject, task.taskDesc, task.status, task.dueDate, task.alarmDtime, new Date(), taskOwnUserId], (err, result) => {
+    db.query(`UPDATE TASK_BASE_INFO SET TASK_DATE=?, DISP_SEQ=?, SUBJECT=?, TASK_DESC=?, STATUS=?, DUE_DTIME=?, ALARM_DTIME=?, MOD_DTIME=?, MOD_ID=? WHERE TASK_ID = '${taskId}'`,
+      [task.TASK_DATE, task.DISP_SEQ, task.SUBJECT, task.TASK_DESC, task.STATUS, task.DUE_DTIME, task.ALARM_DTIME, new Date(), taskOwnUserId], (err, result) => {
         // console.log('result:::', result);
         if (err) {
           return res.status(500).send('Internal Server Error');
         }
         // console.log('task', task);
         res.json(task);
+        res.status(200).end();
       });
   });
 }

@@ -248,7 +248,7 @@ const taskspec = () => {
           const taskDate = '2021-08-22';
           const taskDesc = '할일의 설명';
           const status = 'COMPLETED';
-          const dueDate = '2021-08-31';
+          const dueDtime = '2021-08-31';
           const alarmDtime = '2021-08-30 10:00:00';
           before((done) => {
             request(app)
@@ -263,7 +263,7 @@ const taskspec = () => {
                 taskDate: taskDate,
                 taskDesc: taskDesc,
                 status: status,
-                dueDate: dueDate,
+                dueDtime: dueDtime,
                 alarmDtime: alarmDtime
               })
               .end((err, res) => {
@@ -279,7 +279,7 @@ const taskspec = () => {
             body.should.have.property('TASK_DATE', taskDate);
             body.should.have.property('TASK_DESC', taskDesc);
             body.should.have.property('STATUS', status);
-            body.should.have.property('DUE_DATE', dueDate);
+            body.should.have.property('DUE_DTIME', dueDtime);
             body.should.have.property('ALARM_DTIME', alarmDtime);
             done();
           })
