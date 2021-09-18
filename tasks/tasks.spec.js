@@ -18,7 +18,7 @@ const taskspec = () => {
           .end((err, res) => {
             token = res.body.token;
             userId = res.body.user.userId;
-            console.log('TASK /login/login');
+            console.log('TASK /auth/login');
             done();
           });
       });
