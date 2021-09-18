@@ -1,4 +1,4 @@
-var db = require('../mysql/mysql');
+var { db } = require('../mysql/mysql');
 
 const list = (req, res) => {
   req.query.limit = req.query.limit || 10;

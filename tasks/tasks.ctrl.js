@@ -1,4 +1,4 @@
-var db = require('../mysql/mysql');
+var { db } = require('../mysql/mysql');
 // var { getTodayDateWithHypen } = require('../utils/util');
 var { getTodayDateWithHypen } = require('../utils/util.js');
 
