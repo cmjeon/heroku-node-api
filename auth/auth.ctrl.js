@@ -1,4 +1,4 @@
-var { db, db2Promise, connection3 } = require('../mysql/mysql');
+var { db, db2Promise } = require('../mysql/mysql');
 var bcrypt = require('bcrypt');
 var { newToken } = require('../utils/auth.js');
 var { getRandomID } = require('../utils/util.js');
@@ -12,26 +12,17 @@ const saltRounds = 10;
 const login = async (req, res) => {
   const email = req.body.email;
   const pw = req.body.pw;
-  // console.log(email, pw);
-  // console.log('###db2###')
   const [rows, fields, err1] = await db2Promise.execute(`SELECT * FROM USER_BASE_INFO WHERE EMAIL = '${email}'`);
-  // console.log('###db2###', rows);
   if (err1) {
     return res.status(500).json('Internal Server Error');
   }
   const user = rows[0];
-  // console.log('users', user);
   if (!user) {
-    // console.log('dddddd');
     return res.status(401).send('Authentication failed. User not found.');
   }
-  // const [result, err2] = await bcrypt.compare(pw, user.PW);
-  // console.log('result');
-  const match = await bcrypt.compare(pw, user.PW);
-  console.log('match', match);
+  const pwMatch = await bcrypt.compare(pw, user.PW);
 
-  if (match) {
-    // create token with user info
+  if (pwMatch) {
     const token = newToken(user);
 
     // current logged-in user
