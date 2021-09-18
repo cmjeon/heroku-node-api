@@ -1,7 +1,7 @@
 // import swaggerUi from 'swagger-ui-express';
 var swaggerUi = require('swagger-ui-express');
 // import swaggerDocument from './api-spec.json';
-var swaggerDocument = require('./api-spec.json')
+var swaggerDocument = require('./api-spec-1.0.json')
 // import { Router } from 'express';
 // const router = Router();
 const express = require('express');
