@@ -32,7 +32,14 @@ var db = mysql.createConnection({
 서버실행
 
 ```bash
+# 실행
+$ npm start
 
+# 디버그 모드로 실행
+$ npm run debug
+
+# 테스트 케이스 실행
+$ npm test
 ```
 
 ## heroku 에 대해
