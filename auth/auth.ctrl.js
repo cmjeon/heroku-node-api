@@ -12,8 +12,8 @@ const saltRounds = 10;
 const login = async (req, res) => {
   const email = req.body.email;
   const pw = req.body.pw;
-  const [rows, fields, err1] = await db2Promise.execute(`SELECT * FROM USER_BASE_INFO WHERE EMAIL = '${email}'`);
-  if (err1) {
+  const [rows, fields, err] = await db2Promise.execute(`SELECT * FROM USER_BASE_INFO WHERE EMAIL = '${email}'`);
+  if (err) {
     return res.status(500).json('Internal Server Error');
   }
   const user = rows[0];
