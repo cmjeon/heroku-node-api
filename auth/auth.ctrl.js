@@ -1,4 +1,4 @@
-var db = require('../mysql/mysql');
+var { db, db2Promise, connection3 } = require('../mysql/mysql');
 var bcrypt = require('bcrypt');
 var { newToken } = require('../utils/auth.js');
 var { getRandomID } = require('../utils/util.js');
@@ -9,54 +9,49 @@ const index = (req, res) => {
 
 const saltRounds = 10;
 
-const login = (req, res) => {
+const login = async (req, res) => {
   const email = req.body.email;
   const pw = req.body.pw;
   // console.log(email, pw);
-  db.query(`SELECT * FROM USER_BASE_INFO WHERE EMAIL = '${email}'`, (err, users) => {
-    if (err) {
-      return res.status(500).json('Internal Server Error');
-    }
-    const user = users[0];
-    // console.log(users);
-    // non registered user
-    if (!user) {
-      // console.log('dddddd');
-      return res.status(401).send('Authentication failed. User not found.');
-    }
-    // console.log('user:', user);
-    // bcrypt.hash(pw, saltRounds, function(err, hash) {
-    //   console.log(':::::', hash);
-    // });
-    bcrypt.compare(pw, user.PW, (err, result) => {
-      if (err) {
-        // console.log('err????', err)
-        res.status(500).send('Internal Server Error');
-      }
-      if (result) {
-        // create token with user info
-        const token = newToken(user);
+  // console.log('###db2###')
+  const [rows, fields, err1] = await db2Promise.execute(`SELECT * FROM USER_BASE_INFO WHERE EMAIL = '${email}'`);
+  // console.log('###db2###', rows);
+  if (err1) {
+    return res.status(500).json('Internal Server Error');
+  }
+  const user = rows[0];
+  // console.log('users', user);
+  if (!user) {
+    // console.log('dddddd');
+    return res.status(401).send('Authentication failed. User not found.');
+  }
+  // const [result, err2] = await bcrypt.compare(pw, user.PW);
+  // console.log('result');
+  const match = await bcrypt.compare(pw, user.PW);
+  console.log('match', match);
 
-        // current logged-in user
-        const loggedInUser = {
-          userId: user.USER_ID,
-          email: user.EMAIL,
-          name: user.NAME,
-          profile: user.PROFILE
-        };
+  if (match) {
+    // create token with user info
+    const token = newToken(user);
 
-        // return the information including token as JSON
-        res.status(200).json({
-          success: true,
-          user: loggedInUser,
-          message: 'Login Success',
-          token: token,
-        });
-      } else {
-        res.status(401).json('Authentication failed. Wrong password.');
-      }
+    // current logged-in user
+    const loggedInUser = {
+      userId: user.USER_ID,
+      email: user.EMAIL,
+      name: user.NAME,
+      profile: user.PROFILE
+    };
+
+    // return the information including token as JSON
+    res.status(200).json({
+      success: true,
+      user: loggedInUser,
+      message: 'Login Success',
+      token: token,
     });
-  });
+  } else {
+    res.status(401).json('Authentication failed. Wrong password.');
+  }
 }
 
 const logout = (req, res) => {
