@@ -129,7 +129,7 @@ const update = (req, res) => {
     }
     let task = tasks[0];
     if (!task) return res.status(404).end();
-    // console.log('task', task);
+    // console.log('TASK!!!', task);
     if (taskDate) task.TASK_DATE = taskDate;
     if (dispSeq) task.DISP_SEQ = dispSeq;
     if (subject) task.SUBJECT = subject;

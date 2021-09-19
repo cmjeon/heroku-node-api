@@ -241,7 +241,7 @@ const taskspec = () => {
           });
         });
       });
-      describe('PUT /tasks/:taskId', () => {
+      describe('PATCH /tasks/:taskId', () => {
         describe('성공케이스', () => {
           let body;
           const subject = '변경된 할일 제목';
@@ -252,7 +252,7 @@ const taskspec = () => {
           const alarmDtime = '2021-08-30 10:00:00';
           before((done) => {
             request(app)
-              .put('/tasks/65')
+              .patch('/tasks/64')
               .set({
                 'authorization': token,
                 'userid': userId
@@ -287,7 +287,7 @@ const taskspec = () => {
         describe('실패케이스', () => {
           it('정수가 아닌 taskId 일 경우 400 을 반환한다.', (done) => {
             request(app)
-              .put('/tasks/one')
+              .patch('/tasks/one')
               .set({
                 'authorization': token,
                 'userid': userId
@@ -307,7 +307,7 @@ const taskspec = () => {
           // });
           it('없는 taskId 일 경우 404 을 반환한다', (done) => {
             request(app)
-              .put('/tasks/1')
+              .patch('/tasks/1')
               .set({
                 'authorization': token,
                 'userid': userId
