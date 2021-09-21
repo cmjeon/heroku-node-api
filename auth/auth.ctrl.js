@@ -7,16 +7,14 @@ const index = (req, res) => {
   res.json('Auth!');
 }
 
-const saltRounds = 10;
-
 const login = async (req, res) => {
   const email = req.body.email;
   const pw = req.body.pw;
-  const [rows, fields, err] = await db2Promise.execute(`SELECT * FROM USER_BASE_INFO WHERE EMAIL = '${email}'`);
+  const [users, fields, err] = await db2Promise.execute(`SELECT * FROM USER_BASE_INFO WHERE EMAIL = '${email}'`);
   if (err) {
     return res.status(500).json('Internal Server Error');
   }
-  const user = rows[0];
+  const user = users[0];
   if (!user) {
     return res.status(401).send('Authentication failed. User not found.');
   }
@@ -34,14 +32,14 @@ const login = async (req, res) => {
     };
 
     // return the information including token as JSON
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       user: loggedInUser,
       message: 'Login Success',
       token: token,
     });
   } else {
-    res.status(401).json('Authentication failed. Wrong password.');
+    return res.status(401).json('Authentication failed. Wrong password.');
   }
 }
 
@@ -49,55 +47,122 @@ const logout = (req, res) => {
 
 }
 
-const signup = (req, res) => {
+const signup = async (req, res) => {
   const email = req.body.email;
   const name = req.body.name;
   const pw = req.body.pw;
+  const saltRounds = 10;
   let hashedpw;
   const profile = req.body.profile;
   let id = getRandomID(16);
 
-  db.query(`SELECT * FROM USER_BASE_INFO WHERE EMAIL = '${email}'`, (err, users) => {
-    if (err) {
-      return res.status(500).send('Internal Server Error');
-    }
-    const user = users[0];
-    if (user) {
-      res.status(409).json({
-        success: 'true',
-        user: { email: email },
-        message: 'duplEmail'
-      });
-    } else {
-      bcrypt.hash(pw, saltRounds, function (err, _hashedpw) {
-        hashedpw = _hashedpw;
-        // console.log(email, pw);
+  const [result1, fields1, err1] = await db2Promise.query(`SELECT * FROM USER_BASE_INFO WHERE EMAIL = '${email}'`);
+  if (err1) {
+    return res.status(500).send('Internal Server Error');
+  }
+  const user1 = result1[0];
+  // console.log('user1', user1);
+  if (user1) {
+    return res.status(409).json({
+      success: 'true',
+      user: { email: email },
+      message: 'duplEmail'
+    }).end();
+  }
+  // console.log('dddddd3');
+  const _hashedpw = await bcrypt.hash(pw, saltRounds);
+  // console.log('_hashedpw', _hashedpw)
+  hashedpw = _hashedpw;
+  // console.log('dddddd4');
+  // console.log('dddddd5');
+  const [result, err2] = await db2Promise.execute('INSERT INTO USER_BASE_INFO (USER_ID, EMAIL, NAME, PW, PROFILE, CRET_DTIME, CRET_ID, MOD_DTIME, MOD_ID) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+    [id, email, name, hashedpw, profile, new Date(), id, new Date(), id]);
+  // console.log('result', result)
+  if (err2) {
+    console.log(err2);
+    return res.status(500).json('Internal Server Error');
+  }
+  // console.log('dddddd6');
 
-        db.query('INSERT INTO USER_BASE_INFO (USER_ID, EMAIL, NAME, PW, PROFILE, CRET_DTIME, CRET_ID, MOD_DTIME, MOD_ID) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-          [id, email, name, hashedpw, profile, new Date(), id, new Date(), id], (err, result) => {
-            // id = results.insertId;
-            if (err) {
-              console.log(err);
-              return res.status(500).json('Internal Server Error');
-            }
-            // console.log(id);
-            db.query(`SELECT USER_ID, EMAIL, NAME, PROFILE FROM USER_BASE_INFO WHERE USER_ID = '${id}'`, (err, users) => {
-              // console.log(err);
-              const user = users[0];
-              if (!user) return res.status(404).end();
-              res.status(201).json({
-                success: 'true',
-                user: user,
-                message: 'Signup Success'
-              });
+  const [result3, fields3, err3] = await db2Promise.query(`SELECT USER_ID, EMAIL, NAME, PROFILE FROM USER_BASE_INFO WHERE USER_ID = '${id}'`);
+  // console.log('dddddd7');
+  const user = result3[0];
+  // console.log(user);
+  if (!user) return res.status(404).end();
+  return res.status(201).json({
+    success: 'true',
+    user: user,
+    message: 'Signup Success'
+  });
+
+}
+/*
+const email = req.body.email;
+const name = req.body.name;
+const pw = req.body.pw;
+let hashedpw;
+const profile = req.body.profile;
+let id = getRandomID(16);
+
+db.query(`SELECT * FROM USER_BASE_INFO WHERE EMAIL = '${email}'`, (err, users) => {
+  if (err) {
+    return res.status(500).send('Internal Server Error');
+  }
+  const user = users[0];
+  if (user) {
+    res.status(409).json({
+      success: 'true',
+      user: { email: email },
+      message: 'duplEmail'
+    });
+  } else {
+    bcrypt.hash(pw, saltRounds, function (err, _hashedpw) {
+      hashedpw = _hashedpw;
+      // console.log(email, pw);
+
+      db.query('INSERT INTO USER_BASE_INFO (USER_ID, EMAIL, NAME, PW, PROFILE, CRET_DTIME, CRET_ID, MOD_DTIME, MOD_ID) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        [id, email, name, hashedpw, profile, new Date(), id, new Date(), id], (err, result) => {
+          // id = results.insertId;
+          if (err) {
+            console.log(err);
+            return res.status(500).json('Internal Server Error');
+          }
+          // console.log(id);
+          db.query(`SELECT USER_ID, EMAIL, NAME, PROFILE FROM USER_BASE_INFO WHERE USER_ID = '${id}'`, (err, users) => {
+            // console.log(err);
+            const user = users[0];
+            if (!user) return res.status(404).end();
+            res.status(201).json({
+              success: 'true',
+              user: user,
+              message: 'Signup Success'
             });
           });
-      });
-    }
-  });
-}
+        });
+    });
+  }
+});
+*/
 
-const checkDuplEmail = (req, res) => {
+const checkDuplEmail = async (req, res) => {
+  let success, message, result;
+  const email = req.body.email;
+  const [result1, fields1, err1] = await db2Promise.query(`SELECT * FROM USER_BASE_INFO WHERE EMAIL = '${email}'`);
+  if (err1) {
+    return res.status(500).send('Internal Server Error');
+  }
+  const user = result1[0];
+  if (user) {
+    success = 'true';
+    message = 'duplEmail';
+    result = {
+      success: success,
+      message: message,
+      user: { email: email },
+    };
+    return res.status(200).json(result);
+  }
+  /*
   let success, message, result;
   const email = req.body.email;
   db.query(`SELECT * FROM USER_BASE_INFO WHERE EMAIL = '${email}'`, (err, users) => {
@@ -116,6 +181,7 @@ const checkDuplEmail = (req, res) => {
       res.status(200).json(result);
     }
   });
+  */
 }
 
 module.exports = {
