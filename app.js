@@ -8,6 +8,7 @@ const morgan = require('morgan');
 const auth = require('./auth/index');
 const users = require('./users/index');
 const tasks = require('./tasks/index');
+const weathers = require('./weathers/index');
 const docs = require('./docs/api-doc.js');
 
 const { authenticateUser } = require('./utils/auth');
@@ -27,6 +28,7 @@ app.get('/', function (req, res) {
 app.use('/auth', auth);
 app.use('/users', authenticateUser, users);
 app.use('/tasks', authenticateUser, tasks);
+app.use('/weathers', weathers);
 // app.use('/users', users);
 // app.use('/api', docs);
 app.use('/docs', docs);

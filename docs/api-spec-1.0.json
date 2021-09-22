@@ -483,6 +483,101 @@
           }
         }
       }
+    },
+    "/weathers": {
+      "get": {
+        "tags": [
+          "/weathers"
+        ],
+        "description": "날씨를 조회하는 API입니다",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "lat",
+            "in": "path",
+            "description": "latitude",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "lon",
+            "in": "path",
+            "description": "longitude",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "appid",
+            "in": "path",
+            "description": "appid",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "mode",
+            "in": "path",
+            "description": "mode",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "units",
+            "in": "path",
+            "description": "units",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "lang",
+            "in": "path",
+            "description": "lang",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "[완료]날씨가 조회되었습니다",
+            "content": {
+              "application/json": {},
+              "application/xml": {}
+            }
+          },
+          "400": {
+            "description": "[에러]잘못된 요청입니다",
+            "content": {
+              "application/json": {},
+              "application/xml": {}
+            }
+          },
+          "401": {
+            "description": "[에러]인증 토큰이 유효하지 않아 날씨저오를 받아올 수 없습니다",
+            "content": {
+              "application/json": {},
+              "application/xml": {}
+            }
+          },
+          "404": {
+            "description": "[에러]리소스를 찾을 수 없습니다",
+            "content": {
+              "application/json": {},
+              "application/xml": {}
+            }
+          },
+          "500": {
+            "description": "[에러]서버에 문제가 있어 날씨를 조회하지 못했습니다",
+            "content": {
+              "application/json": {},
+              "application/xml": {}
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {

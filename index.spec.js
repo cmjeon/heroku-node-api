@@ -4,6 +4,7 @@ const should = require('should');
 const usersspec = require('./users/users.spec');
 const authspec = require('./auth/auth.spec');
 const tasksspec = require('./tasks/tasks.spec');
+const weathersspec = require('./weathers/weathers.spec');
 const { getNowTime } = require('./utils/util');
 
 // before(function () {
@@ -27,6 +28,7 @@ describe("ROOT", function () {
 usersspec();
 authspec();
 tasksspec();
+weathersspec();
 
 let nowDate = getNowTime();
 
