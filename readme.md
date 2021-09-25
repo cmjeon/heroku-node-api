@@ -53,6 +53,10 @@ $ npm test
     ```bash
     $ git checkout master 
     ```
+1. merge main
+    ```bash
+    $ git merge --no-ff main
+    ```
 1. master push
     ```bash
     $ git push heroku master
