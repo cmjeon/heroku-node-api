@@ -42,6 +42,22 @@ $ npm run debug
 $ npm test
 ```
 
+## heroku push 방법
+
+1. main branch 소스수정
+1. main branch push
+    ```bash
+    $ git push main
+    ```
+1. master checkout
+    ```bash
+    $ git checkout master 
+    ```
+1. master push
+    ```bash
+    $ git push heroku master
+    ```
+
 ## heroku 에 대해
 
 https://enigmatic-falls-66086.herokuapp.com/
