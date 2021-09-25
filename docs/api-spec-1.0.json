@@ -499,42 +499,42 @@
         "parameters": [
           {
             "name": "lat",
-            "in": "path",
+            "in": "query",
             "description": "latitude",
             "required": true,
             "type": "string"
           },
           {
             "name": "lon",
-            "in": "path",
+            "in": "query",
             "description": "longitude",
             "required": true,
             "type": "string"
           },
           {
             "name": "appid",
-            "in": "path",
+            "in": "query",
             "description": "appid",
             "required": true,
             "type": "string"
           },
           {
             "name": "mode",
-            "in": "path",
+            "in": "query",
             "description": "mode",
             "required": false,
             "type": "string"
           },
           {
             "name": "units",
-            "in": "path",
+            "in": "query",
             "description": "units",
             "required": false,
             "type": "string"
           },
           {
             "name": "lang",
-            "in": "path",
+            "in": "query",
             "description": "lang",
             "required": false,
             "type": "string"
