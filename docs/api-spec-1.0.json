@@ -484,7 +484,7 @@
         }
       }
     },
-    "/weathers": {
+    "/weathers/current": {
       "get": {
         "tags": [
           "/weathers"
