@@ -3,7 +3,7 @@ const request = require('supertest');
 
 const weatherspec = () => {
   return (
-    describe.only('WEATHER', () => {
+    describe('WEATHER', () => {
       describe('GET /weathers', () => {
         describe('성공케이스', () => {
           it('Weather! 를 반환한다', (done) => { // done
