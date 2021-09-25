@@ -1,3 +1,5 @@
+const https = require('https');
+
 const index = (req, res) => {
   res.json('Weather!');
 }
@@ -24,6 +26,50 @@ const list = (req, res) => {
   });
 }
 
+const current = (req, res) => {
+  let lat = req.query.lat;
+  let lon = req.query.lon;
+  let appid = req.query.appid;
+  let mode = req.query.mode;
+  let units = req.query.units;
+  let lang = req.query.lang;
+
+  let qs = `lat=${lat}&lon=${lon}&appid=${appid}`;
+
+  if (mode) qs += `&mode=${mode}`;
+  if (units) qs += `&units=${units}`;
+  if (lang) qs += `&lang=${lang}`;
+
+  const options = {
+    hostname: 'api.openweathermap.org',
+    port: 443,
+    path: `/data/2.5/weather?${qs}`,
+    method: 'GET'
+  }
+
+  https.get(options, res2 => {
+    console.log(`statusCode: ${res2.statusCode}`);
+    let data = '';
+    res2.on('data', (chunk) => {
+      data += chunk;
+    });
+    res2.on('end', () => {
+      // console.log('data', data);
+      // console.log(JSON.parse(data).explanation);
+      res.json(JSON.parse(data));
+      res.status(200).end();
+    });
+
+    // console.log('RES2', res2);
+    // res.json(res2.data);
+  }).on("error", (err) => {
+    console.log("Error: " + err.message);
+  });
+  // req2.end();
+  // res.status(200).end();
+}
+
 module.exports = {
   index,
+  current
 }

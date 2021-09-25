@@ -556,7 +556,7 @@
             }
           },
           "401": {
-            "description": "[에러]인증 토큰이 유효하지 않아 날씨저오를 받아올 수 없습니다",
+            "description": "[에러]인증 토큰이 유효하지 않아 날씨정보를 받아올 수 없습니다",
             "content": {
               "application/json": {},
               "application/xml": {}
