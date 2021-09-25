@@ -39,16 +39,17 @@ const current = (req, res) => {
   if (mode) qs += `&mode=${mode}`;
   if (units) qs += `&units=${units}`;
   if (lang) qs += `&lang=${lang}`;
-
+  let path = `/data/2.5/weather?${qs}`;
+  // console.log('PATH', path);
   const options = {
     hostname: 'api.openweathermap.org',
     port: 443,
-    path: `/data/2.5/weather?${qs}`,
+    path: path,
     method: 'GET'
   }
 
   https.get(options, res2 => {
-    console.log(`statusCode: ${res2.statusCode}`);
+    // console.log(`statusCode: ${res2.statusCode}`);
     let data = '';
     res2.on('data', (chunk) => {
       data += chunk;

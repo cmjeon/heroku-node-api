@@ -27,8 +27,8 @@ const weatherspec = () => {
               .query({ lat: lat, lon: lon, appid: appid })
               .end((err, res) => {
                 // console.log('RES!!!', res.body);
-                res.body.coord.should.have.property('lat', 37.4954);
-                res.body.coord.should.have.property('lon', 127.029);
+                res.body.should.have.property('cod', 200);
+                res.body.should.have.property('id', 1846735);
                 done();
               });
           });
