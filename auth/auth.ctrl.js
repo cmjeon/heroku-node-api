@@ -10,11 +10,14 @@ const index = (req, res) => {
 const login = async (req, res) => {
   const email = req.body.email;
   const pw = req.body.pw;
-  const [users, fields, err] = await db2Promise.execute(`SELECT * FROM USER_BASE_INFO WHERE EMAIL = '${email}'`);
-  if (err) {
+  const executeResult = await db2Promise.execute(`SELECT * FROM USER_BASE_INFO WHERE EMAIL = '${email}'`);
+  const rows1 = executeResult[0];
+  const defs1 = executeResult[1];
+  const err1 = executeResult[2];
+  if (err1) {
     return res.status(500).json('Internal Server Error');
   }
-  const user = users[0];
+  const user = rows1[0];
   if (!user) {
     return res.status(401).send('Authentication failed. User not found.');
   }
@@ -56,11 +59,14 @@ const signup = async (req, res) => {
   const profile = req.body.profile;
   let id = getRandomID(16);
 
-  const [result1, fields1, err1] = await db2Promise.query(`SELECT * FROM USER_BASE_INFO WHERE EMAIL = '${email}'`);
+  const queryResult1 = await db2Promise.query(`SELECT * FROM USER_BASE_INFO WHERE EMAIL = '${email}'`);
+  const rows1 = queryResult1[0];
+  const defs1 = queryResult1[1];
+  const err1 = queryResult1[2];
   if (err1) {
     return res.status(500).send('Internal Server Error');
   }
-  const user1 = result1[0];
+  const user1 = rows1[0];
   // console.log('user1', user1);
   if (user1) {
     return res.status(409).json({
@@ -75,18 +81,26 @@ const signup = async (req, res) => {
   hashedpw = _hashedpw;
   // console.log('dddddd4');
   // console.log('dddddd5');
-  const [result, err2] = await db2Promise.execute('INSERT INTO USER_BASE_INFO (USER_ID, EMAIL, NAME, PW, PROFILE, CRET_DTIME, CRET_ID, MOD_DTIME, MOD_ID) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+  const excuteResult = await db2Promise.execute('INSERT INTO USER_BASE_INFO (USER_ID, EMAIL, NAME, PW, PROFILE, CRET_DTIME, CRET_ID, MOD_DTIME, MOD_ID) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?)',
     [id, email, name, hashedpw, profile, new Date(), id, new Date(), id]);
   // console.log('result', result)
+  const rows2 = excuteResult[0];
+  const err2 = excuteResult[1];
   if (err2) {
     console.log(err2);
     return res.status(500).json('Internal Server Error');
   }
   // console.log('dddddd6');
 
-  const [result3, fields3, err3] = await db2Promise.query(`SELECT USER_ID, EMAIL, NAME, PROFILE FROM USER_BASE_INFO WHERE USER_ID = '${id}'`);
+  const queryResult2 = await db2Promise.query(`SELECT USER_ID, EMAIL, NAME, PROFILE FROM USER_BASE_INFO WHERE USER_ID = '${id}'`);
   // console.log('dddddd7');
-  const user = result3[0];
+  const rows3 = queryResult2[0];
+  const defs3 = queryResult2[1];
+  const err3 = queryResult2[2];
+  if (err3) {
+    return res.status(500).send('Internal Server Error');
+  }
+  const user = rows3[0];
   // console.log(user);
   if (!user) return res.status(404).end();
   return res.status(201).json({
@@ -147,11 +161,14 @@ db.query(`SELECT * FROM USER_BASE_INFO WHERE EMAIL = '${email}'`, (err, users) =
 const checkDuplEmail = async (req, res) => {
   let success, message, result;
   const email = req.body.email;
-  const [result1, fields1, err1] = await db2Promise.query(`SELECT * FROM USER_BASE_INFO WHERE EMAIL = '${email}'`);
+  const queryResult1 = await db2Promise.query(`SELECT * FROM USER_BASE_INFO WHERE EMAIL = '${email}'`);
+  const rows1 = queryResult1[0];
+  const defs1 = queryResult1[1];
+  const err1 = queryResult1[2];
   if (err1) {
     return res.status(500).send('Internal Server Error');
   }
-  const user = result1[0];
+  const user = rows1[0];
   if (user) {
     success = 'true';
     message = 'duplEmail';
