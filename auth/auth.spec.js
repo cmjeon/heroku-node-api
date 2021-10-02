@@ -5,7 +5,7 @@ const { getRandomEmail } = require('../utils/util.js');
 
 const loginspec = () => {
   return (
-    describe.only('LOGIN', () => {
+    describe('LOGIN', () => {
       describe('GET /auth', () => {
         describe('성공케이스', () => {
           it('Auth! 를 반환한다', (done) => { // done
