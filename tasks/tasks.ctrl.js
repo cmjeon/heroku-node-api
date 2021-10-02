@@ -1,9 +1,8 @@
-var { db } = require('../mysql/mysql');
+var { db, db2Promise } = require('../mysql/mysql');
 // var { getTodayDateWithHypen } = require('../utils/util');
 var { getTodayDateWithHypen } = require('../utils/util.js');
 
-const list = (req, res) => {
-  // console.log(req.headers);
+const list = async (req, res) => {
   if (!req.headers.userid) {
     return res.status(403).end();
   }
@@ -14,18 +13,24 @@ const list = (req, res) => {
     if (!req.query.taskDate.match(dateReg)) return res.status(400).end();
   }
   const taskDate = req.query.taskDate || todayDate;
-  // console.log('taskOwnUserId:', taskOwnUserId);
-  // console.log('taskDate:', taskDate);
-  db.query(`SELECT TASK_ID, TASK_DATE, DISP_SEQ, SUBJECT, TASK_DESC, STATUS, DUE_DTIME, ALARM_DTIME, CRET_DTIME, CRET_ID, MOD_DTIME, MOD_ID FROM TASK_BASE_INFO WHERE TASK_OWN_USER_ID = '${taskOwnUserId}' AND TASK_DATE='${taskDate}'`, (err, tasks) => {
-    if (err) {
-      return res.status(500).send('Internal Server Error');
-    }
-    res.json(tasks);
-    res.status(200).end();
-  });
+
+  const [rows1, defs1, err1] = await db2Promise.query(`SELECT TASK_ID, TASK_DATE, DISP_SEQ, SUBJECT, TASK_DESC, STATUS, DUE_DTIME, ALARM_DTIME, CRET_DTIME, CRET_ID, MOD_DTIME, MOD_ID FROM TASK_BASE_INFO WHERE TASK_OWN_USER_ID = '${taskOwnUserId}' AND TASK_DATE='${taskDate}'`);
+
+  if (err1) {
+    return res.status(500).send('Internal Server Error');
+  }
+  res.json(rows1);
+  res.status(200).end();
+  // db.query(`SELECT TASK_ID, TASK_DATE, DISP_SEQ, SUBJECT, TASK_DESC, STATUS, DUE_DTIME, ALARM_DTIME, CRET_DTIME, CRET_ID, MOD_DTIME, MOD_ID FROM TASK_BASE_INFO WHERE TASK_OWN_USER_ID = '${taskOwnUserId}' AND TASK_DATE='${taskDate}'`, (err, tasks) => {
+  //   if (err) {
+  //     return res.status(500).send('Internal Server Error');
+  //   }
+  //   res.json(tasks);
+  //   res.status(200).end();
+  // });
 }
 
-const show = (req, res) => {
+const show = async (req, res) => {
   if (!req.headers.userid) {
     return res.status(403).end();
   }
@@ -35,18 +40,26 @@ const show = (req, res) => {
   if (Number.isNaN(taskId)) {
     return res.status(400).end();
   }
-  db.query(`SELECT TASK_ID, TASK_DATE, DISP_SEQ, SUBJECT, TASK_DESC, STATUS, DUE_DTIME, ALARM_DTIME, CRET_DTIME, CRET_ID, MOD_DTIME, MOD_ID FROM TASK_BASE_INFO WHERE TASK_OWN_USER_ID = '${taskOwnUserId}' AND TASK_ID='${taskId}'`, (err, tasks) => {
-    if (err) {
-      return res.status(500).send('Internal Server Error');
-    }
-    let task = tasks[0];
-    if (!task) return res.status(404).end();
-    res.json(task);
-    res.status(200).end();
-  });
+  const [rows1, defs1, err1] = await db2Promise.query(`SELECT TASK_ID, TASK_DATE, DISP_SEQ, SUBJECT, TASK_DESC, STATUS, DUE_DTIME, ALARM_DTIME, CRET_DTIME, CRET_ID, MOD_DTIME, MOD_ID FROM TASK_BASE_INFO WHERE TASK_OWN_USER_ID = '${taskOwnUserId}' AND TASK_ID='${taskId}'`);
+  if (err1) {
+    return res.status(500).send('Internal Server Error');
+  }
+  let task = rows1[0];
+  if (!task) return res.status(404).end();
+  res.json(task);
+  res.status(200).end();
+  // db.query(`SELECT TASK_ID, TASK_DATE, DISP_SEQ, SUBJECT, TASK_DESC, STATUS, DUE_DTIME, ALARM_DTIME, CRET_DTIME, CRET_ID, MOD_DTIME, MOD_ID FROM TASK_BASE_INFO WHERE TASK_OWN_USER_ID = '${taskOwnUserId}' AND TASK_ID='${taskId}'`, (err, tasks) => {
+  //   if (err) {
+  //     return res.status(500).send('Internal Server Error');
+  //   }
+  //   let task = tasks[0];
+  //   if (!task) return res.status(404).end();
+  //   res.json(task);
+  //   res.status(200).end();
+  // });
 }
 
-const destroy = (req, res) => {
+const destroy = async (req, res) => {
   if (!req.headers.userid) {
     return res.status(403).end();
   }
@@ -55,13 +68,19 @@ const destroy = (req, res) => {
   if (Number.isNaN(taskId)) {
     return res.status(400).end();
   }
-  db.query(`DELETE FROM TASK_BASE_INFO WHERE TASK_OWN_USER_ID = '${taskOwnUserId}' AND TASK_ID='${taskId}'`, (err, result) => {
-    if (err) {
-      return res.status(500).send('Internal Server Error');
-    }
-    // console.log(result);
-    res.status(204).end();
-  });
+
+  const [rows1, defs1, err1] = await db2Promise.query(`DELETE FROM TASK_BASE_INFO WHERE TASK_OWN_USER_ID = '${taskOwnUserId}' AND TASK_ID='${taskId}'`);
+  if (err1) {
+    return res.status(500).send('Internal Server Error');
+  }
+  res.status(204).end();
+  // db.query(`DELETE FROM TASK_BASE_INFO WHERE TASK_OWN_USER_ID = '${taskOwnUserId}' AND TASK_ID='${taskId}'`, (err, result) => {
+  //   if (err) {
+  //     return res.status(500).send('Internal Server Error');
+  //   }
+  //   // console.log(result);
+  //   res.status(204).end();
+  // });
 }
 
 const create = (req, res) => {
