@@ -1,4 +1,5 @@
 const https = require('https');
+var { APIID_OPENWEATHER } = require('../config');
 
 const index = (req, res) => {
   res.json('Weather!');
@@ -29,7 +30,8 @@ const list = (req, res) => {
 const current = (req, res) => {
   let lat = req.query.lat;
   let lon = req.query.lon;
-  let appid = req.query.appid;
+  // let appid = req.query.appid;
+  const appid = APIID_OPENWEATHER;
   let mode = req.query.mode;
   let units = req.query.units;
   let lang = req.query.lang;

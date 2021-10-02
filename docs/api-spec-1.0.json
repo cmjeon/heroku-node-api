@@ -512,13 +512,6 @@
             "type": "string"
           },
           {
-            "name": "appid",
-            "in": "query",
-            "description": "appid",
-            "required": true,
-            "type": "string"
-          },
-          {
             "name": "mode",
             "in": "query",
             "description": "mode",

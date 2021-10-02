@@ -21,10 +21,10 @@ const weatherspec = () => {
           it('오늘의 날씨 객체를 반환한다', (done) => {
             let lat = '37.4954';
             let lon = '127.029';
-            let appid = '363b9090b9fee032857eb62d43b83921';
+            // let appid = '363b9090b9fee032857eb62d43b83921';
             request(app)
               .get('/weathers/current')
-              .query({ lat: lat, lon: lon, appid: appid })
+              .query({ lat: lat, lon: lon })
               .end((err, res) => {
                 // console.log('RES!!!', res.body);
                 res.body.should.have.property('cod', 200);
