@@ -6,7 +6,7 @@
 # push to github
 $ git push origin main
 
-# heroku 실행
+# push to heroku
 $ git push heroku master
 
 # 로그보기
@@ -17,29 +17,30 @@ $ heroku logs --tail
 
 ### 데이터베이스 설정
 
-mysql/mysql 에 적절한 설정 추가
+mysql/config.js 에 DB 설정 추가
 
 ```js
+// config.js
 var db = mysql.createConnection({
   host : 'sampelhost.com',
-  port : '3306',
+  port : '5555',
   user : 'sample-user',
   password : 'sample',
   database : 'sample-db'
 });
 ```
 
-서버실행
+### 서비스 실행
 
 ```bash
-# 실행
-$ npm start
+# 테스트 모드로 실행
+$ npm test
 
 # 디버그 모드로 실행
 $ npm run debug
 
-# 테스트 케이스 실행
-$ npm test
+# 프로덕션 모드로 실행
+$ npm start
 ```
 
 ## heroku push 방법
