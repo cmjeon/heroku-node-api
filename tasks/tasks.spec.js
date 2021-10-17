@@ -5,11 +5,11 @@ const { getTodayDateWithHypen } = require('../utils/util.js');
 
 const taskspec = () => {
   return (
-    describe.only('TASK', () => {
+    describe('TASK', () => {
       // login 처리
       let token;
       let userId;
-      let taskId;
+      // let taskId;
       before(async () => {
         const res = await request(app)
           .post('/auth/login')
@@ -154,6 +154,7 @@ const taskspec = () => {
           it('할일등록에 성공하면 할일 객체를 반환한다', async () => { // done
             body.task.should.have.property('TASK_ID');
             body.task.TASK_ID.should.be.equal(taskId)
+            body.task.should.have.property('SUBJECT', subject);
           });
         })
       });
@@ -266,13 +267,13 @@ const taskspec = () => {
               .expect(400)
               .end(done);
           });
-          // it('name 이 없을 경우 400을 반환한다', (done) => {
-          //   request(app)
-          //     .put('/tasks/1')
-          //     .send({})
-          //     .expect(400)
-          //     .end(done);
-          // });
+          it('authorization 이 없을 경우 400을 반환한다', (done) => {
+            request(app)
+              .patch('/tasks/${taskId}')
+              .send({})
+              .expect(401)
+              .end(done);
+          });
           it('없는 taskId 일 경우 404 을 반환한다', (done) => {
             request(app)
               .patch('/tasks/1')
@@ -286,13 +287,6 @@ const taskspec = () => {
               .expect(404)
               .end(done);
           });
-          // it('이름이 중복일 경우 409 을 반환한다', (done) => {
-          //   request(app)
-          //     .put('/tasks/3')
-          //     .send({ name: 'beck' })
-          //     .expect(409)
-          //     .end(done);
-          // });
         })
       });
     })

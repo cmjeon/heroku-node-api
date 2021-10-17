@@ -17,13 +17,13 @@ const list = async (req, res) => {
     const [rows1, defs1, err1] = await db2Promise.query(`SELECT TASK_ID, TASK_DATE, DISP_SEQ, SUBJECT, TASK_DESC, STATUS, DUE_DTIME, ALARM_DTIME, CRET_DTIME, CRET_ID, MOD_DTIME, MOD_ID FROM TASK_BASE_INFO WHERE TASK_OWN_USER_ID = '${taskOwnUserId}' AND TASK_DATE='${taskDate}'`);
 
     if (err1) {
-      res.status(500).send('Internal Server Error');
+      return res.status(500).send('Internal Server Error');
     }
     res.json(rows1);
-    res.status(200).end();
+    return res.status(200).end();
   } catch (err) {
     console.log('### SQL ERROR ###\n', err, '\n### SQL ERROR ###');
-    res.status(500).send('Internal Server Error');
+    return res.status(500).send('Internal Server Error');
   }
 }
 
@@ -45,10 +45,10 @@ const show = async (req, res) => {
     let task = rows1[0];
     if (!task) return res.status(404).end();
     res.json(task);
-    res.status(200).end();
+    return res.status(200).end();
   } catch (err) {
     console.log('### SQL ERROR ###\n', err, '\n### SQL ERROR ###');
-    res.status(500).send('Internal Server Error');
+    return res.status(500).send('Internal Server Error');
   }
 }
 
@@ -65,12 +65,12 @@ const destroy = async (req, res) => {
   try {
     const [rows1, defs1, err1] = await db2Promise.query(`DELETE FROM TASK_BASE_INFO WHERE TASK_OWN_USER_ID = '${taskOwnUserId}' AND TASK_ID='${taskId}'`);
     if (err1) {
-      res.status(500).send('Internal Server Error');
+      return res.status(500).send('Internal Server Error');
     }
-    res.status(204).end();
+    return res.status(204).end();
   } catch (err) {
     console.log('### SQL ERROR ###\n', err, '\n### SQL ERROR ###');
-    res.status(500).send('Internal Server Error');
+    return res.status(500).send('Internal Server Error');
   }
 }
 
@@ -87,13 +87,13 @@ const create = async (req, res) => {
   const dueDtime = req.body.dueDtime ? req.body.dueDtime : null;
   const alarmDtime = req.body.alarmDtime ? req.body.dueDtime : null;
   if (!taskOwnUserId || !taskDate || !subject || !status) {
-    res.status(400).end();
+    return res.status(400).end();
   }
 
   try {
     const [rows1, defs1, err1] = await db2Promise.query(`SELECT IFNULL(MAX(DISP_SEQ) + 1, 1) AS DISP_SEQ FROM TASK_BASE_INFO WHERE TASK_OWN_USER_ID = '${taskOwnUserId}' AND TASK_DATE = '${taskDate}'`);
     if (err1) {
-      res.status(500).send('Internal Server Error');
+      return res.status(500).send('Internal Server Error');
     }
     dispSeq = rows1[0].DISP_SEQ;
     const excuteResult2 = await db2Promise.execute('INSERT INTO TASK_BASE_INFO (TASK_DATE, DISP_SEQ, SUBJECT, TASK_DESC, STATUS, DUE_DTIME, ALARM_DTIME, CRET_DTIME, CRET_ID, MOD_DTIME, MOD_ID, TASK_OWN_USER_ID) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
@@ -102,7 +102,7 @@ const create = async (req, res) => {
     const err2 = excuteResult2[1];
     const insertId = excuteResult2[0].insertId;
     if (err2) {
-      res.status(500).json('Internal Server Error');
+      return res.status(500).json('Internal Server Error');
     }
 
     const queryResult2 = await db2Promise.query(`SELECT TASK_ID, TASK_DATE, DISP_SEQ, SUBJECT, TASK_DESC, STATUS, DUE_DTIME, ALARM_DTIME, CRET_DTIME, CRET_ID, MOD_DTIME, MOD_ID, TASK_OWN_USER_ID FROM TASK_BASE_INFO WHERE TASK_ID = '${insertId}'`);
@@ -110,19 +110,19 @@ const create = async (req, res) => {
     const defs3 = queryResult2[1];
     const err3 = queryResult2[2];
     if (err3) {
-      res.status(500).json('Internal Server Error');
+      return res.status(500).json('Internal Server Error');
     }
     const task = tasks3[0];
     if (!task) return res.status(404).end();
 
-    res.status(201).json({
+    return res.status(201).json({
       success: 'true',
       task: task,
       message: 'Success'
     });
   } catch (err) {
     console.log('### SQL ERROR ###\n', err, '\n### SQL ERROR ###');
-    res.status(500).json('Internal Server Error');
+    return res.status(500).json('Internal Server Error');
   }
 }
 
@@ -149,7 +149,7 @@ const update = async (req, res) => {
     const err1 = queryResult1[2];
 
     if (err1) {
-      res.status(500).send('Internal Server Error');
+      return res.status(500).send('Internal Server Error');
     }
     let task = tasks1[0];
     if (!task) return res.status(404).end();
@@ -168,14 +168,14 @@ const update = async (req, res) => {
     const result2 = excuteResult1[0];
     const err2 = excuteResult1[1];
     if (err2) {
-      res.status(500).send('Internal Server Error');
+      return res.status(500).send('Internal Server Error');
     }
     // console.log('modified task', task);
     res.json(task);
-    res.status(200).end();
+    return res.status(200).end();
   } catch (err) {
     console.log('### SQL ERROR ###\n', err, '\n### SQL ERROR ###');
-    res.status(500).json('Internal Server Error');
+    return res.status(500).json('Internal Server Error');
   }
 }
 
