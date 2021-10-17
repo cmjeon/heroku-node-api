@@ -3,7 +3,7 @@
 var jwt = require('jsonwebtoken');
 // import { SECRET_KEY, EXPIRATION_DATE } from '../config';
 var { SECRET_KEY, EXPIRATION_DATE } = require('../config');
-var { db } = require('../mysql/mysql');// 
+var { db, db2Promise } = require('../mysql/mysql');// 
 
 // modules
 // import UserModel from '../models/UserModel.js';
@@ -41,8 +41,9 @@ const authenticateUser = async (req, res, next) => {
     return res.status(401).json({ message: 'token is invalid' });
   }
 
-  const user = db.query(`SELECT * FROM USER_BASE_INFO WHERE USER_ID = '${payload.userid}'`);
-
+  const result = await db2Promise.query(`SELECT * FROM USER_BASE_INFO WHERE USER_ID = '${payload.userid}'`);
+  const user = result[0][0];
+  // console.log('user ### ', user)
   // const user = await UserModel.findById(payload._id)
   //   .select('-password')
   //   .lean()
