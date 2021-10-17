@@ -33,5 +33,5 @@ weathersspec();
 let nowDate = getNowTime();
 
 after(function () {
-  console.log("###### Test ends when :", nowDate, "######");
+  console.log("### Test ends when :", nowDate, "###");
 });
