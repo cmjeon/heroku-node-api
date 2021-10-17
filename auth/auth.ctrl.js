@@ -10,39 +10,45 @@ const index = (req, res) => {
 const login = async (req, res) => {
   const email = req.body.email;
   const pw = req.body.pw;
-  const executeResult = await db2Promise.execute(`SELECT * FROM USER_BASE_INFO WHERE EMAIL = '${email}'`);
-  const rows1 = executeResult[0];
-  const defs1 = executeResult[1];
-  const err1 = executeResult[2];
-  if (err1) {
-    return res.status(500).json('Internal Server Error');
-  }
-  const user = rows1[0];
-  if (!user) {
-    return res.status(401).send('Authentication failed. User not found.');
-  }
-  const pwMatch = await bcrypt.compare(pw, user.PW);
+  if (!pw) return res.status(401).json('Authentication failed. Wrong password.');
+  try {
+    const executeResult = await db2Promise.execute(`SELECT * FROM USER_BASE_INFO WHERE EMAIL = '${email}'`);
+    const rows1 = executeResult[0];
+    const defs1 = executeResult[1];
+    const err1 = executeResult[2];
+    if (err1) {
+      return res.status(500).json('Internal Server Error');
+    }
+    const user = rows1[0];
+    if (!user) {
+      return res.status(401).send('Authentication failed. User not found.');
+    }
+    const pwMatch = await bcrypt.compare(pw, user.PW);
 
-  if (pwMatch) {
-    const token = newToken(user);
+    if (pwMatch) {
+      const token = newToken(user);
 
-    // current logged-in user
-    const loggedInUser = {
-      userId: user.USER_ID,
-      email: user.EMAIL,
-      name: user.NAME,
-      profile: user.PROFILE
-    };
+      // current logged-in user
+      const loggedInUser = {
+        userId: user.USER_ID,
+        email: user.EMAIL,
+        name: user.NAME,
+        profile: user.PROFILE
+      };
 
-    // return the information including token as JSON
-    return res.status(200).json({
-      success: true,
-      user: loggedInUser,
-      message: 'Login Success',
-      token: token,
-    });
-  } else {
-    return res.status(401).json('Authentication failed. Wrong password.');
+      // return the information including token as JSON
+      return res.status(200).json({
+        success: true,
+        user: loggedInUser,
+        message: 'Login Success',
+        token: token,
+      });
+    } else {
+      return res.status(401).json('Authentication failed. Wrong password.');
+    }
+  } catch (err) {
+    console.log('### SQL ERROR ###\n', err, '\n### SQL ERROR ###');
+    return res.status(500).send('Internal Server Error');
   }
 }
 

@@ -1,7 +1,7 @@
 const app = require('../app');
 const request = require('supertest');
 const should = require('should');
-const { getRandomEmail } = require('../utils/util.js');
+// const { getRandomEmail } = require('../utils/util.js');
 
 const loginspec = () => {
   return (
@@ -134,6 +134,15 @@ const loginspec = () => {
       });
     })
   )
+}
+
+const getRandomEmail = () => {
+  var chars = 'abcdefghijklmnopqrstuvwxyz1234567890';
+  var emailString = '';
+  for (var i = 0; i < 10; i++) {
+    emailString += chars[Math.floor(Math.random() * chars.length)];
+  }
+  return emailString + '@test.com';
 }
 
 module.exports = loginspec;
