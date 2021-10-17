@@ -5,22 +5,18 @@ const { getTodayDateWithHypen } = require('../utils/util.js');
 
 const taskspec = () => {
   return (
-    describe('TASK', () => {
+    describe.only('TASK', () => {
       // login 처리
       let token;
       let userId;
       let taskId;
-      before((done) => {
-        request(app)
+      before(async () => {
+        const res = await request(app)
           .post('/auth/login')
           .send({ email: 'test@testDupl.com', pw: '1234' })
-          .expect(200)
-          .end((err, res) => {
-            token = res.body.token;
-            userId = res.body.user.userId;
-            console.log('TASK /auth/login');
-            done();
-          });
+          .expect(200);
+        token = res.body.token;
+        userId = res.body.user.userId;
       });
       describe('GET /tasks', () => {
         describe('성공케이스', () => {
@@ -91,7 +87,7 @@ const taskspec = () => {
       });
       describe('GET /tasks/:taskId', () => {
         describe('성공케이스', () => {
-          let taskId = 3;
+          let taskId = 2;
           it(`taskId 가 ${taskId}인 유저 객체를 반환한다`, (done) => {
             request(app)
               .get(`/tasks/${taskId}`)
@@ -129,35 +125,18 @@ const taskspec = () => {
         });
       });
       describe('POST /tasks', () => {
-        // let token;
-        // let body;
-        // let userId;
-        let taskDate;
-        let subject;
-        let status;
         describe('성공케이스', () => {
-          // let token;
-          // let userId;
-          // before((done) => {
-          //   request(app)
-          //     .post('/login/login')
-          //     .send({ email: 'test@testDupl.com', pw: '1234' })
-          //     .expect(200)
-          //     .end((err, res) => {
-          //       // console.log('### LOGIN ###');
-          //       token = res.body.token;
-          //       userId = res.body.user.userId;
-          //       // console.log('userId###', userId)
-          //       done();
-          //     });
-          // });
-          before((done) => {
+          let taskDate;
+          let subject;
+          let status;
+          let taskId;
+          before(async () => {
             taskDate = getTodayDateWithHypen();
             subject = '할일의 제목';
             status = 'OPEN';
             // console.log('id:', id);
             // console.log('token:', token);
-            request(app)
+            const res = await request(app)
               .post('/tasks')
               .set({
                 'authorization': token,
@@ -168,54 +147,42 @@ const taskspec = () => {
                 subject: subject,
                 status: status
               })
-              .expect(201)
-              .end((err, res) => {
-                body = res.body;
-                taskId = body.task.TASK_ID;
-                // console.log('body:', body);
-                // console.log('taskId', taskId);
-                done();
-              });
+              .expect(201);
+            body = res.body;
+            taskId = body.task.TASK_ID;
           });
-          it('할일등록에 성공하면 할일 객체를 반환한다', (done) => { // done
-            // console.log('token222', token);
-            // console.log('userId222', userId);
+          it('할일등록에 성공하면 할일 객체를 반환한다', async () => { // done
             body.task.should.have.property('TASK_ID');
-            done();
+            body.task.TASK_ID.should.be.equal(taskId)
           });
         })
       });
       describe('DELETE /tasks/:taskId', () => {
-        before((done) => {
-          // console.log('taskId:::', taskId);
-          done();
-          // taskDate = getTodayDateWithHypen();
-          // subject = '할일의 제목';
-          // status = 'OPEN';
-          // // console.log('id:', id);
-          // // console.log('token:', token);
-          // request(app)
-          //   .post('/tasks')
-          //   .set({
-          //     'authorization': token,
-          //     'userid': userId
-          //   })
-          //   .send({
-          //     userId: userId,
-          //     taskDate: taskDate,
-          //     subject: subject,
-          //     status: status
-          //   })
-          //   .expect(201)
-          //   .end((err, res) => {
-          //     body = res.body;
-          //     taskId = body.task.TASK_ID;
-          //     console.log('body:', body);
-          //     console.log('taskId', taskId);
-          //     done();
-          //   });
-        });
         describe('성공케이스', () => {
+          let taskDate;
+          let subject;
+          let status;
+          let taskId;
+          before(async () => {
+            taskDate = getTodayDateWithHypen();
+            subject = '할일의 제목';
+            status = 'OPEN';
+            const res = await request(app)
+              .post('/tasks')
+              .set({
+                'authorization': token,
+                'userid': userId
+              })
+              .send({
+                taskDate: taskDate,
+                subject: subject,
+                status: status
+              })
+              .expect(201);
+            body = res.body;
+            taskId = body.task.TASK_ID;
+            // console.log('BEFORE END')
+          });
           it('204를 응답한다', (done) => {
             // console.log('ajdslfkjaslf', taskId);
             request(app)
@@ -244,15 +211,16 @@ const taskspec = () => {
       describe('PATCH /tasks/:taskId', () => {
         describe('성공케이스', () => {
           let body;
+          const taskId = 64;
           const subject = '변경된 할일 제목';
           const taskDate = '2021-08-22';
-          const taskDesc = '할일의 설명';
+          const taskDesc = '변경될 할일의 설명';
           const status = 'COMPLETED';
           const dueDtime = '2021-08-31';
           const alarmDtime = '2021-08-30 10:00:00';
           before((done) => {
             request(app)
-              .patch('/tasks/64')
+              .patch(`/tasks/${taskId}`)
               .set({
                 'authorization': token,
                 'userid': userId
