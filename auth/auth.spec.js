@@ -132,6 +132,24 @@ const loginspec = () => {
           });
         });
       });
+      // describe('POST /auth/findPassword', () => {
+      //   describe('성공케이스', () => {
+      //     it('비밀번호를 찾는 이메일을 전송한다', (done) => {
+      //       let email = 'test@test.com';
+      //       request(app)
+      //         .get('/auth/checkDuplEmail')
+      //         .send({
+      //           email: email
+      //         })
+      //         .expect(200)
+      //         .end((err, res) => {
+      //           body = res.body;
+      //           body.message.should.eql('duplEmail');
+      //           done();
+      //         });
+      //     });
+      //   });
+      // });
     })
   )
 }

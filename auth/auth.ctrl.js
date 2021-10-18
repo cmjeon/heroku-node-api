@@ -2,6 +2,7 @@ var { db, db2Promise } = require('../mysql/mysql');
 var bcrypt = require('bcrypt');
 var { newToken } = require('../utils/auth.js');
 var { getRandomID } = require('../utils/util.js');
+const nodemailer = require('nodemailer');
 
 const index = (req, res) => {
   res.json('Auth!');
@@ -109,6 +110,9 @@ const signup = async (req, res) => {
   const user = rows3[0];
   // console.log(user);
   if (!user) return res.status(404).end();
+
+  // sendEmail(res);
+
   return res.status(201).json({
     success: 'true',
     user: user,
@@ -206,6 +210,35 @@ const checkDuplEmail = async (req, res) => {
   });
   */
 }
+
+const sendEmail = async (res) => {
+  // nodemailer Transport 생성
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    port: 465,
+    secure: true, // true for 465, false for other ports
+    auth: { // 이메일을 보낼 계정 데이터 입력
+      user: 'cmjeon@gmail.com',
+      pass: 'glohas@1198',
+    },
+  });
+  const emailOptions = { // 옵션값 설정
+    from: 'cmjeon@gmail.com',
+    to: 'cmjeon@gmail.com',
+    subject: '테스트이메일',
+    html: '비밀번호 초기화를 위해서는 아래의 URL을 클릭하여 주세요.'
+      + `http://localhost/reset/`,
+  };
+  transporter.sendMail(emailOptions, function (error, info) {
+    if (error) {
+      console.log(error);
+    } else {
+      console.log('Email sent: ' + info.response);
+    }
+  });
+}
+
+
 
 module.exports = {
   index,
