@@ -2,7 +2,7 @@
 // import jwt from 'jsonwebtoken';
 var jwt = require('jsonwebtoken');
 // import { SECRET_KEY, EXPIRATION_DATE } from '../config';
-var { SECRET_KEY, EXPIRATION_DATE } = require('../config');
+var { SECRET_KEY, EXPIRATION_DATE } = require('../config/index');
 var { db, db2Promise } = require('../mysql/mysql');// 
 
 // modules
