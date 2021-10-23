@@ -1,5 +1,6 @@
 node_modules
 package-lock.json
+yarn.lock
 mysql/mysql.js
 mysql/config.json
 config/config.json
