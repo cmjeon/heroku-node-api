@@ -1,8 +1,8 @@
-var config = require('./config.json')
-var mysql = require('mysql');
+var { mysql } = require('../config/config.json')
+var mysql1 = require('mysql');
 var mysql2 = require('mysql2');
-var db = mysql.createConnection(config);
-const db2 = mysql2.createPool(config);
+var db = mysql1.createConnection(mysql);
+const db2 = mysql2.createPool(mysql);
 db.connect();
 const db2Promise = db2.promise();
 
