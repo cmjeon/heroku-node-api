@@ -1,8 +1,9 @@
-var { db, db2Promise } = require('../mysql/mysql');
+var { db2Promise } = require('../mysql/mysql');
 var bcrypt = require('bcrypt');
 var { newToken } = require('../utils/auth.js');
 var { getRandomID } = require('../utils/util.js');
-// const nodemailer = require('nodemailer');
+const config = require('../config/config.json')
+const nodemailer = require('nodemailer');// const smtpTransport = require('nodemailer-smtp-transport');
 
 const index = (req, res) => {
   res.json('Auth!');
@@ -111,7 +112,7 @@ const signup = async (req, res) => {
   // console.log(user);
   if (!user) return res.status(404).end();
 
-  // sendEmail(res);
+  sendEmail(user);
 
   return res.status(201).json({
     success: 'true',
@@ -120,53 +121,6 @@ const signup = async (req, res) => {
   });
 
 }
-/*
-const email = req.body.email;
-const name = req.body.name;
-const pw = req.body.pw;
-let hashedpw;
-const profile = req.body.profile;
-let id = getRandomID(16);
-
-db.query(`SELECT * FROM USER_BASE_INFO WHERE EMAIL = '${email}'`, (err, users) => {
-  if (err) {
-    return res.status(500).send('Internal Server Error');
-  }
-  const user = users[0];
-  if (user) {
-    res.status(409).json({
-      success: 'true',
-      user: { email: email },
-      message: 'duplEmail'
-    });
-  } else {
-    bcrypt.hash(pw, saltRounds, function (err, _hashedpw) {
-      hashedpw = _hashedpw;
-      // console.log(email, pw);
-
-      db.query('INSERT INTO USER_BASE_INFO (USER_ID, EMAIL, NAME, PW, PROFILE, CRET_DTIME, CRET_ID, MOD_DTIME, MOD_ID) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-        [id, email, name, hashedpw, profile, new Date(), id, new Date(), id], (err, result) => {
-          // id = results.insertId;
-          if (err) {
-            console.log(err);
-            return res.status(500).json('Internal Server Error');
-          }
-          // console.log(id);
-          db.query(`SELECT USER_ID, EMAIL, NAME, PROFILE FROM USER_BASE_INFO WHERE USER_ID = '${id}'`, (err, users) => {
-            // console.log(err);
-            const user = users[0];
-            if (!user) return res.status(404).end();
-            res.status(201).json({
-              success: 'true',
-              user: user,
-              message: 'Signup Success'
-            });
-          });
-        });
-    });
-  }
-});
-*/
 
 const checkDuplEmail = async (req, res) => {
   let success, message, result;
@@ -189,56 +143,34 @@ const checkDuplEmail = async (req, res) => {
     };
     return res.status(200).json(result);
   }
-  /*
-  let success, message, result;
-  const email = req.body.email;
-  db.query(`SELECT * FROM USER_BASE_INFO WHERE EMAIL = '${email}'`, (err, users) => {
-    if (err) {
-      return res.status(500).send('Internal Server Error');
-    }
-    const user = users[0];
-    if (user) {
-      success = 'true';
-      message = 'duplEmail';
-      result = {
-        success: success,
-        message: message,
-        user: { email: email },
-      };
-      res.status(200).json(result);
-    }
-  });
-  */
 }
 
-// const sendEmail = async (res) => {
-//   // nodemailer Transport 생성
-//   const transporter = nodemailer.createTransport({
-//     service: 'gmail',
-//     port: 465,
-//     secure: true, // true for 465, false for other ports
-//     auth: { // 이메일을 보낼 계정 데이터 입력
-//       user: 'cmjeon@gmail.com',
-//       pass: 'glohas@1198',
-//     },
-//   });
-//   const emailOptions = { // 옵션값 설정
-//     from: 'cmjeon@gmail.com',
-//     to: 'cmjeon@gmail.com',
-//     subject: '테스트이메일',
-//     html: '비밀번호 초기화를 위해서는 아래의 URL을 클릭하여 주세요.'
-//       + `http://localhost/reset/`,
-//   };
-//   transporter.sendMail(emailOptions, function (error, info) {
-//     if (error) {
-//       console.log(error);
-//     } else {
-//       console.log('Email sent: ' + info.response);
-//     }
-//   });
-// }
+const sendEmail = async (user) => {
+  console.log('### sendEmail', config.email.user, config.email.pass, user.EMAIL)
+  // nodemailer Transport 생성
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    host: 'smtp.gmail.com',
+    port: 587,
+    secure: false,
+    auth: {
+      user: config.email.user,
+      pass: config.email.pass
+    }
+  });
 
+  const emailOptions = { // 옵션값 설정    
+    from: config.email.user,
+    to: 'chmin82@gmail.com',
+    subject: 'Sending Email using Node.js[nodemailer]',
+    text: 'That was easy!'
+  };
 
+  const result = await transporter.sendMail(emailOptions);
+
+  console.log('Message sent: %s', result);
+  // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+}
 
 module.exports = {
   index,
