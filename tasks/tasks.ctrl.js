@@ -1,4 +1,4 @@
-var { db, db2Promise } = require('../mysql/mysql');
+var { db2Promise } = require('../mysql/mysql');
 // var { getTodayDateWithHypen } = require('../utils/util');
 var { getTodayDateWithHypen } = require('../utils/util.js');
 

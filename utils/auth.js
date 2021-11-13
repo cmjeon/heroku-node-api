@@ -3,7 +3,7 @@
 var jwt = require('jsonwebtoken');
 // import { SECRET_KEY, EXPIRATION_DATE } from '../config';
 var { SECRET_KEY, EXPIRATION_DATE } = require('../config/index');
-var { db, db2Promise } = require('../mysql/mysql');// 
+var { db2Promise } = require('../mysql/mysql');// 
 
 // modules
 // import UserModel from '../models/UserModel.js';
