@@ -4,3 +4,4 @@ yarn.lock
 mysql/mysql.js
 mysql/config.json
 config/config.json
+/.idea
