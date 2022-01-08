@@ -18,8 +18,13 @@ const getNowTime = () => {
   return nowTime;
 }
 
+const getRandomTempNumber = (length) => {
+  return ("" + Math.random()).substring(2, length + 2).toString();
+}
+
 module.exports = {
   getRandomID,
   getTodayDateWithHypen,
-  getNowTime
+  getNowTime,
+  getRandomTempNumber,
 }

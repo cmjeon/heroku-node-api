@@ -58,8 +58,16 @@ const loginspec = () => {
           });
         });
       });
+
+      it('resolves', (done) => {
+        fooAsyncPromise(arg1, arg2).then((res, body) => {
+          expect(res.statusCode).equal(incorrectValue);
+          done();
+        }).catch(done);
+      });
+
       describe('POST /auth/signup', () => {
-        describe('성공케이스', () => {
+        describe.only('성공케이스', () => {
           let body;
           let email = getRandomEmail();
           let name = '테스트유저';
@@ -79,7 +87,7 @@ const loginspec = () => {
                 body = res.body;
                 done();
               });
-          });
+          })
           it('회원가입에 성공하면 유저 객체를 반환한다', (done) => { // done
             body.user.should.have.property('USER_ID');
             done();

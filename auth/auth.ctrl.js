@@ -111,7 +111,8 @@ const signup = async (req, res) => {
   // console.log(user);
   if (!user) return res.status(404).end();
 
-  await sendEmail(user);
+  const sendEmailResult = sendEmail(user);
+  console.log('### auth.ctrl:sendEmailResult', sendEmailResult)
 
   return res.status(201).json({
     success: 'true',
