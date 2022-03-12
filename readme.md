@@ -22,12 +22,12 @@ config/config.json 에 DB 설정 추가
 ```js
 // config/config.json
 {
-  'host': 'sampelhost.com',
-  'port': '5555',
-  'user': 'sample-user',
-  'password': 'sample',
-  'database': 'sample-db',
-  'dateString': 'date'
+  "host": "sampelhost.com",
+  "port": "5555",
+  "user": "sample-user",
+  "password": "sample",
+  "database": "sample-db",
+  "dateString": "date"
 }
 ```
 
