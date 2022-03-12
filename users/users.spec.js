@@ -10,7 +10,7 @@ const usersspec = () => {
       before((done) => {
         request(app)
           .post('/auth/login')
-          .send({ email: 'chmin82@gmail.com', pw: '1111' })
+          .send({ email: 'test@test.com', pw: '1234' })
           .expect(200)
           .end((err, res) => {
             token = res.body.token;

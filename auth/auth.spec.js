@@ -21,8 +21,8 @@ const loginspec = () => {
       describe('POST /auth/login', () => {
         describe('성공케이스', () => {
           let body;
-          let email = 'chmin82@gmail.com';
-          let pw = '1111';
+          let email = 'test@test.com';
+          let pw = '1234';
           before((done) => {
             request(app)
               .post('/auth/login')
@@ -59,15 +59,15 @@ const loginspec = () => {
         });
       });
 
-      it('resolves', (done) => {
-        fooAsyncPromise(arg1, arg2).then((res, body) => {
-          expect(res.statusCode).equal(incorrectValue);
-          done();
-        }).catch(done);
-      });
+      // it('resolves', (done) => {
+      //   fooAsyncPromise(arg1, arg2).then((res, body) => {
+      //     expect(res.statusCode).equal(incorrectValue);
+      //     done();
+      //   }).catch(done);
+      // });
 
       describe('POST /auth/signup', () => {
-        describe.only('성공케이스', () => {
+        describe('성공케이스', () => {
           let body;
           let email = getRandomEmail();
           let name = '테스트유저';
