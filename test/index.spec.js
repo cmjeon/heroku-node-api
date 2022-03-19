@@ -1,11 +1,12 @@
-const app = require('./app');
+const app = require('../app');
 const request = require('supertest');
 const should = require('should');
-const usersspec = require('./users/users.spec');
+const { getNowTime } = require('../src/utils/util');
 const authspec = require('./auth/auth.spec');
 const tasksspec = require('./tasks/tasks.spec');
+const usersspec = require('./users/users.spec');
 const weathersspec = require('./weathers/weathers.spec');
-const { getNowTime } = require('./utils/util');
+const utilsauthspec = require('./utils/auth.spec');
 
 // before(function () {
 //    console.log("---");
@@ -25,10 +26,11 @@ describe("ROOT", function () {
     });
   });
 });
-usersspec();
 authspec();
+usersspec();
 tasksspec();
 weathersspec();
+utilsauthspec();
 
 let nowDate = getNowTime();
 

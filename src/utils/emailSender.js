@@ -1,6 +1,6 @@
 const config = require('../config/config.json')
 const nodemailer = require('nodemailer');// const smtpTransport = require('nodemailer-smtp-transport');
-var { getRandomTempNumber } = require('../utils/util.js');
+var { getRandomTempNumber } = require('./util.js');
 
 const sendEmail = async (user) => {
   console.log('### sendEmail:user', user)

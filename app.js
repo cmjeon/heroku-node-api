@@ -5,13 +5,13 @@ const app = express();
 const morgan = require('morgan');
 // const db = require('./mysql/mysql');
 // var bodyParser = require('body-parser');
-const auth = require('./auth/index');
-const users = require('./users/index');
-const tasks = require('./tasks/index');
-const weathers = require('./weathers/index');
+const auth = require('./src/auth/index');
+const users = require('./src/users/index');
+const tasks = require('./src/tasks/index');
+const weathers = require('./src/weathers/index');
 const docs = require('./docs/api-doc.js');
 
-const { authenticateUser } = require('./utils/auth');
+const { authenticateUser } = require('./src/utils/auth');
 
 if (process.env.NODE_ENV === 'debug') {
   app.use(morgan('dev'));

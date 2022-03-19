@@ -1,7 +1,7 @@
-const app = require('../app');
+const app = require('../../app');
 const request = require('supertest');
 const should = require('should');
-const { getTodayDateWithHypen } = require('../utils/util.js');
+const { getTodayDateWithHypen } = require('../../src/utils/util.js');
 
 const taskspec = () => {
   return (

@@ -1,4 +1,4 @@
-const app = require('../app');
+const app = require('../../app');
 const request = require('supertest');
 const should = require('should');
 
@@ -65,6 +65,4 @@ const usersspec = () => {
     })
   )
 }
-
-
 module.exports = usersspec;
