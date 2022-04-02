@@ -1,26 +1,13 @@
-# heroku에 nodejs api 서버 올리는 방법
+# 실행방법
 
-## 명령어
+데이터베이스 설정이 필수입니다.
 
-```bash
-# push to github
-$ git push origin main
-
-# push to heroku
-$ git push heroku master
-
-# 로그보기
-$ heroku logs --tail
-```
-
-## 실행방법
-
-### 데이터베이스 설정
+## 데이터베이스 설정
 
 config/config.json 에 DB 설정 추가
 
 ```js
-// config/config.json
+// src/config/config.json
 {
   "host": "sampelhost.com",
   "port": "5555",
@@ -31,9 +18,11 @@ config/config.json 에 DB 설정 추가
 }
 ```
 
-### 서비스 실행
+## 서비스 실행
 
 ```bash
+$ npm install
+
 # 테스트 모드로 실행
 $ npm test
 
@@ -63,6 +52,19 @@ $ npm start
     ```bash
     $ git push heroku master
     ```
+
+## 명령어
+
+```bash
+# push to github
+$ git push origin main
+
+# push to heroku
+$ git push heroku master
+
+# 로그보기
+$ heroku logs --tail
+```
 
 ## heroku 에 대해
 
