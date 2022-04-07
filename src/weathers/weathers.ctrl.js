@@ -72,7 +72,46 @@ const current = (req, res) => {
   // res.status(200).end();
 }
 
+const onecall = (req, res) => {
+  const lat = req.query.lat;
+  const lon = req.query.lon;
+  const appid = APIID_OPENWEATHER;
+  const exclude = req.query.exclude;
+  const units = req.query.units;
+  const lang = req.query.lang;
+
+  let qs = `lat=${lat}&lon=${lon}&appid=${appid}`;
+
+  if (exclude) qs += `&exclude=${exclude}`;
+  if (units) qs += `&units=${units}`;
+  if (lang) qs += `&lang=${lang}`;
+  let path = `/data/2.5/onecall?${qs}`;
+  // console.log('PATH', path);
+  const options = {
+    hostname: 'api.openweathermap.org',
+    port: 443,
+    path: path,
+    method: 'GET'
+  }
+
+  https.get(options, res2 => {
+    let data = '';
+    res2.on('data', (chunk) => {
+      data += chunk;
+    });
+    res2.on('end', () => {
+      res.json(JSON.parse(data));
+      res.status(200).end();
+    });
+  }).on("error", (err) => {
+    console.log("Error: " + err.message);
+  });
+}
+
+// https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=&appid=${APIKEY}&lang=kr&units=metric`
+
 module.exports = {
   index,
-  current
+  current,
+  onecall
 }
