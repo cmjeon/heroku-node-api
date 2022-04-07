@@ -38,7 +38,7 @@ $ npm start
 1. main branch 소스수정
 1. main branch push
     ```bash
-    $ git push main
+    $ git push
     ```
 1. master checkout
     ```bash
