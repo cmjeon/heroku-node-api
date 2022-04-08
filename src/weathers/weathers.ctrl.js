@@ -83,8 +83,8 @@ const onecall = (req, res) => {
   let qs = `lat=${lat}&lon=${lon}&appid=${appid}`;
 
   if (exclude) qs += `&exclude=${exclude}`;
-  if (units) qs += `&units=${units}`;
-  if (lang) qs += `&lang=${lang}`;
+  (units) ? qs += `&units=${units}` : qs += `&units=metric`;
+  (lang) ? qs += `&lang=${lang}` : qs += `&lang=kr`
   let path = `/data/2.5/onecall?${qs}`;
   // console.log('PATH', path);
   const options = {
