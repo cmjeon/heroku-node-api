@@ -3,5 +3,4 @@ package-lock.json
 yarn.lock
 src/mysql/mysql.js
 src/mysql/config.json
-src/config/config.json
 /.idea
