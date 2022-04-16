@@ -1,6 +1,2 @@
 node_modules
-package-lock.json
-yarn.lock
-src/mysql/mysql.js
-src/config/config.json
 /.idea
