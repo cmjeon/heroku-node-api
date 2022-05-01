@@ -9,6 +9,7 @@ const auth = require('./src/auth/index');
 const users = require('./src/users/index');
 const tasks = require('./src/tasks/index');
 const weathers = require('./src/weathers/index');
+const news = require('./src/news/index');
 const docs = require('./docs/api-doc.js');
 
 const { authenticateUser } = require('./src/utils/auth');
@@ -29,6 +30,7 @@ app.use('/auth', auth);
 app.use('/users', authenticateUser, users);
 app.use('/tasks', authenticateUser, tasks);
 app.use('/weathers', weathers);
+app.use('/news', news);
 // app.use('/users', users);
 // app.use('/api', docs);
 app.use('/docs', docs);
