@@ -3,6 +3,7 @@ const router = express.Router();
 const ctrl = require('./news.ctrl');
 
 router.get('/', ctrl.index);
-router.get('/mk/rss/headline', ctrl.mkRssHeadline);
+router.get('/yh/rss/newest', ctrl.yhRssNewest)
+router.get('/yh/rss/headline', ctrl.yhRssHeadline);
 
 module.exports = router;

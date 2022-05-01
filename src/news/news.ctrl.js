@@ -4,8 +4,17 @@ const index = (req, res) => {
   res.json('News!');
 }
 
-const rssHeadline = async (req, res) => {
-  const path = 'https://www.yonhapnewstv.co.kr/browse/feed/';
+
+const yhRssNewest = async (req, res) => {
+  const path = 'http://www.yonhapnewstv.co.kr/browse/feed/';
+
+  const rssData = await parse(path);
+  res.json(rssData);
+  res.status(200).end();
+}
+
+const yhRssHeadline = async (req, res) => {
+  const path = 'http://www.yonhapnewstv.co.kr/category/news/headline/feed/';
 
   const rssData = await parse(path);
   res.json(rssData);
@@ -14,5 +23,6 @@ const rssHeadline = async (req, res) => {
 
 module.exports = {
   index,
-  mkRssHeadline: rssHeadline
+  yhRssNewest: yhRssNewest,
+  yhRssHeadline: yhRssHeadline
 }
