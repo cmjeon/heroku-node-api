@@ -59,19 +59,13 @@ const logout = (req, res) => {
 
 }
 
-async function isEmailDupl(email, res) {
-  let queryResult1
+async function getIsEmailDupl(email) {
   try {
-    queryResult1 = await pool.query(`SELECT * FROM USER_BASE_INFO WHERE EMAIL = '${email}'`);
-    if (queryResult1.rows.user_id) {
-      console.log('### 있다?');
-      return res.status(409).json({
-        success: 'true',
-        user: { email: email },
-        message: 'duplEmail'
-      }).end();
+    let { rows } = await pool.query(`SELECT * FROM USER_BASE_INFO WHERE EMAIL = '${ email }'`);
+    if (rows.user_id) {
+      return true;
     }
-    return queryResult1.rows[0];
+    return false;
   } catch(err) {
     console.log(err);
     throw err;
@@ -84,11 +78,9 @@ async function hashPassword(pw) {
 }
 
 async function getUserInfo(id, res) {
-  // console.log('### auth.ctrl:getUserInfo', id);
   let queryResult2
   try {
-    queryResult2 = await pool.query(`SELECT USER_ID, EMAIL, NAME, PROFILE FROM USER_BASE_INFO WHERE USER_ID = '${id}'`);
-    // console.log('### auth.ctrl:getUserInfo:queryResult2', queryResult2);
+    queryResult2 = await pool.query(`SELECT USER_ID, EMAIL, NAME, PROFILE FROM USER_BASE_INFO WHERE USER_ID = '${ id }'`);
     const user = queryResult2.rows[0];
     if (!user) return res.status(404).end();
     return user
@@ -100,10 +92,10 @@ async function getUserInfo(id, res) {
 
 async function createUserInfo(body) {
   const id = getRandomID(16);
-  const hashedpw = await hashPassword(body.pw);
+  const hashedPw = await hashPassword(body.pw);
   const statement = {
     text: 'INSERT INTO USER_BASE_INFO (USER_ID, EMAIL, NAME, PW, PROFILE, CRET_DTIME, CRET_ID, MOD_DTIME, MOD_ID) VALUES ( $1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING USER_ID',
-    values: [id, body.email, body.name, hashedpw, body.profile, new Date(), id, new Date(), id]
+    values: [id, body.email, body.name, hashedPw, body.profile, new Date(), id, new Date(), id]
   }
   const result = await pool.query(statement);
   return result.rows[0].user_id;
@@ -111,41 +103,26 @@ async function createUserInfo(body) {
 
 const signup = async (req, res) => {
   console.log('### auth.ctrl:signup');
-  // const email = req.body.email;
-  // const name = req.body.name;
-  // const pw = req.body.pw;
-  // const profile = req.body.profile;
-
-  let queryResult1
   try {
-    queryResult1 = await isEmailDupl(req.body.email, res);
-  } catch(err) {
-    return res.status(500).send('Internal Server Error');
-  }
-
-  let user_id;
-  try {
-    user_id = await createUserInfo(req.body)
-  } catch(err) {
-    console.log(err);
-    return res.status(500).json('Internal Server Error');
-  }
-
-  let user
-  try {
-    user = await getUserInfo(user_id, res)
+    let isEmailDupl = await getIsEmailDupl(req.body.email, res);
+    if(isEmailDupl) {
+      return res.status(409).json({
+        success: 'Conflict',
+        user: { email: email },
+        message: 'duplEmail'
+      }).end();
+    }
+    let user_id = await createUserInfo(req.body)
+    let user = await getUserInfo(user_id, res)
+    return res.status(201).json({
+      success: 'true',
+      user: user,
+      message: 'Signup Success'
+    });
   } catch(err) {
     console.log(err);
     return res.status(500).json('Internal Server Error');
   }
-  // console.log('### user', user);
-
-  return res.status(201).json({
-    success: 'true',
-    user: user,
-    message: 'Signup Success'
-  });
-
 }
 
 const checkDuplEmail = async (req, res) => {
