@@ -20,5 +20,5 @@ pool.connect(err => {
 })
 
 module.exports = {
-  pool: pool
+  pool
 };

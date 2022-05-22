@@ -18,6 +18,63 @@ const loginspec = () => {
           });
         });
       });
+      describe('POST /auth/signup', () => {
+        describe('성공케이스', () => {
+          let body;
+          let email = getRandomEmail();
+          let name = '테스트유저';
+          let pw = '1234';
+          let profile = '유저 프로파일';
+          before((done) => {
+            request(app)
+              .post('/auth/signup')
+              .send({
+                email: email,
+                name: name,
+                pw: pw,
+                profile: profile
+              })
+              .expect(201)
+              .end((err, res) => {
+                body = res.body;
+                done();
+              });
+          })
+          it.only('회원가입에 성공하면 유저 객체를 반환한다', (done) => { // done
+            // body.user.should.have.property('user_id');
+            body.user.should.have.property('email', email);
+            done();
+          });
+          it.only('입력한 email, name, profile 을 반환한다', (done) => {
+            body.user.should.have.property('email', email);
+            body.user.should.have.property('name', name);
+            body.user.should.have.property('profile', profile);
+            done();
+          });
+        });
+        describe('실패케이스', () => {
+          let email = 'test@testDupl.com';
+          let name = '테스트유저';
+          let pw = '1234';
+          let profile = '유저 프로파일';
+          it('중복된 이메일을 등록하면 message로 duplEmail를 반환한다', (done) => {
+            request(app)
+              .post('/auth/signup')
+              .send({
+                email: email,
+                name: name,
+                pw: pw,
+                profile: profile
+              })
+              .expect(200)
+              .end((err, res) => {
+                body = res.body;
+                body.message.should.eql('duplEmail');
+                done();
+              });
+          });
+        });
+      });
       describe('POST /auth/login', () => {
         describe('성공케이스', () => {
           let body;
@@ -66,62 +123,7 @@ const loginspec = () => {
       //   }).catch(done);
       // });
 
-      describe('POST /auth/signup', () => {
-        describe('성공케이스', () => {
-          let body;
-          let email = getRandomEmail();
-          let name = '테스트유저';
-          let pw = '1234';
-          let profile = '유저 프로파일';
-          before((done) => {
-            request(app)
-              .post('/auth/signup')
-              .send({
-                email: email,
-                name: name,
-                pw: pw,
-                profile: profile
-              })
-              .expect(201)
-              .end((err, res) => {
-                body = res.body;
-                done();
-              });
-          })
-          it('회원가입에 성공하면 유저 객체를 반환한다', (done) => { // done
-            body.user.should.have.property('USER_ID');
-            done();
-          });
-          it('입력한 email, name, profile 을 반환한다', (done) => {
-            body.user.should.have.property('EMAIL', email);
-            body.user.should.have.property('NAME', name);
-            body.user.should.have.property('PROFILE', profile);
-            done();
-          });
-        });
-        describe('실패케이스', () => {
-          let email = 'test@testDupl.com';
-          let name = '테스트유저';
-          let pw = '1234';
-          let profile = '유저 프로파일';
-          it('중복된 이메일을 등록하면 message로 duplEmail를 반환한다', (done) => {
-            request(app)
-              .post('/auth/signup')
-              .send({
-                email: email,
-                name: name,
-                pw: pw,
-                profile: profile
-              })
-              .expect(200)
-              .end((err, res) => {
-                body = res.body;
-                body.message.should.eql('duplEmail');
-                done();
-              });
-          });
-        });
-      });
+
       describe('GET /auth/checkDuplEmail', () => {
         describe('성공케이스', () => {
           it('중복된 이메일을 등록하면 message로 duplEmail를 반환한다', (done) => {
