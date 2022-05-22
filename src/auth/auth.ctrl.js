@@ -111,14 +111,14 @@ async function createUserInfo(body) {
 
 const signup = async (req, res) => {
   console.log('### auth.ctrl:signup');
-  const email = req.body.email;
-  const name = req.body.name;
-  const pw = req.body.pw;
-  const profile = req.body.profile;
+  // const email = req.body.email;
+  // const name = req.body.name;
+  // const pw = req.body.pw;
+  // const profile = req.body.profile;
 
   let queryResult1
   try {
-    queryResult1 = await isEmailDupl(email, res);
+    queryResult1 = await isEmailDupl(req.body.email, res);
   } catch(err) {
     return res.status(500).send('Internal Server Error');
   }
