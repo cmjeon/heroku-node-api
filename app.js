@@ -26,6 +26,18 @@ app.get('/', function (req, res) {
   res.json('Hello!');
 });
 
+// const ttt = async () => {
+//   try {
+//     const { pool } = require('./src/postgresql/postgresql');
+//     const { rows } = await pool.query('SELECT NOW()');
+//     console.log('### pg rows ###', rows)
+//   } catch(e) {
+//     console.log('### e', e);
+//   }
+// }
+//
+// ttt();
+
 app.use('/auth', auth);
 app.use('/users', authenticateUser, users);
 app.use('/tasks', authenticateUser, tasks);

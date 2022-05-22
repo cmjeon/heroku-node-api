@@ -84,11 +84,11 @@ async function hashPassword(pw) {
 }
 
 async function getUserInfo(id, res) {
-  console.log('### auth.ctrl:getUserInfo', id);
+  // console.log('### auth.ctrl:getUserInfo', id);
   let queryResult2
   try {
     queryResult2 = await pool.query(`SELECT USER_ID, EMAIL, NAME, PROFILE FROM USER_BASE_INFO WHERE USER_ID = '${id}'`);
-    console.log('### auth.ctrl:getUserInfo:queryResult2', queryResult2);
+    // console.log('### auth.ctrl:getUserInfo:queryResult2', queryResult2);
     const user = queryResult2.rows[0];
     if (!user) return res.status(404).end();
     return user
@@ -105,7 +105,8 @@ async function createUserInfo(body) {
     text: 'INSERT INTO USER_BASE_INFO (USER_ID, EMAIL, NAME, PW, PROFILE, CRET_DTIME, CRET_ID, MOD_DTIME, MOD_ID) VALUES ( $1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING USER_ID',
     values: [id, body.email, body.name, hashedpw, body.profile, new Date(), id, new Date(), id]
   }
-  return await pool.query(statement);
+  const result = await pool.query(statement);
+  return result.rows[0].user_id;
 }
 
 const signup = async (req, res) => {
@@ -122,27 +123,26 @@ const signup = async (req, res) => {
     return res.status(500).send('Internal Server Error');
   }
 
-  let excuteResult;
+  let user_id;
   try {
-    excuteResult = await createUserInfo(req.body)
+    user_id = await createUserInfo(req.body)
   } catch(err) {
     console.log(err);
     return res.status(500).json('Internal Server Error');
   }
-  console.log('### excuteResult', excuteResult);
 
-  let queryResult2
+  let user
   try {
-    queryResult2 = await getUserInfo(excuteResult.rows[0].user_id, res)
+    user = await getUserInfo(user_id, res)
   } catch(err) {
     console.log(err);
     return res.status(500).json('Internal Server Error');
   }
-  console.log('### queryResult2', queryResult2);
+  // console.log('### user', user);
 
   return res.status(201).json({
     success: 'true',
-    user: queryResult2,
+    user: user,
     message: 'Signup Success'
   });
 

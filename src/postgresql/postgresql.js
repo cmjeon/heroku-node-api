@@ -11,13 +11,13 @@ const config = {
   }
 }
 const pool = new Pool(config)
-pool.connect(err => {
-  if (err) {
-    console.log('Failed to connect db ' + err)
-  } else {
-    console.log('Connect to db done!')
-  }
-})
+// pool.connect(err => {
+//   if (err) {
+//     console.log('Failed to connect db ' + err)
+//   } else {
+//     console.log('Connect to db done!')
+//   }
+// })
 
 module.exports = {
   pool
