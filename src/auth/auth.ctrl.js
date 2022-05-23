@@ -11,22 +11,21 @@ const index = (req, res) => {
 }
 
 const login = async (req, res) => {
+  console.log('### login')
   const email = req.body.email;
   const pw = req.body.pw;
   if (!pw) return res.status(401).json('Authentication failed. Wrong password.');
   try {
-    const executeResult = await pool.query(`SELECT * FROM USER_BASE_INFO WHERE EMAIL = '${email}'`);
-    const rows1 = executeResult[0];
-    const defs1 = executeResult[1];
-    const err1 = executeResult[2];
-    if (err1) {
+    const { rows } = await pool.query(`SELECT * FROM USER_BASE_INFO WHERE EMAIL = '${email}'`);
+    if (!rows[0]) {
       return res.status(500).json('Internal Server Error');
     }
-    const user = rows1[0];
+    const user = rows[0];
+    console.log('### user', user)
     if (!user) {
       return res.status(401).send('Authentication failed. User not found.');
     }
-    const pwMatch = await bcrypt.compare(pw, user.PW);
+    const pwMatch = await bcrypt.compare(pw, user.pw);
 
     if (pwMatch) {
       const token = newToken(user);
