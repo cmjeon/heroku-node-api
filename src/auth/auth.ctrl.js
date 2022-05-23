@@ -11,45 +11,35 @@ const index = (req, res) => {
 }
 
 const login = async (req, res) => {
-  console.log('### login')
+리  // console.log('### login')
   const email = req.body.email;
   const pw = req.body.pw;
-  if (!pw) return res.status(401).json('Authentication failed. Wrong password.');
+  if (!email || !pw) return res.status(401).json('Authentication failed. Wrong email or password.');
   try {
-    const { rows } = await pool.query(`SELECT * FROM USER_BASE_INFO WHERE EMAIL = '${email}'`);
-    if (!rows[0]) {
-      return res.status(500).json('Internal Server Error');
-    }
-    const user = rows[0];
-    console.log('### user', user)
+    const user = await getUserInfo({ email });
     if (!user) {
-      return res.status(401).send('Authentication failed. User not found.');
+      return res.status(401).json('Authentication failed. Wrong email or password.');
     }
     const pwMatch = await bcrypt.compare(pw, user.pw);
-
-    if (pwMatch) {
-      const token = newToken(user);
-
-      // current logged-in user
-      const loggedInUser = {
-        userId: user.USER_ID,
-        email: user.EMAIL,
-        name: user.NAME,
-        profile: user.PROFILE
-      };
-
-      // return the information including token as JSON
-      return res.status(200).json({
-        success: true,
-        user: loggedInUser,
-        message: 'Login Success',
-        token: token,
-      });
-    } else {
+    if (!pwMatch) {
       return res.status(401).json('Authentication failed. Wrong password.');
     }
+    const loginUser = {
+      userId: user.user_id,
+      email: user.email,
+      name: user.name,
+      profile: user.profile
+    };
+    const token = newToken(user);
+
+    return res.status(200).json({
+      success: true,
+      user: loginUser,
+      message: 'Login Success',
+      token: token,
+    });
   } catch (err) {
-    console.log('### SQL ERROR ###\n', err, '\n### SQL ERROR ###');
+    console.log(err)
     return res.status(500).send('Internal Server Error');
   }
 }
