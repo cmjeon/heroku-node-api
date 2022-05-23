@@ -111,10 +111,15 @@ const hashPassword = async (pw) => {
 
 const getUserInfo = async (condition) => {
   try {
-    queryResult2 = await pool.query(`SELECT USER_ID, EMAIL, NAME, PROFILE FROM USER_BASE_INFO WHERE USER_ID = '${ id }'`);
-    const user = queryResult2.rows[0];
-    if (!user) return res.status(404).end();
-    return user
+    let where
+    if(condition.userId) {
+      where = `USER_ID = '${ condition.userId }'`
+    } else if(condition.email) {
+      where = `EMAIL = '${ condition.email }'`
+    }
+
+    let { rows } = await pool.query(`SELECT USER_ID, PW, EMAIL, NAME, PROFILE FROM USER_BASE_INFO WHERE ${ where }`);
+    return rows[0]
   } catch(err) {
     console.log(err);
     throw err;
