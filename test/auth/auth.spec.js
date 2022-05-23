@@ -110,7 +110,9 @@ const loginspec = () => {
               });
           });
           it('로그인에 성공하면 토큰을 반환한다', (done) => { // done
+            console.log('### body', body)
             body.should.have.property('token');
+            body.user.should.have.property('email', email)
             done();
           });
         });
