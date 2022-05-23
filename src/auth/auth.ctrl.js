@@ -11,7 +11,6 @@ const index = (req, res) => {
 }
 
 const login = async (req, res) => {
-리  // console.log('### login')
   const email = req.body.email;
   const pw = req.body.pw;
   if (!email || !pw) return res.status(401).json('Authentication failed. Wrong email or password.');
