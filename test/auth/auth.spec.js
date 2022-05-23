@@ -53,10 +53,26 @@ const loginspec = () => {
           });
         });
         describe('실패케이스', () => {
+          let body;
           let email = 'test@testDupl.com';
           let name = '테스트유저';
           let pw = '1234';
           let profile = '유저 프로파일';
+          before((done) => {
+            request(app)
+              .post('/auth/signup')
+              .send({
+                email: email,
+                name: name,
+                pw: pw,
+                profile: profile
+              })
+              .expect(201)
+              .end((err, res) => {
+                body = res.body;
+                done();
+              });
+          })
           it('중복된 이메일을 등록하면 message로 duplEmail를 반환한다', (done) => {
             request(app)
               .post('/auth/signup')
