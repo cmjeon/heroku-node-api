@@ -40,12 +40,12 @@ const loginspec = () => {
                 done();
               });
           })
-          it.only('회원가입에 성공하면 유저 객체를 반환한다', (done) => { // done
+          it('회원가입에 성공하면 유저 객체를 반환한다', (done) => { // done
             // body.user.should.have.property('user_id');
             body.user.should.have.property('email', email);
             done();
           });
-          it.only('입력한 email, name, profile 을 반환한다', (done) => {
+          it('입력한 email, name, profile 을 반환한다', (done) => {
             body.user.should.have.property('email', email);
             body.user.should.have.property('name', name);
             body.user.should.have.property('profile', profile);
@@ -92,9 +92,9 @@ const loginspec = () => {
         });
       });
       describe('POST /auth/login', () => {
-        describe('성공케이스', () => {
+        describe.only('성공케이스', () => {
           let body;
-          let email = 'test@test.com';
+          let email = 'test@testDupl.com';
           let pw = '1234';
           before((done) => {
             request(app)
