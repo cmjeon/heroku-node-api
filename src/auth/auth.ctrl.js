@@ -133,8 +133,8 @@ const createUserInfo = async (body) => {
     text: 'INSERT INTO USER_BASE_INFO (USER_ID, EMAIL, NAME, PW, PROFILE, CRET_DTIME, CRET_ID, MOD_DTIME, MOD_ID) VALUES ( $1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING USER_ID',
     values: [id, body.email, body.name, hashedPw, body.profile, new Date(), id, new Date(), id]
   }
-  const result = await pool.query(statement);
-  return result.rows[0].user_id;
+  const { rows } = await pool.query(statement);
+  return rows[0].user_id;
 }
 
 module.exports = {
