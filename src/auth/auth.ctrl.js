@@ -104,26 +104,12 @@ const checkDuplEmail = async (req, res) => {
   }
 }
 
-async function getIsEmailDupl(email) {
-  try {
-    let { rows } = await pool.query(`SELECT * FROM USER_BASE_INFO WHERE EMAIL = '${ email }'`);
-    if (rows[0]?.user_id) {
-      return true;
-    }
-    return false;
-  } catch(err) {
-    console.log(err);
-    throw err;
-  }
-}
-
-async function hashPassword(pw) {
+const hashPassword = async (pw) => {
   const saltRounds = 10;
   return await bcrypt.hash(pw, saltRounds);
 }
 
-async function getUserInfo(id, res) {
-  let queryResult2
+const getUserInfo = async (condition) => {
   try {
     queryResult2 = await pool.query(`SELECT USER_ID, EMAIL, NAME, PROFILE FROM USER_BASE_INFO WHERE USER_ID = '${ id }'`);
     const user = queryResult2.rows[0];
@@ -135,7 +121,7 @@ async function getUserInfo(id, res) {
   }
 }
 
-async function createUserInfo(body) {
+const createUserInfo = async (body) => {
   const id = getRandomID(16);
   const hashedPw = await hashPassword(body.pw);
   const statement = {
