@@ -60,8 +60,9 @@ const logout = (req, res) => {
 
 const signup = async (req, res) => {
   try {
-    const isEmailDupl = await getIsEmailDupl(req.body.email, res)
-    if(isEmailDupl) {
+    const email = req.body.email;
+    const existUser = await getUserInfo({ email })
+    if(existUser) {
       return res.status(409).json({
         success: 'Conflict',
         user: { email: req.body.email },
@@ -69,10 +70,11 @@ const signup = async (req, res) => {
       }).end();
     }
     const userId = await createUserInfo(req.body)
-    const user = await getUserInfo(userId, res)
+    const newUser = await getUserInfo({ userId })
+    if (!newUser) return res.status(404).end();
     return res.status(201).json({
       success: 'true',
-      user: user,
+      user: newUser,
       message: 'Signup Success'
     });
   } catch(err) {
