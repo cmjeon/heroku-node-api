@@ -59,10 +59,56 @@ const logout = (req, res) => {
 
 }
 
+const signup = async (req, res) => {
+  try {
+    const isEmailDupl = await getIsEmailDupl(req.body.email, res)
+    if(isEmailDupl) {
+      return res.status(409).json({
+        success: 'Conflict',
+        user: { email: req.body.email },
+        message: 'duplEmail'
+      }).end();
+    }
+    const userId = await createUserInfo(req.body)
+    const user = await getUserInfo(userId, res)
+    return res.status(201).json({
+      success: 'true',
+      user: user,
+      message: 'Signup Success'
+    });
+  } catch(err) {
+    console.log(err);
+    return res.status(500).json('Internal Server Error');
+  }
+}
+
+const checkDuplEmail = async (req, res) => {
+  let success, message, result;
+  const email = req.body.email;
+  const queryResult1 = await db2Promise.query(`SELECT * FROM USER_BASE_INFO WHERE EMAIL = '${email}'`);
+  const rows1 = queryResult1[0];
+  const defs1 = queryResult1[1];
+  const err1 = queryResult1[2];
+  if (err1) {
+    return res.status(500).send('Internal Server Error');
+  }
+  const user = rows1[0];
+  if (user) {
+    success = 'true';
+    message = 'duplEmail';
+    result = {
+      success: success,
+      message: message,
+      user: { email: email },
+    };
+    return res.status(200).json(result);
+  }
+}
+
 async function getIsEmailDupl(email) {
   try {
     let { rows } = await pool.query(`SELECT * FROM USER_BASE_INFO WHERE EMAIL = '${ email }'`);
-    if (rows.user_id) {
+    if (rows[0]?.user_id) {
       return true;
     }
     return false;
@@ -99,53 +145,6 @@ async function createUserInfo(body) {
   }
   const result = await pool.query(statement);
   return result.rows[0].user_id;
-}
-
-const signup = async (req, res) => {
-  console.log('### auth.ctrl:signup');
-  try {
-    let isEmailDupl = await getIsEmailDupl(req.body.email, res);
-    if(isEmailDupl) {
-      return res.status(409).json({
-        success: 'Conflict',
-        user: { email: email },
-        message: 'duplEmail'
-      }).end();
-    }
-    let user_id = await createUserInfo(req.body)
-    let user = await getUserInfo(user_id, res)
-    return res.status(201).json({
-      success: 'true',
-      user: user,
-      message: 'Signup Success'
-    });
-  } catch(err) {
-    console.log(err);
-    return res.status(500).json('Internal Server Error');
-  }
-}
-
-const checkDuplEmail = async (req, res) => {
-  let success, message, result;
-  const email = req.body.email;
-  const queryResult1 = await db2Promise.query(`SELECT * FROM USER_BASE_INFO WHERE EMAIL = '${email}'`);
-  const rows1 = queryResult1[0];
-  const defs1 = queryResult1[1];
-  const err1 = queryResult1[2];
-  if (err1) {
-    return res.status(500).send('Internal Server Error');
-  }
-  const user = rows1[0];
-  if (user) {
-    success = 'true';
-    message = 'duplEmail';
-    result = {
-      success: success,
-      message: message,
-      user: { email: email },
-    };
-    return res.status(200).json(result);
-  }
 }
 
 module.exports = {
