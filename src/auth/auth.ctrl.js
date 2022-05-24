@@ -1,9 +1,9 @@
 // var { db2Promise } = require('../mysql/mysql');
 const { pool } = require('../postgresql/postgresql');
 const users = require('../users/users.ctrl')
-var bcrypt = require('bcrypt');
-var { newToken } = require('../utils/auth.js');
-var { getRandomID } = require('../utils/util.js');
+const bcrypt = require('bcrypt');
+const { newToken } = require('../utils/auth.js');
+const { getRandomID } = require('../utils/util.js');
 const { sendEmail } = require('../utils/emailSender.js');
 
 const index = (req, res) => {

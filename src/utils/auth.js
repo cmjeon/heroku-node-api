@@ -1,9 +1,9 @@
 // json related
 // import jwt from 'jsonwebtoken';
-var jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
 // import { SECRET_KEY, EXPIRATION_DATE } from '../config';
-var { SECRET_KEY, EXPIRATION_DATE } = require('../config');
-var { db2Promise } = require('../mysql/mysql');//
+const { SECRET_KEY, EXPIRATION_DATE } = require('../config');
+const { db2Promise } = require('../mysql/mysql');//
 
 // modules
 // import UserModel from '../models/UserModel.js';
