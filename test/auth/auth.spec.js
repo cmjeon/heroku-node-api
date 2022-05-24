@@ -1,11 +1,10 @@
 const app = require('../../app');
 const request = require('supertest');
-const should = require('should');
-// const { getRandomEmail } = require('../utils/util.js');
+// const should = require('should');
 
 const loginspec = () => {
   return (
-    describe('LOGIN', () => {
+    describe.only('LOGIN', () => {
       describe('GET /auth', () => {
         describe('성공케이스', () => {
           it('Auth! 를 반환한다', (done) => { // done
@@ -21,7 +20,7 @@ const loginspec = () => {
       describe('POST /auth/signup', () => {
         describe('성공케이스', () => {
           let body;
-          let email = getRandomEmail();
+          let email = getRandomEmailForTest();
           let name = '테스트유저';
           let pw = '1234';
           let profile = '유저 프로파일';
@@ -85,14 +84,15 @@ const loginspec = () => {
               .expect(200)
               .end((err, res) => {
                 body = res.body;
-                body.message.should.eql('duplEmail');
+                body.success.should.eql(false);
+                body.message.should.eql('Exist Email');
                 done();
               });
           });
         });
       });
       describe('POST /auth/login', () => {
-        describe.only('성공케이스', () => {
+        describe('성공케이스', () => {
           let body;
           let email = 'test@testDupl.com';
           let pw = '1234';
@@ -110,7 +110,6 @@ const loginspec = () => {
               });
           });
           it('로그인에 성공하면 토큰을 반환한다', (done) => { // done
-            console.log('### body', body)
             body.should.have.property('token');
             body.user.should.have.property('email', email)
             done();
@@ -144,8 +143,8 @@ const loginspec = () => {
 
       describe('GET /auth/checkDuplEmail', () => {
         describe('성공케이스', () => {
-          it('중복된 이메일을 등록하면 message로 duplEmail를 반환한다', (done) => {
-            let email = 'test@test.com';
+          it(`중복된 이메일을 등록하면 message로 'Exist Email'를 반환한다`, (done) => {
+            let email = 'test@testDupl.com';
             request(app)
               .get('/auth/checkDuplEmail')
               .send({
@@ -153,8 +152,9 @@ const loginspec = () => {
               })
               .expect(200)
               .end((err, res) => {
-                body = res.body;
-                body.message.should.eql('duplEmail');
+                const body = res.body;
+                body.success.should.eql(false);
+                body.message.should.eql('Exist Email');
                 done();
               });
           });
@@ -182,10 +182,10 @@ const loginspec = () => {
   )
 }
 
-const getRandomEmail = () => {
-  var chars = 'abcdefghijklmnopqrstuvwxyz1234567890';
-  var emailString = '';
-  for (var i = 0; i < 10; i++) {
+const getRandomEmailForTest = () => {
+  const chars = 'abcdefghijklmnopqrstuvwxyz1234567890';
+  let emailString = '';
+  for (let i = 0; i < 10; i++) {
     emailString += chars[Math.floor(Math.random() * chars.length)];
   }
   return emailString + '@test.com';

@@ -1,6 +1,4 @@
-// var { db2Promise } = require('../mysql/mysql');
 const { pool } = require('../postgresql/postgresql');
-const users = require('../users/users.ctrl')
 const bcrypt = require('bcrypt');
 const { newToken } = require('../utils/auth.js');
 const { getRandomID } = require('../utils/util.js');
@@ -53,16 +51,16 @@ const signup = async (req, res) => {
     const existUser = await getUserInfo({ email })
     if(existUser) {
       return res.status(409).json({
-        success: 'Conflict',
-        user: { email: req.body.email },
-        message: 'duplEmail'
+        success: false,
+        user: { email: email },
+        message: 'Exist Email'
       }).end();
     }
     const userId = await createUserInfo(req.body)
     const newUser = await getUserInfo({ userId })
     if (!newUser) return res.status(404).end();
     return res.status(201).json({
-      success: 'true',
+      success: true,
       user: newUser,
       message: 'Signup Success'
     });
@@ -73,26 +71,22 @@ const signup = async (req, res) => {
 }
 
 const checkDuplEmail = async (req, res) => {
-  let success, message, result;
   const email = req.body.email;
-  const queryResult1 = await db2Promise.query(`SELECT * FROM USER_BASE_INFO WHERE EMAIL = '${email}'`);
-  const rows1 = queryResult1[0];
-  const defs1 = queryResult1[1];
-  const err1 = queryResult1[2];
-  if (err1) {
-    return res.status(500).send('Internal Server Error');
-  }
-  const user = rows1[0];
-  if (user) {
-    success = 'true';
-    message = 'duplEmail';
-    result = {
-      success: success,
-      message: message,
+  const existUser = await getUserInfo({ email })
+  if(existUser) {
+    console.log('### Exist Email')
+    return res.status(409).json({
+      success: false,
       user: { email: email },
-    };
-    return res.status(200).json(result);
+      message: 'Exist Email'
+    }).end();
   }
+  const result = {
+    success : true,
+    user: { email: email },
+    message: 'NotExist Email'
+  }
+  return res.status(200).json(result);
 }
 
 const hashPassword = async (pw) => {
