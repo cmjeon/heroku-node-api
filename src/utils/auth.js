@@ -3,28 +3,29 @@
 const jwt = require('jsonwebtoken');
 // import { SECRET_KEY, EXPIRATION_DATE } from '../config';
 const { SECRET_KEY, EXPIRATION_DATE } = require('../config');
-const { db2Promise } = require('../mysql/mysql');//
+const { pool } = require('../postgresql/postgresql');
 
 // modules
 // import UserModel from '../models/UserModel.js';
 
 const newToken = user => {
   const payload = {
-    email: user.EMAIL,
-    userid: user.USER_ID,
+    email: user.email,
+    userid: user.user_id,
   };
   return jwt.sign(payload, SECRET_KEY, {
     expiresIn: EXPIRATION_DATE,
   });
 };
 
-const verifyToken = token =>
-  new Promise((resolve, reject) => {
+const verifyToken = token => {
+  return new Promise((resolve, reject) => {
     jwt.verify(token, SECRET_KEY, (err, payload) => {
       if (err) return reject(err);
       resolve(payload);
     });
   });
+}
 
 // middleware
 const authenticateUser = async (req, res, next) => {
@@ -33,7 +34,6 @@ const authenticateUser = async (req, res, next) => {
   }
 
   const token = req.headers.authorization;
-  // console.log('token::::', token);
   let payload;
   try {
     payload = await verifyToken(token);
@@ -41,13 +41,8 @@ const authenticateUser = async (req, res, next) => {
     return res.status(401).json({ message: 'token is invalid' });
   }
 
-  const result = await db2Promise.query(`SELECT * FROM USER_BASE_INFO WHERE USER_ID = '${payload.userid}'`);
-  const user = result[0][0];
-  // console.log('user ### ', user)
-  // const user = await UserModel.findById(payload._id)
-  //   .select('-password')
-  //   .lean()
-  //   .exec();
+  const { rows } = await pool.query(`SELECT * FROM USER_BASE_INFO WHERE USER_ID = '${payload.userid}'`);
+  const user = rows[0];
 
   if (!user) {
     return res.status(401).json({ message: 'user is not found' });
