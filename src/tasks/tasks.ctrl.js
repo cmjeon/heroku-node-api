@@ -152,6 +152,46 @@ const update = async (req, res) => {
   }
 }
 
+const getDispSeq = async (taskOwnUserId, taskDate) => {
+  const { rows } = await pool.query(`SELECT COALESCE(MAX(DISP_SEQ) + 1, 1) AS DISP_SEQ FROM TASK_BASE_INFO WHERE TASK_OWN_USER_ID = '${ taskOwnUserId }' AND TASK_DATE = '${ taskDate }'`);
+  // console.log('### rows', rows)
+  return rows[0].disp_seq;
+}
+
+const createTaskInfo = async (taskOwnUserId, dispSeq, body) => {
+  try {
+    const taskDate = body.taskDate;
+    const subject = body.subject;
+    const taskDesc = body.taskDesc ? body.taskDesc : null;
+    const status = body.status ? body.status : '';
+    const dueDtime = body.dueDtime ? body.dueDtime : null;
+    const alarmDtime = body.alarmDtime ? body.dueDtime : null;
+    if (!taskOwnUserId || !taskDate || !subject || !status) {
+      throw 400
+    }
+    const statement = {
+      text: 'INSERT INTO TASK_BASE_INFO (TASK_DATE, DISP_SEQ, SUBJECT, TASK_DESC, STATUS, DUE_DTIME, ALARM_DTIME, CRET_DTIME, CRET_ID, MOD_DTIME, MOD_ID, TASK_OWN_USER_ID) VALUES ( $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING TASK_ID',
+      values: [taskDate, dispSeq, subject, taskDesc, status, dueDtime, alarmDtime, new Date(), taskOwnUserId, new Date(), taskOwnUserId, taskOwnUserId]
+    }
+    const {rows} = await pool.query(statement);
+    console.log('### rows', rows[0])
+    return rows[0].task_id;
+  } catch(err) {
+    console.log(err);
+    throw err;
+  }
+}
+
+const getTaskInfo = async (taskId) => {
+  try {
+    const { rows } = await pool.query(`SELECT TASK_ID, TASK_DATE, DISP_SEQ, SUBJECT, TASK_DESC, STATUS, DUE_DTIME, ALARM_DTIME, CRET_DTIME, CRET_ID, MOD_DTIME, MOD_ID, TASK_OWN_USER_ID FROM TASK_BASE_INFO WHERE TASK_ID = '${ taskId }'`);
+    return rows[0];
+  } catch(err) {
+    console.log(err)
+    throw err;
+  }
+}
+
 module.exports = {
   list,
   show,
