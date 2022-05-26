@@ -1,6 +1,6 @@
 const { pool } = require('../postgresql/postgresql');
 // var { getTodayDateWithHypen } = require('../utils/util');
-var { getTodayDateWithHypen } = require('../utils/util.js');
+const { getTodayDateWithHypen } = require('../utils/util.js');
 
 const list = async (req, res) => {
   if (!req.headers.userid) {
@@ -9,7 +9,7 @@ const list = async (req, res) => {
   let taskOwnUserId = req.headers.userid;
   let todayDate = getTodayDateWithHypen();
   if (req.query.taskDate) {
-    var dateReg = /^(19|20|21)\d{2}[-](0[1-9]|1[0-2])[-](0[1-9]|1\d|2\d|3[01])$/;
+    const dateReg = /^(19|20|21)\d{2}[-](0[1-9]|1[0-2])[-](0[1-9]|1\d|2\d|3[01])$/;
     if (!req.query.taskDate.match(dateReg)) return res.status(400).end();
   }
   const taskDate = req.query.taskDate || todayDate;
