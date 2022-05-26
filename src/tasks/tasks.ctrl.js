@@ -14,12 +14,8 @@ const list = async (req, res) => {
   }
   const taskDate = req.query.taskDate || todayDate;
   try {
-    const resultt = await pool.query(`SELECT TASK_ID, TASK_DATE, DISP_SEQ, SUBJECT, TASK_DESC, STATUS, DUE_DTIME, ALARM_DTIME, CRET_DTIME, CRET_ID, MOD_DTIME, MOD_ID FROM TASK_BASE_INFO WHERE TASK_OWN_USER_ID = '${taskOwnUserId}' AND TASK_DATE='${taskDate}'`);
-    console.log('###resultt', resultt)
-    if (err1) {
-      return res.status(500).send('Internal Server Error');
-    }
-    res.json(rows1);
+    const { rows } = await pool.query(`SELECT TASK_ID, TASK_DATE, DISP_SEQ, SUBJECT, TASK_DESC, STATUS, DUE_DTIME, ALARM_DTIME, CRET_DTIME, CRET_ID, MOD_DTIME, MOD_ID FROM TASK_BASE_INFO WHERE TASK_OWN_USER_ID = '${taskOwnUserId}' AND TASK_DATE='${taskDate}'`);
+    res.json(rows);
     return res.status(200).end();
   } catch (err) {
     console.log('### SQL ERROR ###\n', err, '\n### SQL ERROR ###');

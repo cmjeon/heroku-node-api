@@ -62,7 +62,7 @@ const taskspec = () => {
               .end((err, res) => {
                 res.body.should.be.instanceOf(Array);
                 for (let task of res.body) {
-                  task.TASK_DATE.should.eql(getTodayDateWithHypen());
+                  task.task_date.should.eql(getTodayDateWithHypen());
                 }
                 done();
               });
@@ -76,7 +76,8 @@ const taskspec = () => {
                 'userid': userId
               })
               .end((err, res) => {
-                for (let task of res.body) task.TASK_DATE.should.eql(taskDate);
+                // console.log('###', res)
+                for (let task of res.body) task.task_date.should.eql(taskDate);
                 done();
               });
           });
