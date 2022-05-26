@@ -34,16 +34,14 @@ const show = async (req, res) => {
     return res.status(400).end();
   }
   try {
-    const [rows1, defs1, err1] = await pool.query(`SELECT TASK_ID, TASK_DATE, DISP_SEQ, SUBJECT, TASK_DESC, STATUS, DUE_DTIME, ALARM_DTIME, CRET_DTIME, CRET_ID, MOD_DTIME, MOD_ID FROM TASK_BASE_INFO WHERE TASK_OWN_USER_ID = '${taskOwnUserId}' AND TASK_ID='${taskId}'`);
-    if (err1) {
-      return res.status(500).send('Internal Server Error');
-    }
-    let task = rows1[0];
+    const { rows } = await pool.query(`SELECT TASK_ID, TASK_DATE, DISP_SEQ, SUBJECT, TASK_DESC, STATUS, DUE_DTIME, ALARM_DTIME, CRET_DTIME, CRET_ID, MOD_DTIME, MOD_ID FROM TASK_BASE_INFO WHERE TASK_OWN_USER_ID = '${taskOwnUserId}' AND TASK_ID='${taskId}'`);
+    const task = rows[0];
+    // console.log('### task', task)
     if (!task) return res.status(404).end();
     res.json(task);
     return res.status(200).end();
   } catch (err) {
-    console.log('### SQL ERROR ###\n', err, '\n### SQL ERROR ###');
+    // console.log('### SQL ERROR ###\n', err, '\n### SQL ERROR ###');
     return res.status(500).send('Internal Server Error');
   }
 }

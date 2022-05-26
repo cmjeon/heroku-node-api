@@ -129,7 +129,7 @@ const taskspec = () => {
                 'userid': userId
               })
               .end((err, res) => {
-                res.body.should.have.property('TASK_ID', taskId);
+                res.body.should.have.property('task_id', taskId);
                 done();
               });
           });
