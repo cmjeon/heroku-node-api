@@ -1,6 +1,5 @@
 const app = require('../../app');
 const request = require('supertest');
-const should = require('should');
 const { getTodayDateWithHypen } = require('../../src/utils/util.js');
 
 const taskspec = () => {
@@ -17,6 +16,39 @@ const taskspec = () => {
           .expect(200);
         token = res.body.token;
         userId = res.body.user.userId;
+      });
+      describe.only('POST /tasks', () => {
+        describe('성공케이스', () => {
+          let taskDate;
+          let subject;
+          let status;
+          let taskId;
+          let body;
+          before(async () => {
+            taskDate = getTodayDateWithHypen();
+            subject = '할일의 제목';
+            status = 'OPEN';
+            const res = await request(app)
+              .post('/tasks')
+              .set({
+                'authorization': token,
+                'userid': userId
+              })
+              .send({
+                taskDate: taskDate,
+                subject: subject,
+                status: status
+              })
+              .expect(201);
+            body = res.body;
+            taskId = body.task.task_id;
+          });
+          it('할일등록에 성공하면 할일 객체를 반환한다', async () => { // done
+            body.task.should.have.property('task_id');
+            body.task.task_id.should.be.equal(taskId)
+            body.task.should.have.property('subject', subject);
+          });
+        })
       });
       describe('GET /tasks', () => {
         describe('성공케이스', () => {
@@ -123,40 +155,6 @@ const taskspec = () => {
               .end(done);
           });
         });
-      });
-      describe('POST /tasks', () => {
-        describe('성공케이스', () => {
-          let taskDate;
-          let subject;
-          let status;
-          let taskId;
-          before(async () => {
-            taskDate = getTodayDateWithHypen();
-            subject = '할일의 제목';
-            status = 'OPEN';
-            // console.log('id:', id);
-            // console.log('token:', token);
-            const res = await request(app)
-              .post('/tasks')
-              .set({
-                'authorization': token,
-                'userid': userId
-              })
-              .send({
-                taskDate: taskDate,
-                subject: subject,
-                status: status
-              })
-              .expect(201);
-            body = res.body;
-            taskId = body.task.TASK_ID;
-          });
-          it('할일등록에 성공하면 할일 객체를 반환한다', async () => { // done
-            body.task.should.have.property('TASK_ID');
-            body.task.TASK_ID.should.be.equal(taskId)
-            body.task.should.have.property('SUBJECT', subject);
-          });
-        })
       });
       describe('DELETE /tasks/:taskId', () => {
         describe('성공케이스', () => {
