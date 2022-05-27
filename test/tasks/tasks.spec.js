@@ -180,7 +180,7 @@ const taskspec = () => {
               })
               .expect(201);
             body = res.body;
-            taskId = body.task.TASK_ID;
+            taskId = body.task.task_id;
             // console.log('BEFORE END')
           });
           it('204를 응답한다', (done) => {

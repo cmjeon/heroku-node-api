@@ -47,18 +47,18 @@ const show = async (req, res) => {
 }
 
 const destroy = async (req, res) => {
-  if (!req.headers.userid) {
-    return res.status(403).end();
-  }
-  let taskOwnUserId = req.headers.userid;
-  const taskId = parseInt(req.params.taskId);
-  if (Number.isNaN(taskId)) {
-    return res.status(400).end();
-  }
-
   try {
-    const [rows1, defs1, err1] = await pool.query(`DELETE FROM TASK_BASE_INFO WHERE TASK_OWN_USER_ID = '${taskOwnUserId}' AND TASK_ID='${taskId}'`);
-    if (err1) {
+    if (!req.headers.userid) {
+      return res.status(403).end();
+    }
+    let taskOwnUserId = req.headers.userid;
+    const taskId = parseInt(req.params.taskId);
+    if (Number.isNaN(taskId)) {
+      return res.status(400).end();
+    }
+
+    const { rows } = await pool.query(`DELETE FROM TASK_BASE_INFO WHERE TASK_OWN_USER_ID = '${taskOwnUserId}' AND TASK_ID='${taskId}' RETURNING task_id`);
+    if (!rows) {
       return res.status(500).send('Internal Server Error');
     }
     return res.status(204).end();
@@ -168,7 +168,7 @@ const createTaskInfo = async (taskOwnUserId, dispSeq, body) => {
       values: [taskDate, dispSeq, subject, taskDesc, status, dueDtime, alarmDtime, new Date(), taskOwnUserId, new Date(), taskOwnUserId, taskOwnUserId]
     }
     const {rows} = await pool.query(statement);
-    console.log('### rows', rows[0])
+    // console.log('### rows', rows[0])
     return rows[0].task_id;
   } catch(err) {
     console.log(err);
