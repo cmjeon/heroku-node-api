@@ -180,6 +180,23 @@ const getTaskInfo = async (taskId) => {
   }
 }
 
+const updateTaskInfo = async (task) => {
+  try {
+    // console.log('### updateTaskInfo:task', task)
+    const statement = {
+      text: 'UPDATE TASK_BASE_INFO SET TASK_DATE=$1, DISP_SEQ=$2, SUBJECT=$3, TASK_DESC=$4, STATUS=$5, DUE_DTIME=$6, ALARM_DTIME=$7, MOD_DTIME=$8, MOD_ID=$9 WHERE TASK_ID=$10 RETURNING task_id',
+      values: [task.task_date, task.disp_seq, task.subject, task.task_desc, task.status, task.due_dtime, task.alarm_dtime, new Date(), task.mod_id, task.task_id]
+    }
+    // console.log('### statement', statement);
+    const { rows } = await pool.query(statement);
+    // console.log('### rows', rows)
+    return rows[0].task_id
+  } catch(err) {
+    console.log(err);
+    throw err;
+  }
+}
+
 module.exports = {
   list,
   show,
