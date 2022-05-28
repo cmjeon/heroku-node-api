@@ -275,7 +275,7 @@ const taskspec = () => {
           });
           it('없는 taskId 일 경우 404 을 반환한다', (done) => {
             request(app)
-              .patch('/tasks/1')
+              .patch('/tasks/2')
               .set({
                 'authorization': token,
                 'userid': userId
