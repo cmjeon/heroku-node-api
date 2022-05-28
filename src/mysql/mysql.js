@@ -1,12 +1,12 @@
 require('dotenv').config()
 
-const { host, port, USER, PASSWORD, DATABASE } = process.env
+const { HOST, PORT, USER, PASSWORD, DATABASE } = process.env
 const mysql1 = require('mysql')
 const mysql2 = require('mysql2')
 
 const db = mysql1.createConnection({
-  host: host,
-  port: port,
+  host: HOST,
+  port: PORT,
   user: USER,
   password: PASSWORD,
   database: DATABASE,
@@ -14,8 +14,8 @@ const db = mysql1.createConnection({
 })
 
 const db2 = mysql2.createPool({
-  host: host,
-  port: port,
+  host: HOST,
+  port: PORT,
   user: USER,
   password: PASSWORD,
   database: DATABASE,
