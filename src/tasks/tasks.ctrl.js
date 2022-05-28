@@ -168,7 +168,11 @@ const createTaskInfo = async (taskOwnUserId, dispSeq, body) => {
 
 const getTaskInfo = async (taskId) => {
   try {
-    const { rows } = await pool.query(`SELECT TASK_ID, TASK_DATE, DISP_SEQ, SUBJECT, TASK_DESC, STATUS, DUE_DTIME, ALARM_DTIME, CRET_DTIME, CRET_ID, MOD_DTIME, MOD_ID, TASK_OWN_USER_ID FROM TASK_BASE_INFO WHERE TASK_ID = '${ taskId }'`);
+    const statement = {
+      text: 'SELECT TASK_ID, TASK_DATE, DISP_SEQ, SUBJECT, TASK_DESC, STATUS, DUE_DTIME, ALARM_DTIME, CRET_DTIME, CRET_ID, MOD_DTIME, MOD_ID, TASK_OWN_USER_ID FROM TASK_BASE_INFO WHERE TASK_ID = $1',
+      values: [taskId]
+    }
+    const { rows } = await pool.query(statement);
     return rows[0];
   } catch(err) {
     console.log(err)
