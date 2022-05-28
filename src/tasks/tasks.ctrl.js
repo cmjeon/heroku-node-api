@@ -94,9 +94,8 @@ const create = async (req, res) => {
 }
 
 const update = async (req, res) => {
-  let taskOwnUserId = req.body.userId;
+  let userId = req.headers.userid;
   let taskId = parseInt(req.params.taskId);
-  // console.log('taskId:', taskId);
   if (Number.isNaN(taskId)) {
     return res.status(400).end();
   }
@@ -110,38 +109,29 @@ const update = async (req, res) => {
   let alarmDtime = req.body.alarmDtime;
 
   try {
-    const queryResult1 = await pool.query(`SELECT TASK_ID, TASK_DATE, DISP_SEQ, SUBJECT, TASK_DESC, STATUS, DUE_DTIME, ALARM_DTIME, CRET_DTIME, CRET_ID, MOD_DTIME, MOD_ID FROM TASK_BASE_INFO WHERE TASK_ID='${taskId}'`);
-    const tasks1 = queryResult1[0];
-    const defs1 = queryResult1[1];
-    const err1 = queryResult1[2];
-
-    if (err1) {
-      return res.status(500).send('Internal Server Error');
-    }
-    let task = tasks1[0];
+    let task = await getTaskInfo(taskId);
+    // console.log('### update:task', task)
     if (!task) return res.status(404).end();
     // console.log('TASK!!!', task);
-    if (taskDate) task.TASK_DATE = taskDate;
-    if (dispSeq) task.DISP_SEQ = dispSeq;
-    if (subject) task.SUBJECT = subject;
-    if (taskDesc) task.TASK_DESC = taskDesc;
-    if (status) task.STATUS = status;
-    if (dueDtime) task.DUE_DTIME = dueDtime;
-    if (alarmDtime) task.ALARM_DTIME = alarmDtime;
-    // console.log(subject);
-    const excuteResult1 = await pool.execute(`UPDATE TASK_BASE_INFO SET TASK_DATE=?, DISP_SEQ=?, SUBJECT=?, TASK_DESC=?, STATUS=?, DUE_DTIME=?, ALARM_DTIME=?, MOD_DTIME=?, MOD_ID=? WHERE TASK_ID = '${taskId}'`,
-      [task.TASK_DATE, task.DISP_SEQ, task.SUBJECT, task.TASK_DESC, task.STATUS, task.DUE_DTIME, task.ALARM_DTIME, new Date(), taskOwnUserId]);
-
-    const result2 = excuteResult1[0];
-    const err2 = excuteResult1[1];
-    if (err2) {
-      return res.status(500).send('Internal Server Error');
-    }
-    // console.log('modified task', task);
-    res.json(task);
+    task.task_id = taskId;
+    if (taskDate) task.task_date = taskDate;
+    if (dispSeq) task.disp_seq = dispSeq;
+    if (subject) task.subject = subject;
+    if (taskDesc) task.task_desc = taskDesc;
+    if (status) task.status = status;
+    if (dueDtime) task.due_dtime = dueDtime;
+    if (alarmDtime) task.alarm_dtime = alarmDtime;
+    task.mod_id = userId;
+    const updatedTaskId = await updateTaskInfo(task);
+    const updatedTask = await getTaskInfo(updatedTaskId);
+    // console.log ('### update:updatedTask', updatedTask)
+    res.json({
+      success: 'true',
+      task: updatedTask,
+      message: 'Success'
+    })
     return res.status(200).end();
   } catch (err) {
-    console.log('### SQL ERROR ###\n', err, '\n### SQL ERROR ###');
     return res.status(500).json('Internal Server Error');
   }
 }
