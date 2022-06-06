@@ -2,19 +2,19 @@ const { pool } = require('../postgresql/postgresql');
 var { db2Promise } = require('../mysql/mysql');
 
 const list = (req, res) => {
-  req.query.limit = req.query.limit || 10;
-  const limit = parseInt(req.query.limit, 10);
-  if (Number.isNaN(limit)) {
-    return res.status(400).end();
+  try {
+    req.query.limit = req.query.limit || 10;
+    const limit = parseInt(req.query.limit, 10);
+    if (Number.isNaN(limit)) {
+      return res.status(400).end();
+    }
+    const {rows} = db2Promise.query(`SELECT USER_ID, EMAIL, NAME, PROFILE FROM USER_BASE_INFO limit ${limit}`);
+    const users = rows;
+    res.json(users);
+    res.status(200).end();
+  } catch (err) {
+    return res.status(500).send('Internal Server Error');
   }
-  const [rows1, defs1, err1] = db2Promise.query(`SELECT USER_ID, EMAIL, NAME, PROFILE FROM USER_BASE_INFO limit ${limit}`);
-  if (err1) {
-    console.log('err1');
-    throw err1;
-  }
-  const users = rows1;
-  res.json(users);
-  res.status(200).end();
 }
 
 const show = (req, res) => {
