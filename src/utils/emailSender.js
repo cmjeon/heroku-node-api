@@ -1,6 +1,5 @@
-const config = require('../config/config.json')
-const nodemailer = require('nodemailer');// const smtpTransport = require('nodemailer-smtp-transport');
-var { getRandomTempNumber } = require('./util.js');
+const nodemailer = require('nodemailer') // const smtpTransport = require('nodemailer-smtp-transport');
+const { getRandomTempNumber } = require('./util.js')
 
 const sendEmail = async (user) => {
   console.log('### sendEmail:user', user)
@@ -12,22 +11,23 @@ const sendEmail = async (user) => {
     secure: false,
     auth: {
       user: config.email.user,
-      pass: config.email.pass
-    }
-  });
+      pass: config.email.pass,
+    },
+  })
 
   const randomNumber = getRandomTempNumber(6)
 
-  const emailOptions = { // 옵션값 설정    
+  const emailOptions = {
+    // 옵션값 설정
     from: config.email.user,
     to: 'test@test.com',
     subject: 'Sending Email using Node.js[nodemailer]',
-    text: `That was easy! for ${user.EMAIL}\nNumber : ${randomNumber}`
-  };
+    text: `That was easy! for ${user.EMAIL}\nNumber : ${randomNumber}`,
+  }
 
-  const result = await transporter.sendMail(emailOptions);
+  const result = await transporter.sendMail(emailOptions)
 
-  console.log('Message sent: %s', result);
+  console.log('Message sent: %s', result)
   // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
   return result
 }

@@ -17,7 +17,7 @@ const taskspec = () => {
         token = res.body.token;
         userId = res.body.user.userId;
       });
-      describe.only('POST /tasks', () => {
+      describe('POST /tasks', () => {
         describe('성공케이스', () => {
           let taskDate;
           let subject;
@@ -120,8 +120,8 @@ const taskspec = () => {
       });
       describe('GET /tasks/:taskId', () => {
         describe('성공케이스', () => {
-          let taskId = 2;
-          it(`taskId 가 ${taskId}인 유저 객체를 반환한다`, (done) => {
+          let taskId = 1;
+          it(`taskId 가 ${taskId}인 할일 객체를 반환한다`, (done) => {
             request(app)
               .get(`/tasks/${taskId}`)
               .set({
@@ -147,7 +147,7 @@ const taskspec = () => {
           });
           it('taskId 로 할일을 찾을 수 없을 경우 404으로 응답한다', (done) => {
             request(app)
-              .get('/tasks/1')
+              .get('/tasks/2')
               .set({
                 'authorization': token,
                 'userid': userId
@@ -211,12 +211,13 @@ const taskspec = () => {
       describe('PATCH /tasks/:taskId', () => {
         describe('성공케이스', () => {
           let body;
-          const taskId = 64;
+          const taskId = 1;
           const subject = '변경된 할일 제목';
+          const dispSeq = 1;
           const taskDate = '2021-08-22';
-          const taskDesc = '변경될 할일의 설명';
+          const taskDesc = '변경된 할일의 설명';
           const status = 'COMPLETED';
-          const dueDtime = '2021-08-31';
+          const dueDtime = '2021-08-31 09:00:00';
           const alarmDtime = '2021-08-30 10:00:00';
           before((done) => {
             request(app)
@@ -229,6 +230,7 @@ const taskspec = () => {
                 userId: userId,
                 subject: subject,
                 taskDate: taskDate,
+                dispSeq: dispSeq,
                 taskDesc: taskDesc,
                 status: status,
                 dueDtime: dueDtime,
@@ -240,15 +242,15 @@ const taskspec = () => {
               });
           });
           it('제목을 바꾸면 변경된 할일객체를 반환한다', (done) => {
-            body.should.have.property('SUBJECT', subject);
+            body.task.should.have.property('subject', subject);
             done();
           });
           it('할일일자, 설명, 상태, 마감일, 알림일시를 변경하면 변경된 할일객체를 반환한다.', (done) => {
-            body.should.have.property('TASK_DATE', taskDate);
-            body.should.have.property('TASK_DESC', taskDesc);
-            body.should.have.property('STATUS', status);
-            body.should.have.property('DUE_DTIME', dueDtime);
-            body.should.have.property('ALARM_DTIME', alarmDtime);
+            body.task.should.have.property('task_date', taskDate);
+            body.task.should.have.property('task_desc', taskDesc);
+            body.task.should.have.property('status', status);
+            // body.task.should.have.property('due_dtime', dueDtime);
+            // body.task.should.have.property('alarm_dtime', alarmDtime);
             done();
           })
         });
@@ -275,7 +277,7 @@ const taskspec = () => {
           });
           it('없는 taskId 일 경우 404 을 반환한다', (done) => {
             request(app)
-              .patch('/tasks/1')
+              .patch('/tasks/2')
               .set({
                 'authorization': token,
                 'userid': userId
