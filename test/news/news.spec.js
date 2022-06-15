@@ -1,7 +1,6 @@
 const app = require('../../app');
 const request = require('supertest');
 const should = require('should');
-const { getTodayDateWithHypen } = require('../../src/utils/util.js');
 
 const newsspec = () => {
   return (
@@ -20,7 +19,7 @@ const newsspec = () => {
       })
       describe('GET /news/yh/rss/newest', () => {
         describe('성공케이스', () => {
-          it('최신 뉴스 객체를 반환한다', (done) => {
+          it('최신 뉴스 목록을 반환한다', (done) => {
             request(app)
               .get('/news/yh/rss/newest')
               .end((err, res) => {
@@ -33,11 +32,23 @@ const newsspec = () => {
       })
       describe('GET /news/yh/rss/headline', () => {
         describe('성공케이스', () => {
-          it('헤드라인 뉴스 객체를 반환한다', (done) => {
+          it('헤드라인 뉴스 목록을 반환한다', (done) => {
             request(app)
               .get('/news/yh/rss/headline')
               .end((err, res) => {
                 // console.log('RES!!!', res.body);
+                done();
+              });
+          });
+        });
+      })
+      describe('GET /news/naver', () => {
+        describe('성공케이스', () => {
+          it('네이버 뉴스 목록을 반환한다', (done) => {
+            request(app)
+              .get('/news/naver/search')
+              .end((err, res) => {
+                console.log('RES!!!', res.body);
                 done();
               });
           });

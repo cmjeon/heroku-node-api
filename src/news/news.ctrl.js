@@ -21,8 +21,18 @@ const yhRssHeadline = async (req, res) => {
   res.status(200).end();
 }
 
+const naverSearch = async (req, res) => {
+  const query = req.params.query;
+  const url =  `https://openapi.naver.com/v1/search/news.json?query=${query}`
+  console.log('dskjfsaljflkj')
+
+  res.json(rssData);
+  res.status(200).end();
+}
+
 module.exports = {
   index,
   yhRssNewest: yhRssNewest,
-  yhRssHeadline: yhRssHeadline
+  yhRssHeadline: yhRssHeadline,
+  naverSearch: naverSearch,
 }
