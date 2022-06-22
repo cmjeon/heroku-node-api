@@ -3,6 +3,8 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 const morgan = require('morgan');
+require("dotenv").config();
+
 // const db = require('./mysql/mysql');
 // var bodyParser = require('body-parser');
 const auth = require('./src/auth/index');
