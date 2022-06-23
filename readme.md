@@ -35,6 +35,10 @@ $ npm start
 
 ## heroku push 방법
 
+github 은 main 브랜치를 사용하고, heroku 는 master 브랜치를 사용한다.
+
+수정된 소스는 github 의 main 브랜치로 머지 후 heroku 의 master 브랜치로 머지한다.
+
 1. main branch 소스수정
 1. main branch push
     ```bash
