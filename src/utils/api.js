@@ -11,4 +11,4 @@ const instance = axios.create({
 
 module.exports = {
   instance
-}가
+}
