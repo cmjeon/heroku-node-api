@@ -3,6 +3,8 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 const morgan = require('morgan');
+require("dotenv").config();
+
 // const db = require('./mysql/mysql');
 // var bodyParser = require('body-parser');
 const auth = require('./src/auth/index');
@@ -25,6 +27,18 @@ app.use(express.urlencoded({ extended: true }));
 app.get('/', function (req, res) {
   res.json('Hello!');
 });
+
+// const ttt = async () => {
+//   try {
+//     const { pool } = require('./src/postgresql/postgresql');
+//     const { rows } = await pool.query('SELECT NOW()');
+//     console.log('### pg rows ###', rows)
+//   } catch(e) {
+//     console.log('### e', e);
+//   }
+// }
+//
+// ttt();
 
 app.use('/auth', auth);
 app.use('/users', authenticateUser, users);
