@@ -1,4 +1,5 @@
 const { parse } = require('rss-to-json');
+const { instance } = require('../utils/api.js');
 
 const index = (req, res) => {
   res.json('News!');
@@ -22,12 +23,15 @@ const yhRssHeadline = async (req, res) => {
 }
 
 const naverSearch = async (req, res) => {
-  const query = req.params.query;
-  const url =  `https://openapi.naver.com/v1/search/news.json?query=${query}`
-  console.log('dskjfsaljflkj')
+  const query = req.query.query;
+  const url =  `v1/search/news.json?query=${query}`
 
-  res.json(rssData);
-  res.status(200).end();
+  const result = await instance({
+    method : 'get',
+    url : url
+  })
+
+  res.status(200).json(result.data.items).end();
 }
 
 module.exports = {
