@@ -23,15 +23,19 @@ const yhRssHeadline = async (req, res) => {
 }
 
 const naverSearch = async (req, res) => {
-  const query = req.query.query;
-  const url =  `v1/search/news.json?query=${query}`
+  try {
+    const query = encodeURIComponent(req.query.query);
+    const url =  `v1/search/news.json?query=${query}`
 
-  const result = await instance({
-    method : 'get',
-    url : url
-  })
+    const result = await instance({
+      method : 'get',
+      url : url
+    })
 
-  res.status(200).json(result.data.items).end();
+    res.status(200).json(result.data).end();
+  } catch(e) {
+    return res.status(500).send('Internal Server Error');
+  }
 }
 
 module.exports = {
