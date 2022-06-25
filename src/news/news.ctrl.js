@@ -7,19 +7,29 @@ const index = (req, res) => {
 
 
 const yhRssNewest = async (req, res) => {
-  const path = 'http://www.yonhapnewstv.co.kr/browse/feed/';
+  try {
+    const path = 'http://www.yonhapnewstv.co.kr/browse/feed/';
 
-  const rssData = await parse(path);
-  res.json(rssData);
-  res.status(200).end();
+    const rssData = await parse(path);
+    res.json(rssData);
+    res.status(200).end();
+  } catch (e) {
+    console.log(e)
+    return res.status(500).send('Internal Server Error');
+  }
 }
 
 const yhRssHeadline = async (req, res) => {
-  const path = 'http://www.yonhapnewstv.co.kr/category/news/headline/feed/';
+  try {
+    const path = 'http://www.yonhapnewstv.co.kr/category/news/headline/feed/';
 
-  const rssData = await parse(path);
-  res.json(rssData);
-  res.status(200).end();
+    const rssData = await parse(path);
+    res.json(rssData);
+    res.status(200).end();
+  } catch(e) {
+    console.log(e)
+    return res.status(500).send('Internal Server Error');
+  }
 }
 
 const naverSearch = async (req, res) => {
@@ -34,6 +44,7 @@ const naverSearch = async (req, res) => {
 
     res.status(200).json(result.data).end();
   } catch(e) {
+    console.log(e)
     return res.status(500).send('Internal Server Error');
   }
 }
