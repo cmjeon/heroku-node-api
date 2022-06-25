@@ -1,51 +1,54 @@
 const { pool } = require('../postgresql/postgresql');
-var { db2Promise } = require('../mysql/mysql');
 
-const list = (req, res) => {
+const list = async (req, res) => {
   try {
     req.query.limit = req.query.limit || 10;
     const limit = parseInt(req.query.limit, 10);
     if (Number.isNaN(limit)) {
       return res.status(400).end();
     }
-    const {rows} = db2Promise.query(`SELECT USER_ID, EMAIL, NAME, PROFILE FROM USER_BASE_INFO limit ${limit}`);
-    const users = rows;
-    res.json(users);
-    res.status(200).end();
-  } catch (err) {
+    const { rows } = await pool.query(`SELECT USER_ID, EMAIL, NAME, PROFILE FROM USER_BASE_INFO limit ${limit}`);
+    res.json(rows);
+    return res.status(200).end();
+  } catch (e) {
     return res.status(500).send('Internal Server Error');
   }
 }
 
-const show = (req, res) => {
-  const id = req.params.id;
-  if (!id) {
-    return res.status(400).end();
+const show = async (req, res) => {
+  try {
+    if (!req.headers.userid) {
+      return res.status(403).end();
+    }
+    const id = req.params.id;
+    if (!id) {
+      return res.status(400).end();
+    }
+    const { rows } = await pool.query(`SELECT USER_ID, EMAIL, NAME, PROFILE FROM USER_BASE_INFO WHERE USER_ID = '${id}'`);
+    const user = rows[0];
+    if (!user) return res.status(404).end();
+    res.json(user);
+    return res.status(200).end();
+  } catch (e) {
+    console.log(e);
+    return res.status(500).send('Internal Server Error');
   }
-  // if (Number.isNaN(id)) {
-  //   return res.status(400).end();
-  // }
-  // console.log('id', id);
-  const [rows1, defs1, err1] = db2Promise.query(`SELECT USER_ID, EMAIL, NAME, PROFILE FROM USER_BASE_INFO WHERE USER_ID = '${id}'`);
-  // console.log('users', users);
-  if (err1) {
-    console.log('err1');
-    throw err1;
-  }
-  const user = rows1[0];
-  if (!user) return res.status(404).end();
-  res.json(user);
 }
 
-const destroy = (req, res) => {
-  const id = req.params.id;
-  const [rows1, defs1, err1] = db2Promise.query(`DELETE FROM USER_BASE_INFO WHERE USER_ID = '${id}'`)
-  // console.log('users', users);
-  if (err1) {
-    console.log('err1');
-    throw err1;
+const destroy = async (req, res) => {
+  try {
+    const id = req.params.id;
+
+    const {rows} = await pool.query(`DELETE FROM USER_BASE_INFO WHERE USER_ID = '${id}'`)
+    console.log('rows', rows);
+    if (!rows) {
+      return res.status(500).send('Internal Server Error');
+    }
+    return res.status(204).end();
+  } catch (e) {
+    console.log(e);
+    return res.status(500).send('Internal Server Error');
   }
-  res.status(204).end();
 }
 
 module.exports = {
