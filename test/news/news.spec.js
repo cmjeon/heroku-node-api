@@ -23,8 +23,7 @@ const newsspec = () => {
             request(app)
               .get('/news/yh/rss/newest')
               .end((err, res) => {
-                console.log('RES!!!', res.body.title);
-                console.log(typeof res.body.title);
+                res.body.should.has.properties(['title','description','items']);
                 done();
               });
           });
@@ -36,7 +35,7 @@ const newsspec = () => {
             request(app)
               .get('/news/yh/rss/headline')
               .end((err, res) => {
-                // console.log('RES!!!', res.body);
+                res.body.should.has.properties(['title','description','items']);
                 done();
               });
           });
@@ -45,10 +44,11 @@ const newsspec = () => {
       describe('GET /news/naver', () => {
         describe('성공케이스', () => {
           it('네이버 뉴스 목록을 반환한다', (done) => {
+            let query = encodeURIComponent('경제');
             request(app)
-              .get('/news/naver/search')
+              .get(`/news/naver/search?query=${query}`)
               .end((err, res) => {
-                console.log('RES!!!', res.body);
+                res.body.should.has.properties(['lastBuildDate','total','items']);
                 done();
               });
           });
