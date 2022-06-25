@@ -1,6 +1,6 @@
 const axios = require('axios')
 
-const instance = axios.create({
+const naverInstance = axios.create({
   baseURL: 'https://openapi.naver.com/',
   timeout: 1000,
   headers: {
@@ -9,6 +9,18 @@ const instance = axios.create({
   }
 });
 
+const openweatherInstance = axios.create({
+  baseURL: 'https://api.openweathermap.org/',
+  timeout: 1000,
+});
+
+const yonhapnewstvInstance = axios.create({
+  baseURL: 'http://www.yonhapnewstv.co.kr/',
+  timeout: 1000,
+});
+
 module.exports = {
-  instance
+  naverInstance: naverInstance,
+  openweatherInstance: openweatherInstance,
+  yonhapnewstvInstance: yonhapnewstvInstance
 }

@@ -1,5 +1,5 @@
 const { parse } = require('rss-to-json');
-const { instance } = require('../utils/api.js');
+const { naverInstance, yonhapnewstvInstance } = require('../utils/api.js');
 
 const index = (req, res) => {
   res.json('News!');
@@ -37,7 +37,7 @@ const naverSearch = async (req, res) => {
     const query = encodeURIComponent(req.query.query);
     const url =  `v1/search/news.json?query=${query}`
 
-    const result = await instance({
+    const result = await naverInstance({
       method : 'get',
       url : url
     })
