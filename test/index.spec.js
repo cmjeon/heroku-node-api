@@ -13,7 +13,7 @@ const utilsauthspec = require('./utils/auth.spec');
 //    console.log("---");
 // });
 
-describe("ROOT", function () {
+describe.only("ROOT", function () {
   describe('GET /', () => {
     describe('성공시', () => {
       it('Hello! 를 반환한다', (done) => { // done
