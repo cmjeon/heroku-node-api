@@ -17,8 +17,8 @@ const list = async (req, res) => {
     const { rows } = await pool.query(`SELECT TASK_ID, TASK_DATE, DISP_SEQ, SUBJECT, TASK_DESC, STATUS, DUE_DTIME, ALARM_DTIME, CRET_DTIME, CRET_ID, MOD_DTIME, MOD_ID FROM TASK_BASE_INFO WHERE TASK_OWN_USER_ID = '${taskOwnUserId}' AND TASK_DATE='${taskDate}'`);
     res.json(rows);
     return res.status(200).end();
-  } catch (err) {
-    console.log('### SQL ERROR ###\n', err, '\n### SQL ERROR ###');
+  } catch (e) {
+    console.log(e);
     return res.status(500).send('Internal Server Error');
   }
 }
@@ -40,8 +40,8 @@ const show = async (req, res) => {
     if (!task) return res.status(404).end();
     res.json(task);
     return res.status(200).end();
-  } catch (err) {
-    // console.log('### SQL ERROR ###\n', err, '\n### SQL ERROR ###');
+  } catch (e) {
+    console.log(e);
     return res.status(500).send('Internal Server Error');
   }
 }
@@ -62,8 +62,8 @@ const destroy = async (req, res) => {
       return res.status(500).send('Internal Server Error');
     }
     return res.status(204).end();
-  } catch (err) {
-    console.log('### SQL ERROR ###\n', err, '\n### SQL ERROR ###');
+  } catch (e) {
+    console.log(e);
     return res.status(500).send('Internal Server Error');
   }
 }
@@ -87,9 +87,9 @@ const create = async (req, res) => {
       task: task,
       message: 'Success'
     });
-  } catch (err) {
-    // console.log('### SQL ERROR ###\n', err, '\n### SQL ERROR ###');
-    return res.status(err).json('Internal Server Error');
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json('Internal Server Error');
   }
 }
 
@@ -131,7 +131,8 @@ const update = async (req, res) => {
       message: 'Success'
     })
     return res.status(200).end();
-  } catch (err) {
+  } catch (e) {
+    console.log(e);
     return res.status(500).json('Internal Server Error');
   }
 }
@@ -160,9 +161,9 @@ const createTaskInfo = async (taskOwnUserId, dispSeq, body) => {
     const {rows} = await pool.query(statement);
     // console.log('### rows', rows[0])
     return rows[0].task_id;
-  } catch(err) {
-    console.log(err);
-    throw err;
+  } catch(e) {
+    console.log(e);
+    throw e;
   }
 }
 
@@ -174,9 +175,9 @@ const getTaskInfo = async (taskId) => {
     }
     const { rows } = await pool.query(statement);
     return rows[0];
-  } catch(err) {
-    console.log(err)
-    throw err;
+  } catch(e) {
+    console.log(e)
+    throw e;
   }
 }
 
@@ -191,9 +192,9 @@ const updateTaskInfo = async (task) => {
     const { rows } = await pool.query(statement);
     // console.log('### rows', rows)
     return rows[0].task_id
-  } catch(err) {
-    console.log(err);
-    throw err;
+  } catch(e) {
+    console.log(e);
+    throw e;
   }
 }
 
