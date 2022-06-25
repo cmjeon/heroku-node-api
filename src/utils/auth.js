@@ -21,7 +21,7 @@ const newToken = (user) => {
 
 const verifyToken = (token) =>
   new Promise((resolve, reject) => {
-    console.log('### verifyToken', token, SECRET_KEY)
+    // console.log('### verifyToken', token, SECRET_KEY)
     jwt.verify(token, SECRET_KEY, (err, payload) => {
       if (err) return reject(err)
       resolve(payload)
@@ -35,17 +35,17 @@ const authenticateUser = async (req, res, next) => {
   }
 
   const token = req.headers.authorization
-  // console.log('token::::', token);
+  // console.log('### token', token);
   let payload
   try {
     payload = await verifyToken(token)
   } catch (e) {
     return res.status(401).json({ message: 'token is invalid' })
   }
-  console.log('payload', payload)
+  // console.log('### payload', payload)
   const { rows } = await pool.query(`SELECT * FROM USER_BASE_INFO WHERE USER_ID = '${payload.userid}'`)
   const user = rows[0]
-  console.log('user ### ', user)
+  // console.log('### user', user)
   // const user = await UserModel.findById(payload._id)
   //   .select('-password')
   //   .lean()

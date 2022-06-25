@@ -1,4 +1,5 @@
 const https = require('https')
+const { openweatherInstance } = require('../utils/api')
 const { APIID_OPENWEATHER } = process.env
 
 const index = (req, res) => {
@@ -28,8 +29,7 @@ const current = (req, res) => {
     method: 'GET',
   }
 
-  https
-    .get(options, (res2) => {
+  https.get(options, (res2) => {
       // console.log(`statusCode: ${res2.statusCode}`);
       let data = ''
       res2.on('data', (chunk) => {
@@ -74,20 +74,19 @@ const onecall = (req, res) => {
     method: 'GET',
   }
 
-  https
-    .get(options, (res2) => {
-      let data = ''
-      res2.on('data', (chunk) => {
-        data += chunk
-      })
-      res2.on('end', () => {
-        res.json(JSON.parse(data))
-        res.status(200).end()
-      })
+  https.get(options, (res2) => {
+    let data = ''
+    res2.on('data', (chunk) => {
+      data += chunk
     })
-    .on('error', (err) => {
-      console.log('Error: ' + err.message)
+    res2.on('end', () => {
+      res.json(JSON.parse(data))
+      res.status(200).end()
     })
+  })
+  .on('error', (err) => {
+    console.log('Error: ' + err.message)
+  })
 }
 
 // https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=&appid=${APIKEY}&lang=kr&units=metric`
