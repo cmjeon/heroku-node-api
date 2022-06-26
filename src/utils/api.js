@@ -19,8 +19,14 @@ const yonhapnewstvInstance = axios.create({
   timeout: 1000,
 });
 
+const coronaInstance = axios.create({
+  baseURL: 'https://api.corona-19.kr/',
+  timeout: 1000,
+})
+
 module.exports = {
   naverInstance: naverInstance,
   openweatherInstance: openweatherInstance,
-  yonhapnewstvInstance: yonhapnewstvInstance
+  yonhapnewstvInstance: yonhapnewstvInstance,
+  coronaInstance: coronaInstance
 }

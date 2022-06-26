@@ -1,26 +1,27 @@
 # 실행방법
 
-데이터베이스 설정이 필수입니다.
+## .env 설정
 
-## 데이터베이스 설정
-
-config/config.json 에 DB 설정 추가
-
-```js
-// src/config/config.json
-{
-  "host": "sampelhost.com",
-  "port": "5555",
-  "user": "sample-user",
-  "password": "sample",
-  "database": "sample-db",
-  "dateString": "date"
-}
+```text
+// .env
+TEST=
+SECRET_KEY=
+EXPIRATION_DATE=
+APIID_OPENWEATHER=
+DB_HOST=
+DB_PORT=
+DB_NAME=
+DB_USER=
+DB_PW=
+NAVER_CLIENT_ID=
+NAVER_CLIENT_SECRET=
+CORONA_SVC_KEY=
 ```
 
 ## 서비스 실행
 
 ```bash
+# 패키지 설치
 $ npm install
 
 # 테스트 모드로 실행
