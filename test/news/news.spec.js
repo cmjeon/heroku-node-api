@@ -48,10 +48,12 @@ const newsspec = () => {
             request(app)
               .get(`/news/naver/search?query=${query}`)
               .end((err, res) => {
-                res.body.should.has.properties(['lastBuildDate','total','items']);
+                res.body.should.has.properties(['lastBuildDate', 'total', 'items']);
                 done();
               });
           });
+        })
+        describe('실패케이스', () => {
           it('display 값이 100이 넘으면 400 오류가 발생', (done) => {
             let query = encodeURIComponent('경제');
             let display = 101;
@@ -67,6 +69,19 @@ const newsspec = () => {
               .get(`/news/naver/search?query=${query}&start=${start}`)
               .expect(400)
               .end(done);
+          });
+        });
+      })
+      describe('GET /news/naver/keywords', () => {
+        describe('성공케이스', () => {
+          it('네이버 뉴스 키워드 목록을 반환한다', (done) => {
+            let query = encodeURIComponent('경제');
+            request(app)
+              .get(`/news/naver/keywords`)
+              .end((err, res) => {
+                res.body.should.has.property('newsKeywords');
+                done();
+              });
           });
         });
       })
