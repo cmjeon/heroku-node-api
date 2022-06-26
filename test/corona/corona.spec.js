@@ -23,6 +23,7 @@ const coronaspec = () => {
               .get('/corona/korea/beta')
               .end((err, res) => {
                 res.body.should.has.property('API').has.properties(['apiName','updateTime','topCountries']);
+                res.body.should.has.property('korea').has.properties(['countryNm','totalCnt','recCnt']);
                 done();
               });
           });
@@ -34,8 +35,7 @@ const coronaspec = () => {
             request(app)
               .get('/corona/korea/vaccine')
               .end((err, res) => {
-                res.body.should.be.equal('Corona!');
-                // TODO 테스트케이스 추가
+                res.body.should.has.property('korea').has.property('vaccine_1').has.properties(['vaccine_1','vaccine_1_old','vaccine_1_new'])
                 done();
               });
           });
@@ -47,8 +47,7 @@ const coronaspec = () => {
             request(app)
               .get('/corona/korea/counter')
               .end((err, res) => {
-                res.body.should.be.equal('Corona!');
-                // TODO 테스트케이스 추가
+                res.body.should.has.properties(['resultCode','TotalCase','TotalRecovered','TotalDeath']);
                 done();
               });
           });
@@ -60,8 +59,7 @@ const coronaspec = () => {
             request(app)
               .get('/corona/korea/country')
               .end((err, res) => {
-                res.body.should.be.equal('Corona!');
-                // TODO 테스트케이스 추가
+                res.body.should.has.property('korea').has.properties(['countryName','newCase','totalCase','recovered']);
                 done();
               });
           });
