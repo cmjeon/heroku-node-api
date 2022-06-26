@@ -72,7 +72,7 @@ const newsspec = () => {
           });
         });
       })
-      describe.only('GET /news/naver/keywords', () => {
+      describe('GET /news/naver/keywords', () => {
         describe('성공케이스', () => {
           it('네이버 뉴스 키워드 목록을 반환한다', (done) => {
             let query = encodeURIComponent('경제');
