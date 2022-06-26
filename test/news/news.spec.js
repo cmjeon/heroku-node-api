@@ -41,7 +41,7 @@ const newsspec = () => {
           });
         });
       })
-      describe.only('GET /news/naver', () => {
+      describe('GET /news/naver', () => {
         describe('성공케이스', () => {
           it('네이버 뉴스 목록을 반환한다', (done) => {
             let query = encodeURIComponent('경제');
