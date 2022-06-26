@@ -10,7 +10,7 @@ const koreaBeta = async (req, res) => {
     const serviceKey = CORONA_SVC_KEY
     const url =  `korea/beta/?serviceKey=${serviceKey}`
 
-    cons가t result = await coronaInstance({
+    const result = await coronaInstance({
       method : 'get',
       url : url
     })
