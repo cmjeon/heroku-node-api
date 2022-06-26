@@ -33,8 +33,7 @@ const yhRssHeadline = async (req, res) => {
   }
 }
 
-const naverSearch = async (req, res) => {  console.log
-
+const naverSearch = async (req, res) => {
   try {
     const query = encodeURIComponent(req.query.query);
     let display = req.query.display;
@@ -63,9 +62,17 @@ const naverSearch = async (req, res) => {  console.log
   }
 }
 
+const naverNewsKeywords = async (req, res) => {
+  const result = {
+    newsKeywords : ['WWDC','Apple','iPhone','개발자','판교']
+  }
+  return res.status(200).json(result).end();
+}
+
 module.exports = {
   index,
   yhRssNewest: yhRssNewest,
   yhRssHeadline: yhRssHeadline,
   naverSearch: naverSearch,
+  naverNewsKeywords,
 }
