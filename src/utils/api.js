@@ -2,7 +2,7 @@ const axios = require('axios')
 
 const naverInstance = axios.create({
   baseURL: 'https://openapi.naver.com/',
-  timeout: 1000,
+  timeout: 3000,
   headers: {
     'X-Naver-Client-Id': process.env.NAVER_CLIENT_ID,
     'X-Naver-Client-Secret': process.env.NAVER_CLIENT_SECRET
