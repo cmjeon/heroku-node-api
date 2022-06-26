@@ -7,6 +7,7 @@ const tasksspec = require('./tasks/tasks.spec');
 const usersspec = require('./users/users.spec');
 const weathersspec = require('./weathers/weathers.spec');
 const newsspec = require('./news/news.spec');
+const coronaspec = require('./corona/corona.spec')
 const utilsauthspec = require('./utils/auth.spec');
 
 // before(function () {
@@ -33,6 +34,7 @@ tasksspec();
 weathersspec();
 newsspec();
 utilsauthspec();
+coronaspec();
 
 let nowDate = getNowTime();
 

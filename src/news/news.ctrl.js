@@ -33,9 +33,14 @@ const yhRssHeadline = async (req, res) => {
 }
 
 const naverSearch = async (req, res) => {
+  console.log('### req.query', req.query)
+  
   try {
     const query = encodeURIComponent(req.query.query);
-    const url =  `v1/search/news.json?query=${query}`
+    const display = req.query.display;
+    const start = req.query.start;
+    const sort = req.query.sort;
+    const url =  `v1/search/news.json?query=${query}&display=${display}&start=${start}&sort=${sort}`
 
     const result = await naverInstance({
       method : 'get',

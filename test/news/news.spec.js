@@ -52,6 +52,22 @@ const newsspec = () => {
                 done();
               });
           });
+          it('display 값이 100이 넘으면 400 오류가 발생', (done) => {
+            let query = encodeURIComponent('경제');
+            let display = 101;
+            request(app)
+              .get(`/news/naver/search?query=${query}&display=${display}`)
+              .expect(400)
+              .end(done);
+          });
+          it('start 값이 1000이 넘으면 400 오류가 발생', (done) => {
+            let query = encodeURIComponent('경제');
+            let start = 1001;
+            request(app)
+              .get(`/news/naver/search?query=${query}&start=${start}`)
+              .expect(400)
+              .end(done);
+          });
         });
       })
     })
