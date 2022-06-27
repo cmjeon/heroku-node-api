@@ -2,7 +2,7 @@ const axios = require('axios')
 
 const naverInstance = axios.create({
   baseURL: 'https://openapi.naver.com/',
-  timeout: 1000,
+  timeout: 2000,
   headers: {
     'X-Naver-Client-Id': process.env.NAVER_CLIENT_ID,
     'X-Naver-Client-Secret': process.env.NAVER_CLIENT_SECRET
@@ -19,8 +19,14 @@ const yonhapnewstvInstance = axios.create({
   timeout: 1000,
 });
 
+const coronaInstance = axios.create({
+  baseURL: 'https://api.corona-19.kr/',
+  timeout: 1000,
+})
+
 module.exports = {
   naverInstance: naverInstance,
   openweatherInstance: openweatherInstance,
-  yonhapnewstvInstance: yonhapnewstvInstance
+  yonhapnewstvInstance: yonhapnewstvInstance,
+  coronaInstance: coronaInstance
 }

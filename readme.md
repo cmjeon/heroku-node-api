@@ -1,26 +1,27 @@
 # 실행방법
 
-데이터베이스 설정이 필수입니다.
+## .env 설정
 
-## 데이터베이스 설정
-
-config/config.json 에 DB 설정 추가
-
-```js
-// src/config/config.json
-{
-  "host": "sampelhost.com",
-  "port": "5555",
-  "user": "sample-user",
-  "password": "sample",
-  "database": "sample-db",
-  "dateString": "date"
-}
+```text
+// .env
+TEST=
+SECRET_KEY=
+EXPIRATION_DATE=
+APIID_OPENWEATHER=
+DB_HOST=
+DB_PORT=
+DB_NAME=
+DB_USER=
+DB_PW=
+NAVER_CLIENT_ID=
+NAVER_CLIENT_SECRET=
+CORONA_SVC_KEY=
 ```
 
 ## 서비스 실행
 
 ```bash
+# 패키지 설치
 $ npm install
 
 # 테스트 모드로 실행
@@ -73,6 +74,10 @@ $ heroku logs --tail
 ## heroku 에 대해
 
 https://enigmatic-falls-66086.herokuapp.com/
+
+## TODO
+
+- REST docs 적용하기  
 
 ## 참고
 - https://medium.com/@yoobi55/express-node-js-%EB%A5%BC-%EC%9D%B4%EC%9A%A9%ED%95%B4-%EC%84%9C%EB%B2%84%EB%A5%BC-%EB%A7%8C%EB%93%A4%EC%96%B4-heroku%EC%97%90-%EC%98%AC%EB%A6%AC%EB%8A%94-%EB%B0%A9%EB%B2%95-3a5134fc8743
