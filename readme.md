@@ -69,6 +69,9 @@ $ git push heroku master
 
 # 로그보기
 $ heroku logs --tail
+
+# push environment variables to heroku
+$ heroku-dotenv push
 ```
 
 ## heroku 에 대해
