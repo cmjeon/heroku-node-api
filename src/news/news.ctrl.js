@@ -1,5 +1,4 @@
 const { parse } = require('rss-to-json');
-const { idText } = require('typescript');
 const { naverInstance, yonhapnewstvInstance } = require('../utils/api.js');
 
 const index = (req, res) => {
