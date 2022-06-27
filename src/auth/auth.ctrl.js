@@ -36,7 +36,7 @@ const login = async (req, res) => {
       token: token,
     });
   } catch (e) {
-    console.log(e)
+    console.log(e.response.data)
     return res.status(500).send('Internal Server Error');
   }
 }
@@ -65,7 +65,7 @@ const signup = async (req, res) => {
       message: 'Signup Success'
     });
   } catch(e) {
-    console.log(e);
+    console.log(e.response.data);
     return res.status(500).json('Internal Server Error');
   }
 }
