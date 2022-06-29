@@ -1,5 +1,8 @@
 const { parse } = require('rss-to-json');
 const { naverInstance, yonhapnewstvInstance } = require('../utils/api.js');
+const axios = require('axios');
+const cheerio = require('cheerio');
+const iconv = require('iconv-lite');
 
 const index = (req, res) => {
   res.json('News!');
@@ -68,10 +71,40 @@ const naverNewsKeywords = async (req, res) => {
   return res.status(200).json(result).end();
 }
 
+const naverCrawl = async (req, res) => {
+  try {
+    const resp = await axios({
+      url: 'https://news.naver.com/main/main.naver?mode=LSD&mid=shm&sid1=100',
+      method: "GET",
+      responseType: "arraybuffer"
+    });
+    const decoded = iconv.decode(resp.data,'EUC-KR');
+    const $ = cheerio.load(decoded);
+    const elements = $('.cluster_item .cluster_text a').get().map(x => $(x).text());
+    const hrefs = $('.cluster_item .cluster_text a').get().map(x => $(x).attr('href'));
+    // const descs = $('.cluster_item .cluster_text div').get().map(x => $(x).text());
+    let newArray = [];
+    elements.forEach((el, i) => {
+      let obj = {};
+      obj['text'] = el;
+      obj['href'] = hrefs[i];
+      // obj['desc'] = descs[i];
+      newArray.push(obj);
+    });
+    res.json(newArray);
+    return res.status(200).end();
+  } catch(e) {
+    console.log(e)
+    return res.status(500).send('Internal Server Error');
+  }
+
+}
+
 module.exports = {
   index,
   yhRssNewest: yhRssNewest,
   yhRssHeadline: yhRssHeadline,
   naverSearch: naverSearch,
   naverNewsKeywords,
+  naverCrawl
 }
