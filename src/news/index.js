@@ -7,5 +7,6 @@ router.get('/yh/rss/newest', ctrl.yhRssNewest)
 router.get('/yh/rss/headline', ctrl.yhRssHeadline);
 router.get('/naver/search', ctrl.naverSearch);
 router.get('/naver/news-keywords', ctrl.naverNewsKeywords);
+router.get('/naver/crawl', ctrl.naverCrawl);
 
 module.exports = router;
