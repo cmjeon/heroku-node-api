@@ -85,6 +85,17 @@ const newsspec = () => {
           });
         });
       })
+      describe.only('GET /news/naver/crawl', () => {
+        describe('성공케이스', () => {
+          it('네이버뉴스 크롤링 테스트', (done) => {
+            request(app)
+              .get(`/news/naver/crawl`)
+              .end((err, res) => {
+                done();
+              });
+          });
+        });
+      })
     })
   )
 }
