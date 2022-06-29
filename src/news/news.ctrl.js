@@ -73,59 +73,25 @@ const naverNewsKeywords = async (req, res) => {
 
 const naverCrawl = async (req, res) => {
   try {
-    const headers = {
-      'Content-Type': 'euc-kr',
-      'Encoding': null
-    };
     const resp = await axios({
       url: 'https://news.naver.com/main/main.naver?mode=LSD&mid=shm&sid1=100',
       method: "GET",
       responseType: "arraybuffer"
     });
-    // console.log('###', resp.data);
-    // const $ = cheerio.load(resp.data);
-    // const elements = $('.cluster .cluster_text a');
-    // elements.each((idx, el) => {
-    //   console.log('###', iconv.decode($(el).text(), 'euc-kr'));
-    // });
-
     const decoded = iconv.decode(resp.data,'EUC-KR');
-    // console.log('###', decoded);
     const $ = cheerio.load(decoded);
-    const elements = $('.cluster .cluster_text a').get().map(x => $(x).text());
-    const hrefs = $('.cluster .cluster_text a').get().map(x => $(x).attr('href'));
-    const descs = $('.cluster_text_lede').get().map(x => $(x).text());
-    // TODO 설명이나 기타 정보들이 있어야 함
-    // elements.each((idx, el) => {
-    //   console.log('###', $(el).text());
-    // });
-    // console.log('### elements', elements);
-    // console.log('### hrefs', hrefs);
+    const elements = $('.cluster_item .cluster_text a').get().map(x => $(x).text());
+    const hrefs = $('.cluster_item .cluster_text a').get().map(x => $(x).attr('href'));
+    // const descs = $('.cluster_item .cluster_text div').get().map(x => $(x).text());
     let newArray = [];
     elements.forEach((el, i) => {
       let obj = {};
       obj['text'] = el;
       obj['href'] = hrefs[i];
-      obj['desc'] = descs[i];
+      // obj['desc'] = descs[i];
       newArray.push(obj);
     });
-    console.log(newArray);
-    // const decoded = iconv.decode(resp.data,'EUC-KR');
-    // console.log('###', decoded);
-    // console.log('####', resp.data.substring(14000, 18000));
-    // let det = jschardet.detect(resp);
-    // console.log('###', det);
-    // const test1 = resp.data.substring(14000, 18000);
-    // const deResp = iconv.decode(test1, 'EUC-KR');
-    // console.log(deResp);
-    // console.log('####', deResp);
-    // const $ = cheerio.load(deResp.data);
-    // const elements = $('.cluster .cluster_text a');
-    // console.log('###', elements);
-    // console.log(iconv.decode(elements, 'euc-kr'));
-    // elements.each((idx, el) => {
-    // console.log('###', $(el).text());
-    // });
+    res.json(newArray);
     return res.status(200).end();
   } catch(e) {
     console.log(e)
