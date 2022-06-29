@@ -94,6 +94,8 @@ const naverCrawl = async (req, res) => {
     const $ = cheerio.load(decoded);
     const elements = $('.cluster .cluster_text a').get().map(x => $(x).text());
     const hrefs = $('.cluster .cluster_text a').get().map(x => $(x).attr('href'));
+    const descs = $('.cluster_text_lede').get().map(x => $(x).text());
+    // TODO 설명이나 기타 정보들이 있어야 함
     // elements.each((idx, el) => {
     //   console.log('###', $(el).text());
     // });
@@ -104,6 +106,7 @@ const naverCrawl = async (req, res) => {
       let obj = {};
       obj['text'] = el;
       obj['href'] = hrefs[i];
+      obj['desc'] = descs[i];
       newArray.push(obj);
     });
     console.log(newArray);
