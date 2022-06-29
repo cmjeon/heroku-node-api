@@ -40,7 +40,6 @@ const destroy = async (req, res) => {
     const id = req.params.id;
 
     const {rows} = await pool.query(`DELETE FROM USER_BASE_INFO WHERE USER_ID = '${id}'`)
-    console.log('rows', rows);
     if (!rows) {
       return res.status(500).send('Internal Server Error');
     }
