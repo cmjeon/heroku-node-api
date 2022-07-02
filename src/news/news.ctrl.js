@@ -66,7 +66,9 @@ const naverSearch = async (req, res) => {
 
 const naverNewsKeywords = async (req, res) => {
   const result = {
-    newsKeywords : ['WWDC','Apple','iPhone','개발자','판교']
+    newsKeywords : ['Apple', 'WWDC', '개발자', 'IT',
+      '전기차', '해외여행', '주식', '환율',
+      'World Wide Web', '증권사', 'Reactive Native', '한국투자증권']
   }
   return res.status(200).json(result).end();
 }
