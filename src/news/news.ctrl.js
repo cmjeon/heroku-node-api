@@ -80,11 +80,12 @@ const naverCrawl = async (req, res) => {
       { topic:'life', sid1:103 },
       { topic:'world', sid1:104 },
       { topic:'it', sid1:105 },
-      { topic:'politics', sid1:100 },
     ]
     const sid = topicNumbers.find( obj => {
       return obj.topic == req.query.topic
     }).sid1
+    if(!sid) return res.status(400).end();
+
     const resp = await axios({
       url: `https://news.naver.com/main/main.naver?mode=LSD&mid=shm&sid1=${sid}`,
       method: "GET",
