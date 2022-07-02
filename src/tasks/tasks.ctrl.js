@@ -4,6 +4,7 @@ const { getTodayDateWithHypen } = require('../utils/util.js');
 
 const list = async (req, res) => {
   if (!req.headers.userid) {
+    // TODO req.headers.userid 는 req.headers.token 을 통해서 추출할 수 있도록 변경
     return res.status(403).end();
   }
   let taskOwnUserId = req.headers.userid;
