@@ -26,9 +26,9 @@ const verifyToken = (token) =>
 
 // middleware
 const authenticateUser = async (req, res, next) => {
-  if (!req.headers.appkey || req.headers.appkey !== APPKEY) {
-    return res.status(401).json({ message: 'appkey must be included or is wrong' })
-  }
+  // if (!req.headers.appkey || req.headers.appkey !== APPKEY) {
+  //   return res.status(401).json({ message: 'appkey must be included or is wrong' })
+  // }
 
   if (!req.headers.authorization) {
     return res.status(401).json({ message: 'token must be included' })
