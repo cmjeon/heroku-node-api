@@ -85,7 +85,7 @@ const newsspec = () => {
           });
         });
       })
-      describe.only('GET /news/naver/crawl', () => {
+      describe('GET /news/naver/crawl', () => {
         describe('성공케이스', () => {
           it('네이버 뉴스 목록을 반환한다', (done) => {
             request(app)
