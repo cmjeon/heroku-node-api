@@ -73,20 +73,22 @@ const naverNewsKeywords = async (req, res) => {
 
 const naverCrawl = async (req, res) => {
   try {
-    const topicNumbers = [
+    const topics = [
       { topic:'politics', sid1:100 },
       { topic:'economy', sid1:101 },
       { topic:'society', sid1:102 },
       { topic:'life', sid1:103 },
       { topic:'world', sid1:104 },
       { topic:'it', sid1:105 },
-      { topic:'politics', sid1:100 },
     ]
-    const sid = topicNumbers.find( obj => {
+    const topic = topics.find( obj => {
       return obj.topic == req.query.topic
-    }).sid1
+    })
+
+    if(!topic) return res.status(400).end();
+
     const resp = await axios({
-      url: `https://news.naver.com/main/main.naver?mode=LSD&mid=shm&sid1=${sid}`,
+      url: `https://news.naver.com/main/main.naver?mode=LSD&mid=shm&sid1=${topic.sid1}`,
       method: "GET",
       responseType: "arraybuffer"
     });
@@ -95,15 +97,15 @@ const naverCrawl = async (req, res) => {
     const elements = $('.cluster_item .cluster_text a').get().map(x => $(x).text());
     const hrefs = $('.cluster_item .cluster_text a').get().map(x => $(x).attr('href'));
     // const descs = $('.cluster_item .cluster_text div').get().map(x => $(x).text());
-    let newArray = [];
+    let newsList = [];
     elements.forEach((el, i) => {
       let obj = {};
       obj['text'] = el;
       obj['href'] = hrefs[i];
       // obj['desc'] = descs[i];
-      newArray.push(obj);
+      newsList.push(obj);
     });
-    res.json(newArray);
+    res.json({ newsList });
     return res.status(200).end();
   } catch(e) {
     console.log(e)

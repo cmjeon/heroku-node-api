@@ -85,14 +85,23 @@ const newsspec = () => {
           });
         });
       })
-      describe.only('GET /news/naver/crawl', () => {
+      describe('GET /news/naver/crawl', () => {
         describe('성공케이스', () => {
-          it('네이버뉴스 크롤링 테스트', (done) => {
+          it('네이버 뉴스 목록을 반환한다', (done) => {
             request(app)
-              .get(`/news/naver/crawl`)
+              .get(`/news/naver/crawl?topic=economy`)
               .end((err, res) => {
+                res.body.should.has.property('newsList');
                 done();
               });
+          });
+        });
+        describe('성공케이스', () => {
+          it('지정 외 topic 을 전달하면 에러를 반환한다', (done) => {
+            request(app)
+              .get(`/news/naver/crawl?topic=myjob`)
+              .expect(400)
+              .end(done);
           });
         });
       })

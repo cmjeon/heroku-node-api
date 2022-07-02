@@ -3,7 +3,7 @@ const request = require('supertest');
 
 const coronaspec = () => {
   return (
-    describe.only('CORONA', () => {
+    describe('CORONA', () => {
       describe('GET /corona', () => {
         describe('성공케이스', () => {
           it('Conona! 를 반환한다', (done) => { // done
