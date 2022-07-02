@@ -97,15 +97,15 @@ const naverCrawl = async (req, res) => {
     const elements = $('.cluster_item .cluster_text a').get().map(x => $(x).text());
     const hrefs = $('.cluster_item .cluster_text a').get().map(x => $(x).attr('href'));
     // const descs = $('.cluster_item .cluster_text div').get().map(x => $(x).text());
-    let newArray = [];
+    let newsList = [];
     elements.forEach((el, i) => {
       let obj = {};
       obj['text'] = el;
       obj['href'] = hrefs[i];
       // obj['desc'] = descs[i];
-      newArray.push(obj);
+      newsList.push(obj);
     });
-    res.json(newArray);
+    res.json({ newsList });
     return res.status(200).end();
   } catch(e) {
     console.log(e)
