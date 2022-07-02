@@ -13,7 +13,7 @@ const tasks = require('./src/tasks/index');
 const weathers = require('./src/weathers/index');
 const news = require('./src/news/index');
 const corona = require('./src/corona/index');
-const docs = require('./docs/api-doc.js');
+const docs = require('./src/docs/api-doc.js');
 
 const { authenticateUser } = require('./src/utils/auth');
 
