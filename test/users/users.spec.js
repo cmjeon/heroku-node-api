@@ -70,8 +70,8 @@ const usersspec = () => {
           });
         });
       });
-      describe.only('DELETE /users/:id', () => {
-        describe.only('성공케이스', () => {
+      describe('DELETE /users/:id', () => {
+        describe('성공케이스', () => {
           let body;
           let email = getRandomEmailForTest();
           let name = '삭제테스트유저';
