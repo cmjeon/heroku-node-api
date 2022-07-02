@@ -73,7 +73,7 @@ const naverNewsKeywords = async (req, res) => {
 
 const naverCrawl = async (req, res) => {
   try {
-    const topicNumbers = [
+    const topics = [
       { topic:'politics', sid1:100 },
       { topic:'economy', sid1:101 },
       { topic:'society', sid1:102 },
@@ -81,13 +81,14 @@ const naverCrawl = async (req, res) => {
       { topic:'world', sid1:104 },
       { topic:'it', sid1:105 },
     ]
-    const sid = topicNumbers.find( obj => {
+    const topic = topics.find( obj => {
       return obj.topic == req.query.topic
-    }).sid1
-    if(!sid) return res.status(400).end();
+    })
+
+    if(!topic) return res.status(400).end();
 
     const resp = await axios({
-      url: `https://news.naver.com/main/main.naver?mode=LSD&mid=shm&sid1=${sid}`,
+      url: `https://news.naver.com/main/main.naver?mode=LSD&mid=shm&sid1=${topic.sid1}`,
       method: "GET",
       responseType: "arraybuffer"
     });
