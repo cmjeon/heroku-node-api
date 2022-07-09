@@ -8,7 +8,6 @@ const index = (req, res) => {
   res.json('News!');
 }
 
-
 const yhRssNewest = async (req, res) => {
   try {
     const path = 'http://www.yonhapnewstv.co.kr/browse/feed/';
@@ -50,8 +49,9 @@ const naverSearch = async (req, res) => {
     let sort = req.query.sort;
     // sort = sim
     if(sort === undefined) sort = 'sim';
+    // TODO DB 에 검색결과 있는지 조회한다.
     const url =  `v1/search/news.json?query=${query}&display=${display}&start=${start}&sort=${sort}`
-
+    // TODO 검색결과를 DB 에 저장한다
     const result = await naverInstance({
       method : 'get',
       url : url
@@ -65,6 +65,7 @@ const naverSearch = async (req, res) => {
 }
 
 const naverNewsKeywords = async (req, res) => {
+  // TODO https://data.kostat.go.kr/social/keyword/index.do 에서 주간 top 10 키워드를 발굴
   const result = {
     newsKeywords : ['Apple', 'WWDC', '개발자', 'IT',
       '전기차', '해외여행', '주식', '환율',
@@ -113,7 +114,6 @@ const naverCrawl = async (req, res) => {
     console.log(e)
     return res.status(500).send('Internal Server Error');
   }
-
 }
 
 module.exports = {
