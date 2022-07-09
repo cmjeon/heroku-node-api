@@ -15,7 +15,7 @@ const news = require('./src/news/index');
 const corona = require('./src/corona/index');
 const docs = require('./src/docs/api-doc.js');
 
-const { authenticateUser } = require('./src/utils/auth');
+const { authApp, authUser } = require('./src/utils/auth');
 
 if (process.env.NODE_ENV === 'debug') {
   app.use(morgan('dev'));
@@ -29,21 +29,11 @@ app.get('/', function (req, res) {
   res.json('Hello!');
 });
 
-// const ttt = async () => {
-//   try {
-//     const { pool } = require('./src/postgresql/postgresql');
-//     const { rows } = await pool.query('SELECT NOW()');
-//     console.log('### pg rows ###', rows)
-//   } catch(e) {
-//     console.log('### e', e);
-//   }
-// }
-//
-// ttt();
+app.use(authApp);
 
 app.use('/auth', auth);
-app.use('/users', authenticateUser, users);
-app.use('/tasks', authenticateUser, tasks);
+app.use('/users', authUser, users);
+app.use('/tasks', authUser, tasks);
 app.use('/weathers', weathers);
 app.use('/news', news);
 app.use('/corona', corona);

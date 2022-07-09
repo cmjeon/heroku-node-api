@@ -1,6 +1,11 @@
 const app = require('../../app');
 const request = require('supertest');
 const should = require('should');
+const { APPKEY } = process.env
+
+const header = {
+  appkey: APPKEY
+}
 
 const newsspec = () => {
   return (
@@ -41,12 +46,13 @@ const newsspec = () => {
           });
         });
       })
-      describe('GET /news/naver', () => {
+      describe.only('GET /news/naver', () => {
         describe('성공케이스', () => {
           it('네이버 뉴스 목록을 반환한다', (done) => {
             let query = encodeURIComponent('경제');
             request(app)
               .get(`/news/naver/search?query=${query}`)
+              .set(header)
               .end((err, res) => {
                 res.body.should.has.properties(['lastBuildDate', 'total', 'items']);
                 done();
@@ -59,6 +65,7 @@ const newsspec = () => {
             let display = 101;
             request(app)
               .get(`/news/naver/search?query=${query}&display=${display}`)
+              .set(header)
               .expect(400)
               .end(done);
           });
@@ -67,6 +74,7 @@ const newsspec = () => {
             let start = 1001;
             request(app)
               .get(`/news/naver/search?query=${query}&start=${start}`)
+              .set(header)
               .expect(400)
               .end(done);
           });
@@ -78,6 +86,7 @@ const newsspec = () => {
             let query = encodeURIComponent('경제');
             request(app)
               .get(`/news/naver/keywords`)
+              .set(header)
               .end((err, res) => {
                 res.body.should.has.property('newsKeywords');
                 done();
