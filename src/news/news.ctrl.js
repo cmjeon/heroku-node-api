@@ -65,7 +65,6 @@ const naverSearch = async (req, res) => {
 }
 
 const naverNewsKeywords = async (req, res) => {
-  console.log('### naverNewsKeywords')
   try {
     // const result = {
     //   newsKeywords : ['Apple', 'WWDC', '개발자', 'IT',
