@@ -46,7 +46,7 @@ const newsspec = () => {
           });
         });
       })
-      describe.only('GET /news/naver', () => {
+      describe('GET /news/naver/search', () => {
         describe('성공케이스', () => {
           it('네이버 뉴스 목록을 반환한다', (done) => {
             let query = encodeURIComponent('경제');
@@ -80,12 +80,12 @@ const newsspec = () => {
           });
         });
       })
-      describe('GET /news/naver/keywords', () => {
+      describe('GET /news/naver/news-keywords', () => {
         describe('성공케이스', () => {
           it('네이버 뉴스 키워드 목록을 반환한다', (done) => {
             let query = encodeURIComponent('경제');
             request(app)
-              .get(`/news/naver/keywords`)
+              .get(`/news/naver/news-keywords`)
               .set(header)
               .end((err, res) => {
                 res.body.should.has.property('newsKeywords');

@@ -1,6 +1,11 @@
 const app = require('../../app');
 const request = require('supertest');
-// const should = require('should');
+const should = require('should');
+const { APPKEY } = process.env
+
+const header = {
+  appkey: APPKEY
+}
 
 const loginspec = () => {
   return (
@@ -10,6 +15,7 @@ const loginspec = () => {
           it('Auth! 를 반환한다', (done) => { // done
             request(app)
               .get('/auth')
+              .set(header)
               .end((err, res) => {
                 res.body.should.be.equal('Auth!');
                 done();
@@ -27,6 +33,7 @@ const loginspec = () => {
           before((done) => {
             request(app)
               .post('/auth/signup')
+              .set(header)
               .send({
                 email: email,
                 name: name,
@@ -72,9 +79,23 @@ const loginspec = () => {
                 done();
               });
           })
+          it('appkey 가 없으면 401 을 반환한다', (done) => {
+            request(app)
+              .post('/auth/signup')
+              .set({})
+              .send({
+                email: email,
+                name: name,
+                pw: pw,
+                profile: profile
+              })
+              .expect(401)
+              .end(done);
+          });
           it('중복된 이메일을 등록하면 message로 duplEmail를 반환한다', (done) => {
             request(app)
               .post('/auth/signup')
+              .set(header)
               .send({
                 email: email,
                 name: name,
@@ -99,6 +120,7 @@ const loginspec = () => {
           before((done) => {
             request(app)
               .post('/auth/login')
+              .set(header)
               .send({
                 email: email,
                 pw: pw
@@ -116,17 +138,19 @@ const loginspec = () => {
           });
         });
         describe('실패케이스', () => {
-          it('없는 정보로 로그인하면 401를 반환한다', (done) => { // done
+          it('없는 정보로 로그인하면 401 을 반환한다', (done) => { // done
             request(app)
               .post('/auth/login')
+              .set(header)
               .send({})
               .expect(401)
               .end(done);
           });
-          it('없는 사용자로 로그인하면 401를 반환한다', (done) => { // done
+          it('없는 사용자로 로그인하면 401 을 반환한다', (done) => { // done
             request(app)
               .post('/auth/login')
-              .send({ email: 'nullid@email.com', pw: '1111' })
+              .set(header)
+              .send({ email: 'nobody@email.com', pw: '1111' })
               .expect(401)
               .end(done);
           });
@@ -147,14 +171,14 @@ const loginspec = () => {
             let email = 'test@testDupl.com';
             request(app)
               .get('/auth/checkDuplEmail')
+              .set(header)
               .send({
                 email: email
               })
               .expect(200)
               .end((err, res) => {
                 const body = res.body;
-                body.success.should.eql(false);
-                body.message.should.eql('Exist Email');
+                body.message.should.be.eql('Exist Email')
                 done();
               });
           });

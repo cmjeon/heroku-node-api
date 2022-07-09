@@ -75,7 +75,6 @@ const checkDuplEmail = async (req, res) => {
     const email = req.body.email;
     const existUser = await getUserInfo({email})
     if (existUser) {
-      console.log('### Exist Email')
       return res.status(409).json({
         success: false,
         user: {email: email},
