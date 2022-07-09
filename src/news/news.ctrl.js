@@ -65,13 +65,29 @@ const naverSearch = async (req, res) => {
 }
 
 const naverNewsKeywords = async (req, res) => {
-  // TODO https://data.kostat.go.kr/social/keyword/index.do 에서 주간 top 10 키워드를 발굴
-  const result = {
-    newsKeywords : ['Apple', 'WWDC', '개발자', 'IT',
-      '전기차', '해외여행', '주식', '환율',
-      'World Wide Web', '증권사', 'Reactive Native', '한국투자증권']
+  console.log('### naverNewsKeywords')
+  try {
+    // const result = {
+    //   newsKeywords : ['Apple', 'WWDC', '개발자', 'IT',
+    //     '전기차', '해외여행', '주식', '환율',
+    //     'World Wide Web', '증권사', 'Reactive Native', '한국투자증권']
+    // }
+    // TODO https://data.kostat.go.kr/social/keyword/index.do 에서 주간 top 10 키워드를 발굴
+    const response = await axios({
+      url: `https://data.kostat.go.kr/social/getPointKeywordList.do?fromdate=20220626&todate=20220702&categoryCd=ECO_KWD&termDicCd=1`,
+      method: "GET",
+    });
+    const newsKeywords = response.data.dataList.map((keyword) => {
+      return keyword.text;
+    }).slice(0, 10);
+    const result = {
+      newsKeywords
+    }
+    return res.status(200).json(result).end();
+  } catch(e) {
+    console.log(e)
+    return res.status(500).send('Internal Server Error');
   }
-  return res.status(200).json(result).end();
 }
 
 const naverCrawl = async (req, res) => {
@@ -90,12 +106,12 @@ const naverCrawl = async (req, res) => {
 
     if(!topic) return res.status(400).end();
 
-    const resp = await axios({
+    const response = await axios({
       url: `https://news.naver.com/main/main.naver?mode=LSD&mid=shm&sid1=${topic.sid1}`,
       method: "GET",
       responseType: "arraybuffer"
     });
-    const decoded = iconv.decode(resp.data,'EUC-KR');
+    const decoded = iconv.decode(response.data,'EUC-KR');
     const $ = cheerio.load(decoded);
     const elements = $('.cluster_item .cluster_text a').get().map(x => $(x).text());
     const hrefs = $('.cluster_item .cluster_text a').get().map(x => $(x).attr('href'));
