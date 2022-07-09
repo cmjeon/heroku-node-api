@@ -25,11 +25,15 @@ const verifyToken = (token) =>
   })
 
 // middleware
-const authenticateUser = async (req, res, next) => {
-  // if (!req.headers.appkey || req.headers.appkey !== APPKEY) {
-  //   return res.status(401).json({ message: 'appkey must be included or is wrong' })
-  // }
+const authApp = async (req, res, next) => {
+  if (!req.headers.appkey || req.headers.appkey !== APPKEY) {
+    return res.status(401).json({ message: 'appkey must be included or is wrong' })
+  }
+  next();
+}
 
+const authUser = async (req, res, next) => {
+  console.log('### authUser')
   if (!req.headers.authorization) {
     return res.status(401).json({ message: 'token must be included' })
   }
@@ -54,5 +58,6 @@ const authenticateUser = async (req, res, next) => {
 module.exports = {
   newToken,
   verifyToken,
-  authenticateUser,
+  authApp,
+  authUser,
 }
