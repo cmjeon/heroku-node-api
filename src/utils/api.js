@@ -9,6 +9,11 @@ const naverInstance = axios.create({
   }
 });
 
+const kostatInstance = axios.create({
+  baseURL: 'https://data.kostat.go.kr/',
+  timeout: 2000,
+})
+
 const openweatherInstance = axios.create({
   baseURL: 'https://api.openweathermap.org/',
   timeout: 1000,
@@ -25,8 +30,9 @@ const coronaInstance = axios.create({
 })
 
 module.exports = {
-  naverInstance: naverInstance,
-  openweatherInstance: openweatherInstance,
-  yonhapnewstvInstance: yonhapnewstvInstance,
-  coronaInstance: coronaInstance
+  naverInstance,
+  openweatherInstance,
+  yonhapnewstvInstance,
+  coronaInstance,
+  kostatInstance,
 }
