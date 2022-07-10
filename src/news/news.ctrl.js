@@ -1,8 +1,9 @@
 const { parse } = require('rss-to-json');
-const { naverInstance, yonhapnewstvInstance } = require('../utils/api.js');
+const { naverInstance, yonhapnewstvInstance, kostatInstance } = require('../utils/api.js');
 const axios = require('axios');
 const cheerio = require('cheerio');
 const iconv = require('iconv-lite');
+const { pool } = require("../postgresql/postgresql");
 
 const index = (req, res) => {
   res.json('News!');
@@ -65,20 +66,47 @@ const naverSearch = async (req, res) => {
 }
 
 const naverNewsKeywords = async (req, res) => {
+  console.log('### naverNewsKeywords')
   try {
-    // const result = {
-    //   newsKeywords : ['Apple', 'WWDC', '개발자', 'IT',
-    //     '전기차', '해외여행', '주식', '환율',
-    //     'World Wide Web', '증권사', 'Reactive Native', '한국투자증권']
-    // }
-    // TODO https://data.kostat.go.kr/social/keyword/index.do 에서 주간 top 10 키워드를 발굴
-    const response = await axios({
-      url: `https://data.kostat.go.kr/social/getPointKeywordList.do?fromdate=20220626&todate=20220702&categoryCd=ECO_KWD&termDicCd=1`,
-      method: "GET",
+    const yearList = await kostatInstance({
+      url: `social/getYearList.do`,
+      method: 'GET'
+    })
+    const startYear = getLastObjOfYearList(yearList.data.startYearList);
+    const endYear = getLastObjOfYearList(yearList.data.endYearList);
+    const monthDayList = await kostatInstance({
+      url: `social/getMonthDayList.do?startyear=${startYear}&endyear=${endYear}`,
+      method: 'GET'
+
     });
-    const newsKeywords = response.data.dataList.map((keyword) => {
-      return keyword.text;
-    }).slice(0, 10);
+    const fromDate = getSearchDate(startYear, monthDayList.data.startMMDD);
+    const toDate = getSearchDate(startYear, monthDayList.data.endMMDD);
+    let newsKeywords;
+    const statement = {
+      text: 'SELECT KEYWORD_ID, FROM_DATE, TO_DATE, SN, KEYWORD, CRET_DTIME, CRET_ID FROM NEWS_KEYWORD WHERE FROM_DATE = $1 AND TO_DATE = $2 ORDER BY SN ASC',
+      values: [fromDate, toDate]
+    }
+    const { rows } = await pool.query(statement);
+    newsKeywords = rows.map((keyword) => {
+      return { sn:keyword.sn, keyword: keyword.keyword }
+    });
+    if (newsKeywords.length === 0) {
+      const pointKeywordList = await kostatInstance({
+        url: `social/getPointKeywordList.do?fromdate=${fromDate}&todate=${toDate}&categoryCd=ECO_KWD&termDicCd=1`,
+        method: 'GET',
+      });
+      newsKeywords = pointKeywordList.data.dataList.map((keyword) => {
+        return { sn: keyword.sn, keyword: keyword.text };
+      }).slice(0, 10);
+      newsKeywords.forEach((keyword) => {
+        const statement = {
+          text: 'INSERT INTO NEWS_KEYWORD (FROM_DATE, TO_DATE, SN, KEYWORD, CRET_DTIME, CRET_ID) VALUES ($1, $2, $3, $4, $5, $6)',
+          values: [fromDate, toDate, keyword.sn, keyword.keyword, new Date(), 'SYSTEM']
+        }
+        const { rows } = pool.query(statement);
+      })
+    }
+
     const result = {
       newsKeywords
     }
@@ -129,6 +157,14 @@ const naverCrawl = async (req, res) => {
     console.log(e)
     return res.status(500).send('Internal Server Error');
   }
+}
+
+const getLastObjOfYearList = (yearList) => {
+  return yearList[yearList.length-1].year
+}
+
+function getSearchDate(startYear, mmdd) {
+  return startYear + mmdd[mmdd.length-1].mm + mmdd[mmdd.length-1].dd;
 }
 
 module.exports = {
