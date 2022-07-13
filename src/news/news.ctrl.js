@@ -50,9 +50,13 @@ const naverSearch = async (req, res) => {
     let sort = req.query.sort;
     // sort = sim
     if(sort === undefined) sort = 'sim';
-    // TODO DB 에 검색결과 있는지 조회한다.
+    /**
+     * TODO DB 에 해당키워드로 검색결과가 있는지 조회한다.
+     */
     const url =  `v1/search/news.json?query=${query}&display=${display}&start=${start}&sort=${sort}`
-    // TODO 검색결과를 DB 에 저장한다
+    /**
+     * TODO 없으면 검색결과를 DB 에 저장한다
+     */
     const result = await naverInstance({
       method : 'get',
       url : url
@@ -66,6 +70,10 @@ const naverSearch = async (req, res) => {
 }
 
 const naverNewsKeywords = async (req, res) => {
+  /**
+   * TODO 키워드는 매주 화요일에 그 전주 일요일부터 토요일까지로 바뀌는 듯 하다
+    */
+
   console.log('### naverNewsKeywords')
   try {
     const yearList = await kostatInstance({

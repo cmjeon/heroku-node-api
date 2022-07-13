@@ -42,7 +42,7 @@ const login = async (req, res) => {
 }
 
 const logout = (req, res) => {
-  // TODO 구현
+  // TODO 로그아웃 구현
 }
 
 const signup = async (req, res) => {
